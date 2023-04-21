@@ -24,6 +24,12 @@ import KendaraanIndex from "/src/views/admin/kendaraan/index.vue";
 //Laporan
 import LaporanIndex from "/src/views/admin/laporan/index.vue";
 
+//Owner
+import OwnerIndex from "/src/views/admin/owner/index.vue";
+import OwnerGaji from "/src/views/admin/owner/gaji.vue";
+import OwnerJualBarang from "/src/views/admin/owner/jual_barang.vue";
+import OwnerLabaRugi from "/src/views/admin/owner/laba_rugi.vue";
+
 //Routes
 const routes = [
   {
@@ -104,6 +110,38 @@ const routes = [
     component: LaporanIndex,
     meta: {
       title: "Laporan - Index",
+    },
+  },
+  {
+    path: "/admin/owner",
+    name: "OwnerIndex",
+    component: OwnerIndex,
+    meta: {
+      title: "Owner - Index",
+    },
+  },
+  {
+    path: "/admin/owner/gaji",
+    name: "OwnerGaji",
+    component: OwnerGaji,
+    meta: {
+      title: "Owner - Gaji",
+    },
+  },
+  {
+    path: "/admin/owner/jual_barang",
+    name: "OwnerJualBarang",
+    component: OwnerJualBarang,
+    meta: {
+      title: "Owner - Jual Barang",
+    },
+  },
+  {
+    path: "/admin/owner/laba_rugi",
+    name: "OwnerLabaRugi",
+    component: OwnerLabaRugi,
+    meta: {
+      title: "Owner - Laba Rugi",
     },
   },
 ];
