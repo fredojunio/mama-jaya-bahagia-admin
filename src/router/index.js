@@ -10,6 +10,9 @@ import BarangIndex from "/src/views/admin/barang/index.vue";
 import RitIndex from "/src/views/admin/rit/index.vue";
 import RitJualBarang from "/src/views/admin/rit/jual_barang.vue";
 
+//Customer
+import CustomerIndex from "/src/views/admin/customer/index.vue";
+
 //Routes
 const routes = [
   {
@@ -42,6 +45,14 @@ const routes = [
     component: RitJualBarang,
     meta: {
       title: "Rit - Jual Barang",
+    },
+  },
+  {
+    path: "/admin/customer",
+    name: "CustomerIndex",
+    component: CustomerIndex,
+    meta: {
+      title: "Customer - Index",
     },
   },
 ];
