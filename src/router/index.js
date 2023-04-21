@@ -21,6 +21,9 @@ import FinancePenjualan from "/src/views/admin/finance/penjualan.vue";
 //Kendaraan
 import KendaraanIndex from "/src/views/admin/kendaraan/index.vue";
 
+//Laporan
+import LaporanIndex from "/src/views/admin/laporan/index.vue";
+
 //Routes
 const routes = [
   {
@@ -93,6 +96,14 @@ const routes = [
     component: KendaraanIndex,
     meta: {
       title: "Kendaraan - Index",
+    },
+  },
+  {
+    path: "/admin/laporan",
+    name: "LaporanIndex",
+    component: LaporanIndex,
+    meta: {
+      title: "Laporan - Index",
     },
   },
 ];
