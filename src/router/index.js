@@ -13,6 +13,11 @@ import RitJualBarang from "/src/views/admin/rit/jual_barang.vue";
 //Customer
 import CustomerIndex from "/src/views/admin/customer/index.vue";
 
+//Finance
+import FinanceIndex from "/src/views/admin/finance/index.vue";
+import FinanceRit from "/src/views/admin/finance/rit.vue";
+import FinancePenjualan from "/src/views/admin/finance/penjualan.vue";
+
 //Routes
 const routes = [
   {
@@ -53,6 +58,30 @@ const routes = [
     component: CustomerIndex,
     meta: {
       title: "Customer - Index",
+    },
+  },
+  {
+    path: "/admin/finance",
+    name: "FinanceIndex",
+    component: FinanceIndex,
+    meta: {
+      title: "Finance - Index",
+    },
+  },
+  {
+    path: "/admin/finance/rit",
+    name: "FinanceRit",
+    component: FinanceRit,
+    meta: {
+      title: "Finance - Rit",
+    },
+  },
+  {
+    path: "/admin/finance/penjualan",
+    name: "FinancePenjualan",
+    component: FinancePenjualan,
+    meta: {
+      title: "Finance - Penjualan",
     },
   },
 ];
