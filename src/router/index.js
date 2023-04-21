@@ -18,6 +18,9 @@ import FinanceIndex from "/src/views/admin/finance/index.vue";
 import FinanceRit from "/src/views/admin/finance/rit.vue";
 import FinancePenjualan from "/src/views/admin/finance/penjualan.vue";
 
+//Kendaraan
+import KendaraanIndex from "/src/views/admin/kendaraan/index.vue";
+
 //Routes
 const routes = [
   {
@@ -82,6 +85,14 @@ const routes = [
     component: FinancePenjualan,
     meta: {
       title: "Finance - Penjualan",
+    },
+  },
+  {
+    path: "/admin/kendaraan",
+    name: "KendaraanIndex",
+    component: KendaraanIndex,
+    meta: {
+      title: "Kendaraan - Index",
     },
   },
 ];
