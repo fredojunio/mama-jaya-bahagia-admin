@@ -45,7 +45,7 @@
                   @click="sidebarOpen = false"
                 >
                   <span class="sr-only">Close sidebar</span>
-                  <Icon icon="mdi-light:home" class="h-6 w-6 text-white"></Icon>
+                  <Icon icon="uil:times" class="h-6 w-6 text-white"></Icon>
                 </button>
               </div>
             </TransitionChild>
@@ -63,7 +63,7 @@
                       class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
                     >
                       <Icon
-                        :name="item.icon"
+                        :icon="item.icon"
                         class="text-gray-400 group-hover:text-gray-300 mr-4 flex-shrink-0 h-6 w-6"
                       ></Icon>
                       {{ item.name }}
@@ -84,7 +84,7 @@
                       ]"
                     >
                       <Icon
-                        :name="item.icon"
+                        :icon="item.icon"
                         class="text-gray-400 group-hover:text-gray-300 mr-4 flex-shrink-0 h-6 w-6"
                       ></Icon>
                       <span class="flex-1">
@@ -102,7 +102,7 @@
                       </svg>
                     </DisclosureButton>
                     <DisclosurePanel class="space-y-1">
-                      <div
+                      <a
                         v-for="subItem in item.children"
                         :key="subItem.name"
                         as="a"
@@ -110,7 +110,7 @@
                         class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"
                       >
                         {{ subItem.name }}
-                      </div>
+                      </a>
                     </DisclosurePanel>
                   </Disclosure>
                 </template>
@@ -124,7 +124,7 @@
                 <div class="flex items-center group/logout">
                   <div>
                     <Icon
-                      name="bx:log-out"
+                      icon="bx:log-out"
                       class="text-gray-300 group-hover/logout:text-gray-400 mr-3 flex-shrink-0 h-6 w-6"
                     ></Icon>
                   </div>
@@ -166,7 +166,7 @@
                 >
                   <span class="sr-only">Open user menu</span>
                   <Icon
-                    name="ic:outline-notifications-active"
+                    icon="ic:outline-notifications-active"
                     class="h-8 w-8 rounded-full"
                   ></Icon>
                 </MenuButton>
@@ -193,7 +193,7 @@
                         <div class="flex">
                           <div class="flex-shrink-0">
                             <Icon
-                              name="fa:exclamation-triangle"
+                              icon="fa:exclamation-triangle"
                               class="h-5 w-5 text-yellow-400"
                             ></Icon>
                           </div>
@@ -214,7 +214,7 @@
                         <div class="flex">
                           <div class="flex-shrink-0">
                             <Icon
-                              name="fa:exclamation-triangle"
+                              icon="fa:exclamation-triangle"
                               class="h-5 w-5 text-yellow-400"
                             ></Icon>
                           </div>
@@ -239,7 +239,7 @@
                         <div class="flex">
                           <div class="flex-shrink-0">
                             <Icon
-                              name="fa:exclamation-triangle"
+                              icon="fa:exclamation-triangle"
                               class="h-5 w-5 text-yellow-400"
                             ></Icon>
                           </div>
@@ -263,7 +263,7 @@
                         <div class="flex">
                           <div class="flex-shrink-0">
                             <Icon
-                              name="fa:exclamation-triangle"
+                              icon="fa:exclamation-triangle"
                               class="h-5 w-5 text-yellow-400"
                             ></Icon>
                           </div>

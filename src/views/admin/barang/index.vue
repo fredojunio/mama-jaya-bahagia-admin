@@ -216,8 +216,10 @@
   </Admin>
 </template>
 
-<script>
+<script setup>
 import Admin from "../../../layouts/Admin.vue";
+</script>
+<script>
 import {
   Menu,
   MenuButton,
@@ -231,7 +233,6 @@ import {
 } from "@headlessui/vue";
 export default {
   components: {
-    Admin,
     Menu,
     MenuButton,
     MenuItem,
