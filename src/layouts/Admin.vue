@@ -330,6 +330,7 @@ var navigation = [
     children: [
       { name: "Daftar Rit", href: "/admin/rit" },
       { name: "Jual Barang", href: "/admin/rit/jual_barang" },
+      { name: "Nota", href: "/admin/rit/nota" },
     ],
   },
   {

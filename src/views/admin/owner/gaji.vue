@@ -218,7 +218,7 @@
                             id="do_code"
                             v-model="do_code"
                             type="text"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -234,7 +234,7 @@
                             id="original_weight"
                             v-model="original_weight"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -250,7 +250,7 @@
                             id="do_code"
                             v-model="do_code"
                             type="text"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -266,7 +266,7 @@
                             id="do_code"
                             v-model="do_code"
                             type="datetime-local"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -279,14 +279,14 @@
                     <button
                       type="button"
                       @click="showAddSalaryForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showAddSalaryForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>

@@ -181,11 +181,11 @@
                         <div class="flex flex-col items-start">
                           <div
                             @click="showTransactionDetail = true"
-                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                           >
                             <Icon
                               icon="uil:eye"
-                              class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                             ></Icon>
                             <span class="ml-3">Detail</span>
                           </div>
@@ -488,7 +488,7 @@
                               v-model="type"
                               id="type"
                               name="type"
-                              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
                               <option value="long" selected>TB</option>
                               <option value="short">TW</option>
@@ -511,7 +511,7 @@
                                 id="withdraw_balance"
                                 v-model="withdraw_balance"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -528,7 +528,7 @@
                                 id="sisa"
                                 v-model="sisa"
                                 type="number"
-                                class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -543,14 +543,14 @@
                     <button
                       type="button"
                       @click="showWithdrawSavingsForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showWithdrawSavingsForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -655,7 +655,7 @@
                                 id="cashback"
                                 v-model="cashback"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -670,14 +670,14 @@
                     <button
                       type="button"
                       @click="showCashbackApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showCashbackApprovalForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -773,12 +773,6 @@
                                     scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                   >
-                                    Tonase Akumulatif (kg)
-                                  </th>
-                                  <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                  >
                                     TB (Rp.)
                                   </th>
                                   <th
@@ -830,15 +824,6 @@
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
                                         {{ formatNumber(1000) }} kg
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td
-                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                  >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        {{ formatNumber(2000) }} kg
                                       </div>
                                     </div>
                                   </td>
@@ -912,14 +897,14 @@
                   <button
                     type="button"
                     @click="showTransactionDetail = false"
-                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     @click="showTransactionDetail = false"
-                    class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                    class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                   >
                     {{ "Save" }}
                   </button>

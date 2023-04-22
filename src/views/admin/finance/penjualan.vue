@@ -121,11 +121,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showSaleApprovalForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="fa:check"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
@@ -176,11 +176,11 @@
                       <div class="flex flex-col items-start">
                         <!-- <div
                         @click="showSaleApprovalForm = true"
-                        class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                        class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                       >
                         <Icon
                           name="fa:check"
-                          class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                          class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                         ></Icon>
                         <span class="ml-3">Approve</span>
                       </div> -->
@@ -269,14 +269,14 @@
                     <button
                       type="button"
                       @click="showSaleApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showSaleApprovalForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}
                     </button>
