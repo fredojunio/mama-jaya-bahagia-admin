@@ -111,7 +111,7 @@
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
               >
-                <Icon name="fa:calendar" class="h-5 w-5 text-gray-400" />
+                <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
               </div>
               <VueDatePicker
                 v-model="date"
@@ -184,7 +184,7 @@
                             class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
                           >
                             <Icon
-                              name="uil:eye"
+                              icon="uil:eye"
                               class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
                             ></Icon>
                             <span class="ml-3">Detail</span>
@@ -206,7 +206,7 @@
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
               >
-                <Icon name="fa:calendar" class="h-5 w-5 text-gray-400" />
+                <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
               </div>
               <VueDatePicker
                 v-model="date"

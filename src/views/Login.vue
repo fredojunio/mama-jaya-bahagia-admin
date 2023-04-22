@@ -15,7 +15,7 @@
             </label>
             <div class="mt-1">
               <input
-                v-model="email"
+                v-model="userEmail"
                 id="email"
                 name="email"
                 type="email"
@@ -36,7 +36,7 @@
             <div class="mt-1">
               <input
                 @keyup.enter="login()"
-                v-model="password"
+                v-model="userPassword"
                 id="password"
                 name="password"
                 type="password"
@@ -49,32 +49,65 @@
 
           <div>
             <button
-              @click="login()"
+              v-if="!isSubmitted"
+              @click="submitLogin()"
               type="button"
               class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Sign in
             </button>
+            <div
+              v-else
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <div class="animate-spin">
+                <Icon icon="fa:circle-o-notch" />
+              </div>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
+import { Icon } from "@iconify/vue";
+
 export default {
   data() {
     return {
-      email: "",
-      password: "",
+      isSubmitted: false,
+      userEmail: null,
+      userPassword: null,
     };
   },
   methods: {
-    login() {
-      ///TODO - Connect to Login API
+    submitLogin: function () {
+      if (this.userEmail && this.userPassword) {
+        this.isSubmitted = true;
+        let self = this;
+        axios
+          .post(this.url + "login", {
+            email: this.userEmail,
+            password: this.userPassword,
+          })
+          .then((data) => {
+            console.log(data);
+            localStorage["access_token"] = data.data.data.results.access_token;
+            localStorage["user_id"] = data.data.data.results.user_id;
+            localStorage["role_id"] = data.data.data.results.role_id;
+            self.$router.push("/admin/rit");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        alert("E-Mail / Password belum di isi!");
+      }
     },
   },
+  components: { Icon },
 };
 </script>
-
-<style></style>

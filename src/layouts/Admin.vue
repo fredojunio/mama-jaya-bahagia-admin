@@ -118,7 +118,7 @@
             </div>
             <div class="flex-shrink-0 flex bg-gray-700 p-4">
               <div
-                @click="logout()"
+                @click="submitLogout()"
                 class="flex-shrink-0 w-full group block cursor-pointer"
               >
                 <div class="flex items-center group/logout">
@@ -393,7 +393,14 @@ export default {
       navigation,
     };
   },
-  methods: {},
+  methods: {
+    submitLogout: function () {
+      localStorage["access_token"] = null;
+      localStorage["user_id"] = null;
+      localStorage["role_id"] = null;
+      this.$router.push("/");
+    },
+  },
   data() {
     return {
       sidebarOpen: false,

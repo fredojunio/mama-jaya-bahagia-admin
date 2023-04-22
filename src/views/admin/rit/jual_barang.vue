@@ -117,15 +117,63 @@
               Rit {{ index + 1 }}
             </label>
             <div class="mt-1">
-              <select
-                v-model="product.product_id"
-                id="product_id"
-                name="product_id"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
-              >
-                <option value="1" selected>K-ABC</option>
-                <option value="2">K-DEF</option>
-              </select>
+              <Combobox as="div" v-model="product.product">
+                <div class="relative mt-1">
+                  <ComboboxInput
+                    class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                    @keydown="filterBarang"
+                    @change="barangQuery = $event.target.value"
+                    :display-value="(barang) => barang.name"
+                  />
+                  <ComboboxButton
+                    class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
+                  >
+                    <SelectorIcon
+                      class="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </ComboboxButton>
+
+                  <ComboboxOptions
+                    v-if="filteredBarangs.length > 0"
+                    class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                  >
+                    <ComboboxOption
+                      v-for="barang in filteredBarangs"
+                      :key="barang.id"
+                      :value="barang"
+                      as="template"
+                      v-slot="{ active, selected }"
+                    >
+                      <li
+                        :class="[
+                          'relative cursor-default select-none py-2 pl-3 pr-9',
+                          active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                        ]"
+                      >
+                        <span
+                          :class="[
+                            'block truncate',
+                            selected && 'font-semibold',
+                          ]"
+                        >
+                          {{ barang.name }}
+                        </span>
+
+                        <span
+                          v-if="selected"
+                          :class="[
+                            'absolute inset-y-0 right-0 flex items-center pr-4',
+                            active ? 'text-white' : 'text-indigo-600',
+                          ]"
+                        >
+                          <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      </li>
+                    </ComboboxOption>
+                  </ComboboxOptions>
+                </div>
+              </Combobox>
             </div>
           </div>
           <div class="col-span-2">
@@ -231,6 +279,35 @@
                 class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
+          </div>
+        </div>
+        <div class="sm:col-span-6">
+          <div class="relative flex items-start">
+            <div class="text-sm">
+              <label for="sak" class="font-medium text-gray-700"
+                >Sak - Stok: 190</label
+              >
+            </div>
+            <div
+              class="ml-2 pl-2 flex items-center h-5 border-l-2 border-black gap-x-2 text-sm"
+            >
+              <input
+                id="sak_fee"
+                aria-describedby="candidates-description"
+                name="sak_fee"
+                type="checkbox"
+                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+              />
+              <span class="font-medium text-gray-700">Berbayar</span>
+            </div>
+          </div>
+          <div class="mt-1">
+            <input
+              id="sak"
+              v-model="sak"
+              type="number"
+              class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+            />
           </div>
         </div>
         <div class="sm:col-span-6">
@@ -421,6 +498,45 @@
                       Pastikan data sudah benar ketika mensubmit penjualan!
                     </p>
                   </div>
+                  <div
+                    v-for="(product, index) in products"
+                    :key="index"
+                    class="grid grid-cols-4 gap-x-2 justify-center items-center"
+                  >
+                    <div class="col-span-2">
+                      <label
+                        for="product_id"
+                        class="block text-sm font-medium text-gray-700"
+                      >
+                        Rit {{ index + 1 }}
+                      </label>
+                      <div class="mt-1">
+                        <input
+                          id="name"
+                          v-model="product.product.name"
+                          type="text"
+                          disabled
+                          class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-span-2">
+                      <label
+                        for="real_amount"
+                        class="block text-sm font-medium text-gray-700"
+                      >
+                        Tonase Fisik(kg)
+                      </label>
+                      <div class="mt-1">
+                        <input
+                          id="real_amount"
+                          v-model="product.real_amount"
+                          type="number"
+                          class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
@@ -453,6 +569,15 @@
 import Admin from "../../../layouts/Admin.vue";
 import CustomerDetail from "../../../components/CustomerDetail.vue";
 import { Icon } from "@iconify/vue";
+import { computed, ref } from "vue";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxLabel,
+  ComboboxOption,
+  ComboboxOptions,
+} from "@headlessui/vue";
 </script>
 <script>
 import {
@@ -493,18 +618,52 @@ export default {
       }
     },
     addNewProduct() {
-      var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
+      var newProduct = {
+        product: { id: 0, name: "" },
+        amount: 0,
+        real_amount: 0,
+        masak: 1,
+        is_new: false,
+      };
       this.products.push(newProduct);
     },
     removeProduct(index) {
       this.products.splice(index, 1);
+    },
+    filterBarang() {
+      if (this.barangQuery == "") {
+        this.filteredBarangs = this.barangs;
+      } else {
+        this.filteredBarangs = this.barangs.filter((barang) => {
+          return barang.name
+            .toLowerCase()
+            .includes(this.barangQuery.toLowerCase());
+        });
+      }
     },
   },
   data() {
     return {
       //ini buat confirmation
       showConfirmationPopup: false,
-      products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
+      products: [
+        {
+          product: { id: 0, name: "" },
+          amount: 0,
+          real_amount: 0,
+          masak: 1,
+          is_new: false,
+        },
+      ],
+      barangs: [
+        { id: 1, name: "K-ABC" },
+        { id: 2, name: "K-DEF" },
+      ],
+      filteredBarangs: [
+        { id: 1, name: "K-ABC" },
+        { id: 2, name: "K-DEF" },
+      ],
+      barangQuery: "",
     };
   },
 };

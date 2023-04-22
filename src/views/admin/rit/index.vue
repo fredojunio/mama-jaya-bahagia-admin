@@ -630,6 +630,23 @@
                           />
                         </div>
                       </div>
+                      
+                      <div class="sm:col-span-6">
+                        <label
+                          for="sak"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Sak
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="sak"
+                            
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
 
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">

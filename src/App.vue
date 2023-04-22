@@ -6,6 +6,9 @@
 <script>
 export default {
   setup() {},
+  beforeMount() {
+    this.checkLogin();
+  },
   watch: {
     $route(to) {
       document.title = `Mama Jaya Bahagia - ${to.meta.title}`;

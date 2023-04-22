@@ -77,7 +77,7 @@
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
                         >
                           <Icon
-                            name="uil:edit"
+                            icon="uil:edit"
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
                           ></Icon>
                           <span class="ml-3">Edit</span>
@@ -218,7 +218,9 @@
 
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
+import { Icon } from "@iconify/vue";
 </script>
+
 <script>
 import {
   Menu,
