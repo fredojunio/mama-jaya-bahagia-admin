@@ -185,7 +185,7 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Barang: {{ "K-ABC" }}
+                        <!-- Kosong -->
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         BBM: -

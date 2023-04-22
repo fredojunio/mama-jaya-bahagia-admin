@@ -7,9 +7,45 @@
         Jual Barang (Owner)
       </h1>
     </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select a tab</label>
+        <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+        <select
+          @change="changeTabMobile($event)"
+          id="tabs"
+          name="tabs"
+          class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
+            {{ tab.name }}
+          </option>
+        </select>
+      </div>
+      <div class="hidden sm:block">
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <div
+              @click="changeTab(index)"
+              v-for="(tab, index) in tabs"
+              :key="tab.name"
+              :class="[
+                tab.current
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+              ]"
+              :aria-current="tab.current ? 'page' : undefined"
+            >
+              {{ tab.name }}
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
     <!-- //SECTION - Main Page  -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mt-8 flex flex-col">
+      <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -112,6 +148,99 @@
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
                           ></Icon>
                           <span class="ml-3">Kirim ke Pusat</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentTab == tabs[1].name" class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode - Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Keterangan
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal Pengiriman
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          K-ABC - 29/03/2023
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col gap-y-2">
+                        <div class="font-medium text-gray-900">
+                          Customer: 2.000 kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Cabang: 200 kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Pusat: 7.800 kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">04/04/2023</div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showRitApprovalForm = true"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                        >
+                          <Icon
+                            icon="fa:check"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                          ></Icon>
+                          <span class="ml-3">Approve</span>
                         </div>
                       </div>
                     </td>
@@ -713,6 +842,123 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION -->
+    <!-- //SECTION - Form Approve Rit -->
+    <TransitionRoot as="template" :show="showRitApprovalForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showRitApprovalForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Approve Rit Kiriman
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div class="grid grid-cols-2 gap-x-4">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        <!-- Kosong -->
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        BBM: -
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Kendaraan: Truk A
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        E-Toll: -
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        <!-- Kosong -->
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sangu: Rp. 10.000
+                      </h3>
+                    </div>
+                    <hr />
+
+                    <div
+                      class="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
+                    >
+                      <div class="sm:col-span-6">
+                        <label
+                          for="money"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Total (Rp.)
+                        </label>
+                        <div class="mt-1">Rp. 10.000</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showRitApprovalForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      @click="showRitApprovalForm = false"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                    >
+                      {{ "Submit" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION -->
   </Admin>
 </template>
 
@@ -759,6 +1005,25 @@ export default {
         return "-";
       }
     },
+    changeTab(index) {
+      this.tabs.forEach((tab) => {
+        if (tab.current) {
+          tab.current = false;
+        }
+      });
+      this.tabs[index].current = true;
+      this.currentTab = this.tabs[index].name;
+    },
+    changeTabMobile(event) {
+      this.tabs.forEach((tab) => {
+        if (tab.name == event.target.value) {
+          tab.current = true;
+          this.currentTab = tab.name;
+        } else {
+          tab.current = false;
+        }
+      });
+    },
     addNewProduct() {
       var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
       this.products.push(newProduct);
@@ -775,140 +1040,13 @@ export default {
       showAddBranchTransaction: false,
       //ini buat ngembalikin ke cabang
       showTransferFromBranch: false,
-      rits: [
-        {
-          id: 1,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 0,
-          branch_weight: 200,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: {
-            id: 1,
-            name: "Supardi",
-            weight: 2000,
-          },
-          arrive_date: "29/03/2023",
-          empty_date: "29/03/2023",
-          hold: false,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 1,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 0,
-          branch_weight: 200,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: "29/03/2023",
-          hold: false,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
+      // ini approval nota
+      showRitApprovalForm: false,
+      tabs: [
+        { name: "Rit", current: true },
+        { name: "Nota", current: false },
       ],
+      currentTab: "Rit",
       products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
     };
   },
