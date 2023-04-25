@@ -48,13 +48,13 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="(product, index) in products" :key="product.id">
+                  <tr v-for="item in items" :key="item.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ product.code }}
+                          {{ item.code }}
                         </div>
                       </div>
                     </td>
@@ -63,7 +63,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ product.name }}
+                          {{ item.brand }}
                         </div>
                       </div>
                     </td>
@@ -73,7 +73,7 @@
                       <div class="flex flex-col items-start">
                         <!-- //TODO - Edit Logic -->
                         <div
-                          @click="editData(index)"
+                          @click="showEdit(item.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -139,7 +139,7 @@
                     <div>
                       <h3 class="text-lg leading-6 font-medium text-gray-900">
                         {{
-                          isEditing
+                          tempData.id
                             ? "Edit Jenis Barang"
                             : "Tambah Jenis Barang"
                         }}
@@ -162,7 +162,7 @@
                         <div class="mt-1">
                           <input
                             id="code"
-                            v-model="code"
+                            v-model="tempData.code"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -171,15 +171,15 @@
 
                       <div class="sm:col-span-6">
                         <label
-                          for="name"
+                          for="brand"
                           class="block text-sm font-medium text-gray-700"
                         >
-                          Nama
+                          Merek
                         </label>
                         <div class="mt-1">
                           <input
-                            id="name"
-                            v-model="name"
+                            id="brande"
+                            v-model="tempData.brand"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -193,17 +193,17 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="openForm = false"
+                      @click="showForm = false"
                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
-                      @click="isEditing ? updateData() : submitData()"
+                      @click="tempData.id ? updateData() : createData()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      {{ isEditing ? "Update" : "Save" }}
+                      {{ tempData.id ? "Update" : "Save" }}
                     </button>
                   </div>
                 </div>
@@ -219,6 +219,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -248,19 +249,92 @@ export default {
   data() {
     return {
       showForm: false,
-      products: [
-        {
-          id: 1,
-          code: "K-ABC",
-          name: "Kedelai ABC",
-        },
-        {
-          id: 2,
-          code: "K-DEF",
-          name: "Kedelai DEF",
-        },
-      ],
+      tempData: {
+        id: null,
+        code: null,
+        brand: null,
+      },
+      items: [],
     };
+  },
+  created() {
+    this.getAllData();
+  },
+  methods: {
+    resetData: function () {
+      this.tempData = {
+        id: null,
+        code: null,
+        brand: null,
+      };
+    },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/item")
+        .then((data) => {
+          this.isLoading = false;
+          this.items = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              code: item.code,
+              brand: item.brand,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    createData() {
+      console.log(this.tempData)
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("admin/item", {
+          code: this.tempData.code,
+          brand: this.tempData.brand,
+        })
+        .then((data) => {
+          this.showForm = false;
+          this.getAllData();
+          this.resetData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateData() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("admin/item/" + this.tempData.id, {
+          _method: "PATCH",
+          code: this.tempData.code,
+          brand: this.tempData.brand,
+        })
+        .then((data) => {
+          this.showForm = false;
+          this.getAllData();
+          this.resetData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showEdit(id) {
+      this.showForm = true;
+      this.tempData = this.items.find((obj) => {
+        return obj.id === id;
+      });
+    },
   },
 };
 </script>
