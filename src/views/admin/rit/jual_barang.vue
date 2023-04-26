@@ -609,14 +609,7 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: {
-    formatNumber(value) {
-      if (value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      } else {
-        return "-";
-      }
-    },
+  methods: { 
     addNewProduct() {
       var newProduct = {
         product: { id: 0, name: "" },

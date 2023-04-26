@@ -290,7 +290,6 @@ export default {
         });
     },
     createData() {
-      console.log(this.tempData)
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },

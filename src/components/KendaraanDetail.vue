@@ -10,7 +10,9 @@
             <div
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
-              <h1 class="text-2xl font-bold text-gray-900 truncate">Truk A</h1>
+              <h1 class="text-2xl font-bold text-gray-900 truncate">
+                {{ selectedData.name }}
+              </h1>
             </div>
           </div>
         </div>
@@ -18,8 +20,10 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            Truk A
-            <span class="text-gray-400 text-sm font-normal">Truk</span>
+            {{ selectedData.name }}
+            <span class="text-gray-400 text-sm font-normal">{{
+              selectedData.type
+            }}</span>
           </h1>
         </div>
       </div>
@@ -59,6 +63,7 @@
               </div>
               <VueDatePicker
                 v-model="date"
+                @update:model-value="filterData"
                 locale="id"
                 :start-time="[
                   { hours: 0, minutes: 0, seconds: 0 },
@@ -112,13 +117,13 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
+                    <tr v-for="trip in filteredTrips" :key="trip.id">
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            24/03/2023
+                            {{ formatDate(trip.created_at) }}
                           </div>
                         </div>
                       </td>
@@ -127,7 +132,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Menjual ke Supardi
+                            {{ trip.note }}
                           </div>
                         </div>
                       </td>
@@ -136,7 +141,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(1000) }}
+                            Rp. {{ formatNumber(trip.gas) }}
                           </div>
                         </div>
                       </td>
@@ -145,7 +150,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(1000) }}
+                            Rp. {{ formatNumber(trip.toll) }}
                           </div>
                         </div>
                       </td>
@@ -154,7 +159,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(10000) }}
+                            Rp. {{ formatNumber(trip.allowance) }}
                           </div>
                         </div>
                       </td>
@@ -183,6 +188,12 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 export default {
+  props: ["selectedData"],
+  watch: {
+    selectedData: function (newVal, oldVal) {
+      this.filterData();
+    },
+  },
   components: {
     VueDatePicker,
     Dialog,
@@ -190,16 +201,14 @@ export default {
     TransitionChild,
     TransitionRoot,
   },
-  setup() {
-    return {};
-  },
   data() {
     return {
       date: [
-        new Date(new Date().setHours(0, 0, 0, 0)),
-        new Date(new Date().setHours(23, 59, 59, 59)),
+        // new Date(new Date().setHours(0, 0, 0, 0)),
+        // new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       tabs: [{ name: "Daftar Perjalanan", current: true }],
+      filteredTrips: [],
     };
   },
   methods: {
@@ -212,12 +221,13 @@ export default {
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
     },
-    formatNumber(value) {
-      if (value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      } else {
-        return "-";
-      }
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredTrips = this.selectedData.trips.filter((trip) => {
+        let tripDate = new Date(trip.created_at);
+        return tripDate >= startDate && tripDate <= untilDate;
+      });
     },
   },
 };

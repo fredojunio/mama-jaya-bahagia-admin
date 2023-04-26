@@ -832,14 +832,7 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
-    },
-    formatNumber(value) {
-      if (value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      } else {
-        return "-";
-      }
-    },
+    }, 
   },
 };
 </script>
