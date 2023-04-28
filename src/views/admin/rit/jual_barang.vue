@@ -19,7 +19,7 @@
             <select
               id="customer"
               name="customer"
-              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
             >
               <option value="long" selected>Supardi</option>
               <option value="short">Paimin</option>
@@ -35,7 +35,7 @@
               v-model="vehicle"
               id="vehicle"
               name="vehicle"
-              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
             >
               <option value="long" selected>Truk A - (3 Trip)</option>
               <option value="short">Truk B - (7 Trip)</option>
@@ -56,7 +56,7 @@
                 id="allowance_fee"
                 v-model="allowance_fee"
                 type="number"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -72,7 +72,7 @@
                 id="gas_fee"
                 v-model="gas_fee"
                 type="number"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -88,7 +88,7 @@
                 id="etoll_fee"
                 v-model="etoll_fee"
                 type="number"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -185,7 +185,7 @@
                 id="amount"
                 v-model="product.amount"
                 type="number"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@
                 id="masak"
                 v-model="product.masak"
                 type="number"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
           </div>
@@ -212,7 +212,7 @@
                 v-model="product.price"
                 type="number"
                 disabled
-                class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
           </div>
@@ -226,7 +226,7 @@
                 v-model="product.price"
                 type="number"
                 disabled
-                class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
           </div>
@@ -250,7 +250,7 @@
                 id="tb"
                 v-model="tb"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -263,7 +263,7 @@
                 id="tw"
                 v-model="tw"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -276,7 +276,7 @@
                 id="thr"
                 v-model="thr"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -306,7 +306,7 @@
               id="sak"
               v-model="sak"
               type="number"
-              class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+              class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
           </div>
         </div>
@@ -319,7 +319,7 @@
               id="discount"
               v-model="discount"
               type="number"
-              class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+              class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
           </div>
         </div>
@@ -344,7 +344,7 @@
                 id="tb"
                 v-model="tb"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -360,7 +360,7 @@
                 disabled
                 id="money_kurang"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -371,7 +371,7 @@
             <button
               type="button"
               @click="showConfirmationPopup = true"
-              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               {{ "Submit" }}
             </button>
@@ -393,7 +393,7 @@
               <select
                 id="product_id"
                 name="product_id"
-                class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
               >
                 <option value="1" selected>K-ABC</option>
                 <option value="2">K-DEF</option>
@@ -408,7 +408,7 @@
               <input
                 id="tonase"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -421,7 +421,7 @@
                 disabled
                 id="money"
                 type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
@@ -516,7 +516,7 @@
                           v-model="product.product.name"
                           type="text"
                           disabled
-                          class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                          class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                         />
                       </div>
                     </div>
@@ -532,7 +532,7 @@
                           id="real_amount"
                           v-model="product.real_amount"
                           type="number"
-                          class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                          class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                         />
                       </div>
                     </div>
@@ -549,7 +549,7 @@
                 </button>
                 <button
                   type="button"
-                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black sm:mt-0 sm:w-auto sm:text-sm"
+                  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black sm:mt-0 sm:w-auto sm:text-sm"
                   @click="showConfirmationPopup = false"
                   ref="cancelButtonRef"
                 >

@@ -178,7 +178,7 @@
                             v-model="type"
                             id="type"
                             name="type"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
                             <option value="long" selected>Truk</option>
                             <option value="short">Pickup</option>

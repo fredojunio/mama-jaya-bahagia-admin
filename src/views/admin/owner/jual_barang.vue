@@ -121,31 +121,31 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showAddCustomerTransaction = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Penjualan (Customer)</span>
                         </div>
                         <div
                           @click="showAddBranchTransaction = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Penjualan (Cabang)</span>
                         </div>
                         <div
                           @click="showTransferFromBranch = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Kirim ke Pusat</span>
                         </div>
@@ -234,11 +234,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showRitApprovalForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="fa:check"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
@@ -328,13 +328,13 @@
                                 id="allowance_fee"
                                 v-model="allowance_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
                         </div>
                         <hr class="border-2" />
-                        <div
+                        <!-- <div
                           class="flex justify-between items-center gap-2 mb-2"
                         >
                           <div class="text-md font-medium">Daftar Barang</div>
@@ -345,11 +345,11 @@
                             <Icon icon="fa-plus"></Icon>
                             Tambah Barang
                           </div>
-                        </div>
+                        </div> -->
                         <div
                           v-for="(product, index) in products"
                           :key="index"
-                          class="grid grid-cols-9 gap-x-2 justify-center items-center"
+                          class="grid grid-cols-11 gap-x-2 justify-center items-center"
                         >
                           <div class="col-span-2">
                             <label
@@ -363,7 +363,7 @@
                                 v-model="product.product_id"
                                 id="product_id"
                                 name="product_id"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                               >
                                 <option value="1" selected>K-ABC</option>
                                 <option value="2">K-DEF</option>
@@ -382,7 +382,7 @@
                                 id="amount"
                                 v-model="product.amount"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
                           </div>
@@ -398,7 +398,7 @@
                                 id="masak"
                                 v-model="product.masak"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
                           </div>
@@ -407,7 +407,23 @@
                               for="price"
                               class="block text-sm font-medium text-gray-700"
                             >
-                              Harga Total
+                              Harga
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                id="price"
+                                v-model="product.price"
+                                type="number"
+                                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-span-2">
+                            <label
+                              for="price"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Total
                             </label>
                             <div class="mt-1">
                               <input
@@ -415,18 +431,18 @@
                                 v-model="product.price"
                                 type="number"
                                 disabled
-                                class="disabled:bg-gray-100 shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
                           </div>
-                          <div class="col-span-1">
+                          <!-- <div class="col-span-1">
                             <div
                               @click="removeProduct(index)"
                               class="inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-red-600 p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
                             >
                               <Icon icon="uil:times" class="w-4 h-4"></Icon>
                             </div>
-                          </div>
+                          </div> -->
                         </div>
                         <hr class="border-2" />
                         <div class="text-md font-medium">Total</div>
@@ -456,7 +472,7 @@
                                 id="tb"
                                 v-model="tb"
                                 type="number"
-                                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -472,7 +488,7 @@
                                 disabled
                                 id="money_kurang"
                                 type="number"
-                                class="shadow-sm disabled:bg-gray-100 focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -483,7 +499,7 @@
                             <button
                               type="button"
                               @click="showAddRitForm = false"
-                              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                             >
                               {{ "Submit" }}
                             </button>
@@ -504,14 +520,14 @@
                     <button
                       type="button"
                       @click="showAddCustomerTransaction = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showAddCustomerTransaction = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -659,7 +675,7 @@
                                             id="allowance_fee"
                                             v-model="allowance_fee"
                                             type="number"
-                                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                                           />
                                         </div>
                                       </div>
@@ -680,14 +696,14 @@
                     <button
                       type="button"
                       @click="showAddBranchTransaction = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showAddBranchTransaction = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -770,7 +786,7 @@
                               v-model="vehicle"
                               id="vehicle"
                               name="vehicle"
-                              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
                               <option value="long" selected>
                                 Truk A - (3 Trip)
@@ -794,7 +810,7 @@
                                 id="weight"
                                 v-model="weight"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -822,14 +838,14 @@
                     <button
                       type="button"
                       @click="showTransferFromBranch = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showTransferFromBranch = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -939,14 +955,14 @@
                     <button
                       type="button"
                       @click="showRitApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showRitApprovalForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}
                     </button>
@@ -965,6 +981,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import CustomerDetail from "../../../components/CustomerDetail.vue";
 </script>
 
 <script>
@@ -1025,7 +1042,13 @@ export default {
       });
     },
     addNewProduct() {
-      var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
+      var newProduct = {
+        product: { id: 0, name: "" },
+        amount: 0,
+        real_amount: 0,
+        masak: 1,
+        is_new: false,
+      };
       this.products.push(newProduct);
     },
     removeProduct(index) {
@@ -1047,7 +1070,15 @@ export default {
         { name: "Nota", current: false },
       ],
       currentTab: "Rit",
-      products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
+      products: [
+        {
+          product: { id: 0, name: "" },
+          amount: 0,
+          real_amount: 0,
+          masak: 1,
+          is_new: false,
+        },
+      ],
     };
   },
 };

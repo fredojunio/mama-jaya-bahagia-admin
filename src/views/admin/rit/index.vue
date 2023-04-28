@@ -564,7 +564,6 @@
                         </label>
                         <div class="mt-1">
                           <select
-                            
                             id="vehicle"
                             name="vehicle"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
@@ -587,7 +586,6 @@
                         <div class="mt-1">
                           <input
                             id="do_code"
-                            
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -603,7 +601,6 @@
                         </label>
                         <div class="mt-1">
                           <select
-                            
                             id="product"
                             name="product"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
@@ -624,13 +621,12 @@
                         <div class="mt-1">
                           <input
                             id="original_weight"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
-                      
+
                       <div class="sm:col-span-6">
                         <label
                           for="sak"
@@ -641,7 +637,6 @@
                         <div class="mt-1">
                           <input
                             id="sak"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -651,7 +646,7 @@
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">
                           <Switch
-                            
+                            v-model="sendToCustomer"
                             :class="[
                               sendToCustomer ? 'bg-indigo-600' : 'bg-gray-200',
                               'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
@@ -684,7 +679,6 @@
                         </label>
                         <div class="mt-1">
                           <select
-                            
                             id="customer"
                             name="customer"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
@@ -704,7 +698,6 @@
                         <div class="mt-1">
                           <input
                             id="customer_weight"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -721,7 +714,6 @@
                         <div class="mt-1">
                           <input
                             id="allowance_fee"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -737,7 +729,6 @@
                         <div class="mt-1">
                           <input
                             id="gas_fee"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -753,7 +744,6 @@
                         <div class="mt-1">
                           <input
                             id="etoll_fee"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -871,7 +861,6 @@
                         <div class="mt-1">
                           <input
                             id="original_weight"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -887,7 +876,6 @@
                         <div class="mt-1">
                           <input
                             id="etoll_fee"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1006,7 +994,6 @@
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">
                           <Switch
-                            
                             :class="[
                               holdRit ? 'bg-indigo-600' : 'bg-gray-200',
                               'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
@@ -1037,7 +1024,6 @@
                         <div class="mt-1">
                           <input
                             id="sell_price"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1053,7 +1039,6 @@
                         <div class="mt-1">
                           <input
                             id="buy_price"
-                            
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1156,7 +1141,6 @@
                           <div class="mt-1">
                             <input
                               id="do_code"
-                              
                               type="text"
                               class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                             />
@@ -1171,7 +1155,6 @@
                           </label>
                           <div class="mt-1">
                             <select
-                              
                               id="vehicle"
                               name="vehicle"
                               class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
@@ -1196,7 +1179,6 @@
                             <div class="mt-1">
                               <input
                                 id="allowance_fee"
-                                
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
@@ -1212,7 +1194,6 @@
                             <div class="mt-1">
                               <input
                                 id="gas_fee"
-                                
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
@@ -1244,7 +1225,10 @@
                             @click="addNewProduct"
                             class="inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-black p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
                           >
-                            <Icon icon="uil:times" class="w-6 h-6 text-white"></Icon>
+                            <Icon
+                              icon="uil:times"
+                              class="w-6 h-6 text-white"
+                            ></Icon>
                             Tambah Barang
                           </button>
                         </div>
@@ -1468,7 +1452,6 @@
                             <div class="mt-1">
                               <input
                                 id="allowance_fee"
-                                
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />

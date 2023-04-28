@@ -186,11 +186,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showEditRitPriceForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Edit</span>
                         </div>
@@ -198,11 +198,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showRitBranchDetail = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:home"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Cabang</span>
                         </div>
@@ -210,11 +210,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showReturnRitForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:truck"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Retur</span>
                         </div>
@@ -222,11 +222,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showRitDetail = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:eye"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Detail</span>
                         </div>
@@ -354,11 +354,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showEditRitArrivalForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Edit Status</span>
                         </div>
@@ -436,11 +436,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showEditRitPriceForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Edit</span>
                         </div>
@@ -583,11 +583,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showEditRitPriceForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Edit</span>
                         </div>
@@ -595,11 +595,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showRitBranchDetail = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:home"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Cabang</span>
                         </div>
@@ -607,11 +607,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showReturnRitForm = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:truck"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Retur</span>
                         </div>
@@ -619,11 +619,11 @@
                       <div class="flex flex-col items-start">
                         <div
                           @click="showRitDetail = true"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-tukim-black group/edit"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:eye"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-tukim-black"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Detail</span>
                         </div>
@@ -707,7 +707,7 @@
                             v-model="vehicle"
                             id="vehicle"
                             name="vehicle"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
                             <option value="long" selected>
                               Truk A - (3 Trip)
@@ -729,7 +729,7 @@
                             id="do_code"
                             v-model="do_code"
                             type="text"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -746,7 +746,7 @@
                             v-model="product"
                             id="product"
                             name="product"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
                             <option value="long" selected>K-ABC</option>
                             <option value="short">K-DEF</option>
@@ -766,7 +766,7 @@
                             id="original_weight"
                             v-model="original_weight"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -810,7 +810,7 @@
                             v-model="customer"
                             id="customer"
                             name="customer"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
                             <option value="long" selected>Supardi</option>
                             <option value="short">Paimin</option>
@@ -829,7 +829,7 @@
                             id="customer_weight"
                             v-model="customer_weight"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -846,7 +846,7 @@
                             id="allowance_fee"
                             v-model="allowance_fee"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -862,7 +862,7 @@
                             id="gas_fee"
                             v-model="gas_fee"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -878,7 +878,7 @@
                             id="etoll_fee"
                             v-model="etoll_fee"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -891,14 +891,14 @@
                     <button
                       type="button"
                       @click="showAddRitForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showAddRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -996,7 +996,7 @@
                             id="original_weight"
                             v-model="original_weight"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -1012,7 +1012,7 @@
                             id="etoll_fee"
                             v-model="etoll_fee"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -1025,14 +1025,14 @@
                     <button
                       type="button"
                       @click="showEditRitArrivalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showEditRitArrivalForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1162,7 +1162,7 @@
                             id="sell_price"
                             v-model="sell_price"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -1178,7 +1178,7 @@
                             id="buy_price"
                             v-model="buy_price"
                             type="number"
-                            class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
@@ -1191,14 +1191,14 @@
                     <button
                       type="button"
                       @click="showEditRitPriceForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showEditRitPriceForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1281,7 +1281,7 @@
                               id="do_code"
                               v-model="do_code"
                               type="text"
-                              class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                             />
                           </div>
                         </div>
@@ -1297,7 +1297,7 @@
                               v-model="vehicle"
                               id="vehicle"
                               name="vehicle"
-                              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
                               <option value="long" selected>
                                 Truk A - (3 Trip)
@@ -1321,7 +1321,7 @@
                                 id="allowance_fee"
                                 v-model="allowance_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1337,7 +1337,7 @@
                                 id="gas_fee"
                                 v-model="gas_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1353,7 +1353,7 @@
                                 id="etoll_fee"
                                 v-model="etoll_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1389,7 +1389,7 @@
                                 v-model="product.product_id"
                                 id="product_id"
                                 name="product_id"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                               >
                                 <option value="1" selected>K-ABC</option>
                                 <option value="2">K-DEF</option>
@@ -1408,7 +1408,7 @@
                                 id="amount"
                                 v-model="product.amount"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
                           </div>
@@ -1433,14 +1433,14 @@
                     <button
                       type="button"
                       @click="showTransferToBranch = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showTransferToBranch = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1524,7 +1524,7 @@
                               v-model="vehicle"
                               id="vehicle"
                               name="vehicle"
-                              class="shadow-sm focus:ring-tukim-black focus:border-tukimring-tukim-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
                               <option value="long" selected>
                                 Truk A - (3 Trip)
@@ -1548,7 +1548,7 @@
                                 id="allowance_fee"
                                 v-model="allowance_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1564,7 +1564,7 @@
                                 id="gas_fee"
                                 v-model="gas_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1580,7 +1580,7 @@
                                 id="etoll_fee"
                                 v-model="etoll_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1600,7 +1600,7 @@
                                 id="allowance_fee"
                                 v-model="allowance_fee"
                                 type="number"
-                                class="shadow-sm focus:ring-tukim-black focus:border-tukim-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
                             </div>
                           </div>
@@ -1615,14 +1615,14 @@
                     <button
                       type="button"
                       @click="toggleRetur = !toggleRetur"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showReturnRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1663,14 +1663,14 @@
                     <button
                       type="button"
                       @click="toggleRetur = !toggleRetur"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showReturnRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1819,14 +1819,14 @@
                     <button
                       type="button"
                       @click="showRitBranchDetail = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showRitBranchDetail = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -2020,14 +2020,14 @@
                     <button
                       type="button"
                       @click="showRitDetail = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       @click="showRitDetail = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tukim-black"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
