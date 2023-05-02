@@ -92,12 +92,6 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Ongkir (Rp.)
-                    </th>
-                    <th
-                      scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
                       BBM (Rp.)
                     </th>
                     <th
@@ -133,15 +127,6 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">Truk A</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
                       </div>
                     </td>
                     <td
@@ -227,15 +212,6 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
                         <div class="font-medium text-gray-900">30/03/2023</div>
                       </div>
                     </td>
@@ -255,15 +231,6 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">Truk A</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
                       </div>
                     </td>
                     <td

@@ -21,7 +21,7 @@
         </nav>
 
         <div>
-          <CustomerDetail />
+          <CustomerDetail :selectedData="selectedData" />
         </div>
       </main>
       <aside
@@ -40,9 +40,6 @@
               Tambah Customer
             </button>
           </div>
-          <p class="mt-1 text-sm text-gray-600">
-            Search directory of 3,018 employees
-          </p>
           <form class="mt-6 flex space-x-4" action="#">
             <div class="flex-1 min-w-0">
               <label for="search" class="sr-only">Search</label>
@@ -53,6 +50,7 @@
                   <Icon icon="uil:search" class="h-5 w-5 text-gray-400" />
                 </div>
                 <input
+                  v-model="searchQuery"
                   type="search"
                   name="search"
                   id="search"
@@ -72,7 +70,11 @@
               <h3>Customer</h3>
             </div>
             <ul role="list" class="relative z-0 divide-y divide-gray-200">
-              <li v-for="person in directory" :key="person.id">
+              <li
+                v-for="customer in customers"
+                :key="customer.id"
+                @click="selectData(customer.id)"
+              >
                 <div
                   class="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500"
                 >
@@ -81,10 +83,10 @@
                       <!-- Extend touch target to entire panel -->
                       <span class="absolute inset-0" aria-hidden="true" />
                       <p class="text-sm font-medium text-gray-900">
-                        {{ person.name }}
+                        {{ customer.nickname }}
                       </p>
                       <p class="text-sm text-gray-500 truncate">
-                        {{ person.role }}
+                        {{ customer.name }}
                       </p>
                     </a>
                   </div>
@@ -142,7 +144,7 @@
                   <div>
                     <div>
                       <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        {{ "Tambah Customer" }}
+                        {{ tempData.id ? "Edit Customer" : "Tambah Customer" }}
                       </h3>
                       <p class="mt-1 text-sm text-gray-500">
                         Pastikan data sudah benar.
@@ -154,15 +156,15 @@
                     >
                       <div class="sm:col-span-6">
                         <label
-                          for="original_weight"
+                          for="nickname"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Nama Panggilan
                         </label>
                         <div class="mt-1">
                           <input
-                            id="original_weight"
-                            v-model="original_weight"
+                            id="nickname"
+                            v-model="tempData.nickname"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -170,15 +172,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="name"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Nama Asli
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="name"
+                            v-model="tempData.name"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -186,15 +188,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="nik"
                           class="block text-sm font-medium text-gray-700"
                         >
                           NIK
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="nik"
+                            v-model="tempData.nik"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -202,31 +204,47 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="address"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Alamat
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="address"
+                            v-model="tempData.address"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="ongkir"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Ongkir
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
-                            type="text"
+                            id="ongkir"
+                            v-model="tempData.ongkir"
+                            type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="birthdate"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Tanggal Lahir
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="birthdate"
+                            v-model="tempData.birthdate"
                             type="date"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -241,14 +259,13 @@
                         </label>
                         <div class="mt-1">
                           <select
-                            v-model="type"
+                            v-model="tempData.type"
                             id="type"
-                            name="type"
                             class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
-                            <option value="long" selected>Owner</option>
-                            <option value="short">Kiriman</option>
-                            <option value="">Eceran</option>
+                            <option value="Owner" selected>Owner</option>
+                            <option value="Kiriman">Kiriman</option>
+                            <option value="Eceran">Eceran</option>
                           </select>
                         </div>
                       </div>
@@ -267,10 +284,10 @@
                     </button>
                     <button
                       type="button"
-                      @click="showAddCustomerForm = false"
+                      @click="tempData.id ? updateData() : createData()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      {{ "Save" }}
+                      {{ tempData.id ? "Update" : "Save" }}
                     </button>
                   </div>
                 </div>
@@ -288,6 +305,7 @@
 import Admin from "../../../layouts/Admin.vue";
 import CustomerDetail from "../../../components/CustomerDetail.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import {
@@ -303,86 +321,154 @@ export default {
     TransitionChild,
     TransitionRoot,
   },
-  setup() {
-    return {};
-  },
-  // methods: {
-  //   formatNumber(value) {
-  //     if (value) {
-  //       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  //     } else {
-  //       return "-";
-  //     }
-  //   },
-  // },
   data() {
     return {
       //ini buat tambah rit
       showAddCustomerForm: false,
       showDirectory: false,
-      profile: {
-        name: "Ricardo Cooper",
-        about: `
-    <p>Tincidunt quam neque in cursus viverra orci, dapibus nec tristique. Nullam ut sit dolor consectetur urna, dui cras nec sed. Cursus risus congue arcu aenean posuere aliquam.</p>
-    <p>Et vivamus lorem pulvinar nascetur non. Pulvinar a sed platea rhoncus ac mauris amet. Urna, sem pretium sit pretium urna, senectus vitae. Scelerisque fermentum, cursus felis dui suspendisse velit pharetra. Augue et duis cursus maecenas eget quam lectus. Accumsan vitae nascetur pharetra rhoncus praesent dictum risus suspendisse.</p>
-  `,
-        fields: {
-          Phone: "(555) 123-4567",
-          Email: "ricardocooper@example.com",
-          Title: "Senior Front-End Developer",
-          Team: "Product Development",
-          Location: "San Francisco",
-          Sits: "Oasis, 4th floor",
-          Salary: "$145,000",
-          Birthday: "June 8, 1990",
-        },
+      tempData: {
+        id: null,
+        nik: null,
+        name: null,
+        nickname: null,
+        address: null,
+        ongkir: null,
+        birthdate: null,
+        type: null,
+        savings: [],
+        transactions: [],
       },
-      directory: [
-        {
-          id: 1,
-          name: "NAMA PANGGILAN",
-          role: "NAMA KTP",
-        },
-        {
-          id: 2,
-          name: "Hector Adams",
-          role: "VP, Marketing",
-        },
-        {
-          id: 3,
-          name: "Blake Alexander",
-          role: "Account Coordinator",
-        },
-        {
-          id: 4,
-          name: "Fabricio Andrews",
-          role: "Senior Art Director",
-        },
-      ],
-
-      team: [
-        {
-          name: "Leslie Alexander",
-          handle: "lesliealexander",
-          role: "Co-Founder / CEO",
-        },
-        {
-          name: "Michael Foster",
-          handle: "michaelfoster",
-          role: "Co-Founder / CTO",
-        },
-        {
-          name: "Dries Vincent",
-          handle: "driesvincent",
-          role: "Manager, Business Relations",
-        },
-        {
-          name: "Lindsay Walton",
-          handle: "lindsaywalton",
-          role: "Front-end Developer",
-        },
-      ],
+      selectedData: {
+        id: null,
+        nik: null,
+        name: null,
+        nickname: null,
+        address: null,
+        ongkir: null,
+        birthdate: null,
+        type: null,
+        tb: null,
+        tw: null,
+        thr: null,
+        savings: [],
+        transactions: [],
+      },
+      customers: [],
+      searchQuery: null,
     };
+  },
+  created() {
+    this.getAllData();
+  },
+  methods: {
+    resetData: function () {
+      this.tempData = {
+        id: null,
+        nik: null,
+        name: null,
+        nickname: null,
+        address: null,
+        ongkir: null,
+        birthdate: null,
+        type: null,
+        savings: [],
+        transactions: [],
+      };
+    },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/customer")
+        .then((data) => {
+          this.isLoading = false;
+          this.customers = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              nik: item.nik,
+              name: item.name,
+              nickname: item.nickname,
+              address: item.address,
+              ongkir: item.ongkir,
+              birthdate: item.birthdate,
+              type: item.type,
+              tb: item.tb,
+              tw: item.tw,
+              thr: item.thr,
+              tonnage: item.tonnage,
+              cashback_approved: item.cashback_approved,
+              savings: item.savings,
+              transactions: item.transactions,
+            };
+          });
+          this.selectedData = this.customers[0];
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    createData() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("admin/customer", {
+          nik: this.tempData.nik,
+          name: this.tempData.name,
+          nickname: this.tempData.nickname,
+          address: this.tempData.address,
+          ongkir: this.tempData.ongkir,
+          birthdate: this.tempData.birthdate,
+          type: this.tempData.type,
+        })
+        .then((data) => {
+          this.showAddCustomerForm = false;
+          this.getAllData();
+          this.resetData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateData() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("admin/customer/" + this.tempData.id, {
+          _method: "PATCH",
+          nik: this.tempData.nik,
+          name: this.tempData.name,
+          nickname: this.tempData.nickname,
+          address: this.tempData.address,
+          ongkir: this.tempData.ongkir,
+          birthdate: this.tempData.birthdate,
+          type: this.tempData.type,
+        })
+        .then((data) => {
+          this.showAddCustomerForm = false;
+          this.getAllData();
+          this.resetData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showEdit(id) {
+      this.showAddCustomerForm = true;
+      this.tempData = this.customers.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    selectData(id) {
+      this.selectedData = this.customers.find((obj) => {
+        return obj.id === id;
+      });
+    },
   },
 };
 </script>

@@ -10,7 +10,9 @@
             <div
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
-              <h1 class="text-2xl font-bold text-gray-900 truncate">Supardi</h1>
+              <h1 class="text-2xl font-bold text-gray-900 truncate">
+                {{ selectedData.nickname }}
+              </h1>
               <div class="flex flex-col gap-2">
                 <button
                   v-if="$route.path == '/admin/customer'"
@@ -32,10 +34,13 @@
         </div>
         <div class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2">
           <h1 class="text-2xl font-bold text-gray-900 truncate mr-auto">
-            Supardi
+            {{ selectedData.nickname }}
           </h1>
           <button
-            v-if="$route.path == '/admin/customer'"
+            v-if="
+              $route.path == '/admin/customer' &&
+              selectedData.cashback_approved == 0
+            "
             @click="showCashbackApprovalForm = true"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
           >
@@ -58,30 +63,36 @@
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Alamat</dt>
           <dd class="mt-1 text-sm text-gray-900">
-            Jl. Protomulyo Indah No.30B
+            {{ selectedData.address }}
           </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">NIK</dt>
-          <dd class="mt-1 text-sm text-gray-900">1234567891234567</dd>
+          <dd class="mt-1 text-sm text-gray-900">{{ selectedData.nik }}</dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Ongkir</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 24.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.ongkir) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Tanggal Lahir</dt>
-          <dd class="mt-1 text-sm text-gray-900">21/03/1985</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            {{ selectedData.birthdate }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Tipe</dt>
-          <dd class="mt-1 text-sm text-gray-900">Kiriman</dd>
+          <dd class="mt-1 text-sm text-gray-900">{{ selectedData.type }}</dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">
             Cashback (sejak 21/03/2022)
           </dt>
-          <dd class="mt-1 text-sm text-gray-900">180 hari</dd>
+          <!-- //TODO - perlu ngitung jumlah past consecutive transactions  -->
+          <!-- ini itu kalo putus sehari ilang? -->
+          <dd class="mt-1 text-sm text-gray-900">mau tanya</dd>
         </div>
         <div class="w-full col-span-2 border-t">
           <div class="border-b border-gray-200">
@@ -115,6 +126,7 @@
               </div>
               <VueDatePicker
                 v-model="date"
+                @update:model-value="filterTransaction"
                 locale="id"
                 :start-time="[
                   { hours: 0, minutes: 0, seconds: 0 },
@@ -145,33 +157,23 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
                         Detail
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
+                    <tr
+                      v-for="transaction in filteredTransactions.filter(
+                        (transaction) => transaction.settled_date != null
+                      )"
+                      :key="transaction.id"
+                    >
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            24/03/2023
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Dalam Perjalanan
+                            {{ formatDate(transaction.created_at) }}
                           </div>
                         </div>
                       </td>
@@ -180,7 +182,7 @@
                       >
                         <div class="flex flex-col items-start">
                           <div
-                            @click="showTransactionDetail = true"
+                            @click="openTransactionDetail(transaction.id)"
                             class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                           >
                             <Icon
@@ -210,6 +212,7 @@
               </div>
               <VueDatePicker
                 v-model="date"
+                @update:model-value="filterSaving"
                 locale="id"
                 :start-time="[
                   { hours: 0, minutes: 0, seconds: 0 },
@@ -293,13 +296,13 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
+                    <tr v-for="saving in selectedData.savings" :key="saving.id">
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            24/03/2023
+                            {{ formatDate(saving.created_at) }}
                           </div>
                         </div>
                       </td>
@@ -308,7 +311,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. 10.000
+                            Rp. {{ formatNumber(saving.total_tw) }}
                           </div>
                         </div>
                       </td>
@@ -317,7 +320,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. 10.000
+                            Rp. {{ formatNumber(saving.total_tb) }}
                           </div>
                         </div>
                       </td>
@@ -326,30 +329,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. 10.000
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">100 kg</div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">Pemasukan</div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Rp. 20.000
+                            Rp. {{ formatNumber(saving.total_thr) }}
                           </div>
                         </div>
                       </td>
@@ -358,7 +338,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. 10.000
+                            {{ formatNumber(saving.total_tonnage) }} kg
                           </div>
                         </div>
                       </td>
@@ -366,14 +346,45 @@
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">10 kg</div>
+                          <div class="font-medium text-gray-900">
+                            {{ saving.type }}
+                          </div>
                         </div>
                       </td>
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">-</div>
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.tw) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.tb) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.thr) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(saving.tonnage) }} kg
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -386,6 +397,7 @@
         <!-- //!SECTION  -->
       </dl>
     </div>
+    <!-- //SECTION - Form Tarik Tabungan  -->
     <TransitionRoot as="template" :show="showWithdrawSavingsForm">
       <Dialog
         as="div"
@@ -447,22 +459,23 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Customer: {{ "Supardi" }}
+                            Customer: {{ selectedData.nickname }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            TB: Rp. {{ "100.000" }}
+                            TB: Rp. {{ formatNumber(selectedData.tb) }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Tonase Akumulatif: {{ "1.000" }} kg
+                            Tonase Akumulatif:
+                            {{ formatNumber(selectedData.tonnage) }} kg
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            TW: Rp. {{ "100.000" }}
+                            TW: Rp. {{ formatNumber(selectedData.tw) }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
@@ -472,7 +485,7 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            THR: Rp. {{ "100.000" }}
+                            THR: Rp. {{ formatNumber(selectedData.thr) }}
                           </h3>
                         </div>
                         <hr class="border-2" />
@@ -485,14 +498,15 @@
                           </label>
                           <div class="mt-1">
                             <select
-                              v-model="type"
+                              v-model="savings.type"
+                              @change="calculateDifference()"
                               id="type"
                               name="type"
                               class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
-                              <option value="long" selected>TB</option>
-                              <option value="short">TW</option>
-                              <option value="">THR</option>
+                              <option value="tb" selected>TB</option>
+                              <option value="tw">TW</option>
+                              <option value="thr">THR</option>
                             </select>
                           </div>
                         </div>
@@ -509,7 +523,8 @@
                             <div class="mt-1">
                               <input
                                 id="withdraw_balance"
-                                v-model="withdraw_balance"
+                                v-model="savings.amount"
+                                v-on:keyup="calculateDifference()"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
@@ -520,13 +535,13 @@
                               for="sisa"
                               class="block text-sm font-medium text-gray-700"
                             >
-                              Saldo Sisa (Rp.) *auto keisi dan kehitung
+                              Saldo Sisa (Rp.)
                             </label>
                             <div class="mt-1">
                               <input
                                 disabled
+                                v-model="savings.difference"
                                 id="sisa"
-                                v-model="sisa"
                                 type="number"
                                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
@@ -549,7 +564,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showWithdrawSavingsForm = false"
+                      @click="withdrawSavings()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -562,6 +577,8 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <!-- //!SECTION  -->
+    <!-- //SECTION - Form Approve Cashback  -->
     <TransitionRoot as="template" :show="showCashbackApprovalForm">
       <Dialog
         as="div"
@@ -623,12 +640,13 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Customer: {{ "Supardi" }}
+                            Customer: {{ selectedData.nickname }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Tonase Akumulatif: {{ "1.000" }} kg
+                            Tonase Akumulatif:
+                            {{ formatNumber(selectedData.tonnage) }} kg
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
@@ -636,7 +654,7 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Jumlah Transaksi: 120 Hari
+                            Jumlah Transaksi: {{ "nanti diliat" }} Hari
                           </h3>
                         </div>
                         <hr class="border-2" />
@@ -653,7 +671,7 @@
                             <div class="mt-1">
                               <input
                                 id="cashback"
-                                v-model="cashback"
+                                v-model="cashback.amount"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                               />
@@ -676,7 +694,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showCashbackApprovalForm = false"
+                      @click="approveCashback()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -689,6 +707,7 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <!-- //!SECTION  -->
   </div>
   <!-- //SECTION Detail -->
   <TransitionRoot as="template" :show="showTransactionDetail">
@@ -812,9 +831,26 @@
                                   <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                   >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        K-ABC
+                                    <div class="flex flex-col items-center">
+                                      <div
+                                        class="font-medium text-gray-900"
+                                        v-for="rit in selectedTransaction.rits"
+                                        :key="rit.id"
+                                      >
+                                        {{ rit.rit.item.code }}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td
+                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                  >
+                                    <div class="flex flex-col items-center">
+                                      <div
+                                        class="font-medium text-gray-900"
+                                        v-for="rit in selectedTransaction.rits"
+                                        :key="rit.id"
+                                      >
+                                        {{ rit.tonnage }}
                                       </div>
                                     </div>
                                   </td>
@@ -823,7 +859,10 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        {{ formatNumber(1000) }} kg
+                                        Rp.
+                                        {{
+                                          formatNumber(selectedTransaction.tb)
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -832,7 +871,15 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        Rp. {{ formatNumber(10000) }}
+                                        Rp.
+                                        {{
+                                          formatNumber(
+                                            selectedTransaction.savings
+                                              ? selectedTransaction.savings
+                                                  .total_tb
+                                              : 0
+                                          )
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -841,7 +888,10 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        Rp. {{ formatNumber(20000) }}
+                                        Rp.
+                                        {{
+                                          formatNumber(selectedTransaction.tw)
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -850,7 +900,15 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        Rp. {{ formatNumber(10000) }}
+                                        Rp.
+                                        {{
+                                          formatNumber(
+                                            selectedTransaction.savings
+                                              ? selectedTransaction.savings
+                                                  .total_tw
+                                              : 0
+                                          )
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -859,7 +917,10 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        Rp. {{ formatNumber(20000) }}
+                                        Rp.
+                                        {{
+                                          formatNumber(selectedTransaction.thr)
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -868,16 +929,15 @@
                                   >
                                     <div class="flex items-center">
                                       <div class="font-medium text-gray-900">
-                                        -
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td
-                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                  >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        -
+                                        Rp.
+                                        {{
+                                          formatNumber(
+                                            selectedTransaction.savings
+                                              ? selectedTransaction.savings
+                                                  .total_thr
+                                              : 0
+                                          )
+                                        }}
                                       </div>
                                     </div>
                                   </td>
@@ -891,22 +951,14 @@
                   </div>
                 </div>
               </div>
-
               <div class="pt-5">
                 <div class="flex justify-end">
                   <button
                     type="button"
                     @click="showTransactionDetail = false"
-                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    @click="showTransactionDetail = false"
                     class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                   >
-                    {{ "Save" }}
+                    {{ "Tutup" }}
                   </button>
                 </div>
               </div>
@@ -921,6 +973,7 @@
 
 <script setup>
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -933,15 +986,18 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 export default {
+  props: ["selectedData"],
+  watch: {
+    selectedData: function (newVal, oldVal) {
+      this.filterTransaction();
+    },
+  },
   components: {
     VueDatePicker,
     Dialog,
     DialogOverlay,
     TransitionChild,
     TransitionRoot,
-  },
-  setup() {
-    return {};
   },
   data() {
     return {
@@ -957,6 +1013,20 @@ export default {
         { name: "Daftar Transaksi", current: true },
         { name: "Riwayat Tabungan", current: false },
       ],
+      filteredTransactions: [],
+      selectedTransaction: null,
+      filteredSavings: [],
+      savings: {
+        type: "tb",
+        amount: null,
+        tb: 0,
+        tw: 0,
+        thr: 0,
+        difference: 0,
+      },
+      cashback: {
+        amount: 0,
+      },
     };
   },
   methods: {
@@ -968,7 +1038,98 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
-    }, 
+      if (this.currentTab == "Daftar Transaksi") {
+        this.filterTransaction();
+      } else if (this.currentTab == "Riwayat Tabungan") {
+        this.filterSaving();
+      }
+    },
+    filterTransaction() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredTransactions = this.selectedData.transactions.filter(
+        (transaction) => {
+          let transactionDate = new Date(transaction.created_at);
+          return transactionDate >= startDate && transactionDate <= untilDate;
+        }
+      );
+    },
+    openTransactionDetail(id) {
+      this.selectedTransaction = this.selectedData.transactions.find((obj) => {
+        return obj.id === id;
+      });
+      this.showTransactionDetail = true;
+    },
+    filterSaving() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredSavings = this.selectedData.savings.filter((saving) => {
+        let savingDate = new Date(saving.created_at);
+        return savingDate >= startDate && savingDate <= untilDate;
+      });
+    },
+    calculateDifference() {
+      this.savings.tb = 0;
+      this.savings.tw = 0;
+      this.savings.thr = 0;
+      if (this.savings.type == "tb") {
+        this.savings.difference = this.selectedData.tb - this.savings.amount;
+        this.savings.tb = this.savings.amount;
+      } else if (this.savings.type == "tw") {
+        this.savings.difference = this.selectedData.tw - this.savings.amount;
+        this.savings.tw = this.savings.amount;
+      } else if (this.savings.type == "thr") {
+        this.savings.difference = this.selectedData.thr - this.savings.amount;
+        this.savings.thr = this.savings.amount;
+      }
+    },
+    withdrawSavings() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          `admin/customer/${this.selectedData.id}/withdraw_savings`,
+          this.savings
+        )
+        .then((data) => {
+          this.showWithdrawSavingsForm = false;
+          this.savings = {
+            type: "tb",
+            amount: null,
+            tb: 0,
+            tw: 0,
+            thr: 0,
+            difference: 0,
+          };
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    approveCashback() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          `admin/customer/${this.selectedData.id}/approve_cashback`,
+          this.cashback
+        )
+        .then((data) => {
+          this.showCashbackApprovalForm = false;
+          this.cashback = {
+            amount: null,
+          };
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
