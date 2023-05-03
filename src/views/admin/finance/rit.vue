@@ -62,47 +62,64 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="rit in rits.filter(
+                      (rit) => rit.finance_approved == 0
+                    )"
+                    :key="rit.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">23/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(rit.created_at) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Truk A</div>
+                        <div class="font-medium text-gray-900">
+                          {{ rit.trip.vehicle.name }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">K-ABC</div>
+                        <div class="font-medium text-gray-900">
+                          {{ rit.item.code }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 10.000</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.trip.allowance) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 10.000</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.trip.gas) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 10.000</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.trip.toll) }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -110,7 +127,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showRitApprovalForm = true"
+                          @click="showApprovalForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -188,19 +205,20 @@
                         <!-- Kosong -->
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        BBM: -
+                        BBM: {{ formatNumber(selectedData.trip.gas) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Kendaraan: Truk A
+                        Kendaraan: {{ selectedData.trip.vehicle.name }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        E-Toll: -
+                        E-Toll: {{ formatNumber(selectedData.trip.toll) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         <!-- Kosong -->
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Sangu: Rp. 10.000
+                        Sangu: Rp.
+                        {{ formatNumber(selectedData.trip.allowance) }}
                       </h3>
                     </div>
                     <hr />
@@ -215,7 +233,16 @@
                         >
                           Total (Rp.)
                         </label>
-                        <div class="mt-1">Rp. 10.000</div>
+                        <div class="mt-1">
+                          Rp.
+                          {{
+                            formatNumber(
+                              selectedData.trip.allowance +
+                                selectedData.trip.toll +
+                                selectedData.trip.gas
+                            )
+                          }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -232,7 +259,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showRitApprovalForm = false"
+                      @click="approveRit()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}
@@ -252,7 +279,9 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
+
 <script>
 import {
   Menu,
@@ -283,7 +312,10 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  created() {
+    this.getAllData();
+  },
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -303,266 +335,74 @@ export default {
         }
       });
     },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit")
+        .then((data) => {
+          this.isLoading = false;
+          this.rits = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              expected_tonnage: item.expected_tonnage,
+              customer_tonnage: item.customer_tonnage,
+              branch_tonnage: item.branch_tonnage,
+              main_tonnage: item.main_tonnage,
+              retur_tonnage: item.retur_tonnage,
+              arrived_tonnage: item.arrived_tonnage,
+              tonnage_left: item.tonnage_left,
+              delivery_date: item.delivery_date,
+              arrival_date: item.arrival_date,
+              sold_date: item.sold_date,
+              sell_price: item.sell_price,
+              buy_price: item.buy_price,
+              sack: item.sack,
+              finance_approved: item.finance_approved,
+              is_hold: item.is_hold,
+              item: item.item,
+              trip: item.trip,
+              retur_trip: item.retur_trip,
+              branches: item.branches,
+              transactions: item.transactions,
+              created_at: item.created_at,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showApprovalForm(id) {
+      this.showRitApprovalForm = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    approveRit() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("admin/rit/" + this.selectedData.id + "/approve_finance")
+        .then((data) => {
+          this.showRitApprovalForm = false;
+          // this.selectedData = null;
+          this.getAllData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
       showRitApprovalForm: false,
-      rits: [
-        {
-          id: 1,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 0,
-          branch_weight: 200,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: {
-            id: 1,
-            name: "Supardi",
-            weight: 2000,
-          },
-          arrive_date: "29/03/2023",
-          empty_date: "29/03/2023",
-          hold: false,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 2,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 2,
-            name: "On Delivery",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 2,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 20000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 3,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 1,
-            name: "Needs Finance Approval",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 3,
-            vehicle_id: 1,
-            request_bbm: 100000,
-            request_etoll: 120000,
-            request_allowance: 50000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: null,
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 5000,
-          branch_weight: null,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-      ],
+      rits: [],
+      selectedData: null,
     };
   },
 };
