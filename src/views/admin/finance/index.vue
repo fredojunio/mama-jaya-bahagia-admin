@@ -16,6 +16,7 @@
           </div>
           <VueDatePicker
             v-model="date"
+            @update:model-value="filterData"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
@@ -121,20 +122,18 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Truk A</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) => expense.type == 'Kendaraan'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          {{ expense.trip.vehicle.name }}
                         </div>
                       </div>
                     </td>
@@ -143,7 +142,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          Rp. {{ formatNumber(expense.trip.gas) }}
                         </div>
                       </div>
                     </td>
@@ -152,41 +151,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Pengiriman ke Cabang
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Truk A</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          Rp. {{ formatNumber(expense.trip.toll) }}
                         </div>
                       </div>
                     </td>
@@ -195,7 +160,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          Rp. {{ formatNumber(expense.trip.allowance) }}
                         </div>
                       </div>
                     </td>
@@ -204,41 +169,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Pengiriman ke Supardi
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Truk A</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          {{ formatDate(expense.time) }}
                         </div>
                       </div>
                     </td>
@@ -247,32 +178,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Pengambilan Rit
+                          {{ expense.note }}
                         </div>
                       </div>
                     </td>
@@ -323,20 +229,21 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) =>
+                        expense.type == 'TW' ||
+                        expense.type == 'TB' ||
+                        expense.type == 'THR'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          {{ expense.name }}
                         </div>
                       </div>
                     </td>
@@ -344,31 +251,8 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">TW</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          Rp. {{ formatNumber(expense.amount) }}
                         </div>
                       </div>
                     </td>
@@ -376,31 +260,8 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">TW</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          {{ expense.type }}
                         </div>
                       </div>
                     </td>
@@ -408,14 +269,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">TW</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(expense.time) }}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -459,20 +315,18 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) => expense.type == 'Cashback'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          {{ expense.name }}
                         </div>
                       </div>
                     </td>
@@ -480,7 +334,18 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">30/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(expense.amount) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(expense.time) }}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -524,13 +389,18 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) => expense.type == 'Operasional'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(10000) }}
+                          Rp. {{ formatNumber(expense.amount) }}
                         </div>
                       </div>
                     </td>
@@ -538,7 +408,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Beli Pulpen</div>
+                        <div class="font-medium text-gray-900">
+                          {{ expense.note }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -546,7 +418,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          30/03/2023 12:30
+                          {{ expense.time }}
                         </div>
                       </div>
                     </td>
@@ -597,20 +469,18 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rudi</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) => expense.type == 'Gaji'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(1250000) }}
+                          {{ expense.name }}
                         </div>
                       </div>
                     </td>
@@ -618,7 +488,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">23/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(expense.amount) }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -626,7 +498,16 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Pembayaran Pertama
+                          {{ formatDate(expense.time) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.note }}
                         </div>
                       </div>
                     </td>
@@ -698,15 +579,15 @@
                     >
                       <div class="sm:col-span-6">
                         <label
-                          for="original_weight"
+                          for="amount"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Jumlah (Rp.)
                         </label>
                         <div class="mt-1">
                           <input
-                            id="original_weight"
-                            v-model="original_weight"
+                            id="amount"
+                            v-model="expense.amount"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -714,15 +595,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="note"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Keterangan
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="note"
+                            v-model="expense.note"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -730,15 +611,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="time"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Waktu
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="time"
+                            v-model="expense.time"
                             type="datetime-local"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -759,7 +640,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showAddExpenseForm = false"
+                      @click="createExpense()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -779,6 +660,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -813,7 +695,37 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  data() {
+    return {
+      //ini buat tambah rit
+      showAddExpenseForm: false,
+      date: [
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
+      ],
+      tabs: [
+        { name: "Kendaraan", current: true },
+        { name: "Tabungan", current: false },
+        { name: "Cashback", current: false },
+        { name: "Operasional", current: false },
+        { name: "Gaji", current: false },
+      ],
+      currentTab: "Kendaraan",
+      expense: {
+        amount: null,
+        note: null,
+        name: null,
+        time: null,
+        type: "Operasional",
+      },
+      expenses: [],
+      filteredExpenses: [],
+    };
+  },
+  created() {
+    this.getAllData();
+  },
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -833,288 +745,62 @@ export default {
         }
       });
     },
-    addNewProduct() {
-      var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
-      this.products.push(newProduct);
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/expense")
+        .then((data) => {
+          this.isLoading = false;
+          this.expenses = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              amount: item.amount,
+              note: item.note,
+              name: item.name,
+              time: item.time,
+              type: item.type,
+              trip: item.trip,
+            };
+          });
+          this.filterData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    removeProduct(index) {
-      this.products.splice(index, 1);
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredExpenses = this.expenses.filter((expense) => {
+        let expenseDate = new Date(expense.time);
+        return expenseDate >= startDate && expenseDate <= untilDate;
+      });
     },
-  },
-  data() {
-    return {
-      //ini buat tambah rit
-      showAddExpenseForm: false,
-      date: [
-        new Date(new Date().setHours(0, 0, 0, 0)),
-        new Date(new Date().setHours(23, 59, 59, 59)),
-      ],
-      tabs: [
-        { name: "Kendaraan", current: true },
-        { name: "Tabungan", current: false },
-        { name: "Cashback", current: false },
-        { name: "Operasional", current: false },
-        { name: "Gaji", current: false },
-      ],
-      currentTab: "Kendaraan",
-      rits: [
-        {
-          id: 1,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 0,
-          branch_weight: 200,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: {
-            id: 1,
-            name: "Supardi",
-            weight: 2000,
-          },
-          arrive_date: "29/03/2023",
-          empty_date: "29/03/2023",
-          hold: false,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 2,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 2,
-            name: "On Delivery",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 2,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 20000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 3,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 1,
-            name: "Needs Finance Approval",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 3,
-            vehicle_id: 1,
-            request_bbm: 100000,
-            request_etoll: 120000,
-            request_allowance: 50000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: null,
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 5000,
-          branch_weight: null,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-      ],
-      products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
-    };
+    createExpense() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/expense`, this.expense)
+        .then((data) => {
+          this.showAddExpenseForm = false;
+          this.expense = {
+            amount: null,
+            note: null,
+            name: null,
+            time: null,
+            type: "Operasional",
+          };
+          this.getAllData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
