@@ -14,6 +14,7 @@
         </div>
         <VueDatePicker
           v-model="date"
+          @update:model-value="filterData"
           locale="id"
           :start-time="[
             { hours: 0, minutes: 0, seconds: 0 },
@@ -75,27 +76,16 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">12</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="transaction in filteredTransactions"
+                    :key="transaction.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ formatNumber(10000) }}
+                          {{ transaction.daily_id }}
                         </div>
                       </div>
                     </td>
@@ -104,7 +94,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Belum dibayar
+                          {{ transaction.customer.name }}
                         </div>
                       </div>
                     </td>
@@ -112,15 +102,42 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">20/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(transaction.total_price) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex flex-col items-start">
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{
+                            transaction.finance_approved == 0
+                              ? "Belum dibayar"
+                              : "Lunas"
+                          }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(transaction.created_at) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div
+                        class="flex flex-col items-start"
+                        v-if="transaction.finance_approved == 0"
+                      >
                         <div
-                          @click="showSaleApprovalForm = true"
+                          @click="showApprovalForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -129,61 +146,6 @@
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">13</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Supardi</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          {{ formatNumber(10000) }}
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Lunas</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">20/03/2023</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex flex-col items-start">
-                        <!-- <div
-                        @click="showSaleApprovalForm = true"
-                        class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
-                      >
-                        <Icon
-                          name="fa:check"
-                          class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
-                        ></Icon>
-                        <span class="ml-3">Approve</span>
-                      </div> -->
                       </div>
                     </td>
                   </tr>
@@ -249,16 +211,13 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Customer: {{ "Supardi" }}
+                        Customer: {{ selectedData.customer.name }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Jumlah: Rp. 10.000
+                        Jumlah: Rp. {{ formatNumber(selectedData.total_price) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Waktu: 20/03/2023 12:33
-                      </h3>
-                      <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Tonase: {{ "10.000" }} kg
+                        Tanggal: {{ formatDate(selectedData.created_at) }}
                       </h3>
                     </div>
                   </div>
@@ -275,7 +234,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showSaleApprovalForm = false"
+                      @click="approveTransaction()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}
@@ -294,6 +253,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -329,7 +289,10 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  created() {
+    this.getAllData();
+  },
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -349,6 +312,72 @@ export default {
         }
       });
     },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction")
+        .then((data) => {
+          this.transactions = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              created_at: item.created_at,
+              daily_id: item.daily_id,
+              tb: item.tb,
+              tw: item.tw,
+              thr: item.thr,
+              sack: item.sack,
+              sack_price: item.sack_price,
+              item_price: item.item_price,
+              discount: item.discount,
+              ongkir: item.ongkir,
+              total_price: item.total_price,
+              settled_date: item.settled_date,
+              owner_approved: item.owner_approved,
+              finance_approved: item.finance_approved,
+              customer: item.customer,
+              trip: item.trip,
+              rits: item.rits,
+              savings: item.savings,
+            };
+          });
+          this.filterData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredTransactions = this.transactions.filter((transaction) => {
+        let transactionDate = new Date(transaction.created_at);
+        return transactionDate >= startDate && transactionDate <= untilDate;
+      });
+    },
+    showApprovalForm(id) {
+      this.showSaleApprovalForm = true;
+      this.selectedData = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    approveTransaction() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("admin/transaction/" + this.selectedData.id + "/approve_finance")
+        .then((data) => {
+          this.showSaleApprovalForm = false;
+          this.getAllData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
@@ -357,6 +386,8 @@ export default {
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
+      transactions: [],
+      filteredTransactions: [],
     };
   },
 };

@@ -390,7 +390,6 @@ export default {
         .get("admin/rit/" + this.selectedData.id + "/approve_finance")
         .then((data) => {
           this.showRitApprovalForm = false;
-          // this.selectedData = null;
           this.getAllData();
         })
         .catch((err) => {
