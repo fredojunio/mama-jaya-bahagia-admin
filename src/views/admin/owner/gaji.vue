@@ -6,23 +6,24 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Gaji</h1>
       <div class="relative flex gap-2 text-left">
         <!-- //TODO - Add Data Logic -->
-        <!-- <div class="relative rounded-md shadow-sm w-96">
-        <div
-          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-        >
-          <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+        <div class="relative rounded-md shadow-sm w-96">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+          </div>
+          <VueDatePicker
+            v-model="date"
+            @update:model-value="filterData"
+            locale="id"
+            :start-time="[
+              { hours: 0, minutes: 0, seconds: 0 },
+              { hours: 23, minutes: 59, seconds: 59 },
+            ]"
+            range
+            :enable-time-picker="false"
+          />
         </div>
-        <VueDatePicker
-          v-model="date"
-          locale="id"
-          :start-time="[
-            { hours: 0, minutes: 0, seconds: 0 },
-            { hours: 23, minutes: 59, seconds: 59 },
-          ]"
-          range
-          :enable-time-picker="false"
-        />
-      </div> -->
         <button
           @click="showAddSalaryForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -107,20 +108,18 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rudi</div>
-                      </div>
-                    </td>
+                  <tr
+                    v-for="expense in filteredExpenses.filter(
+                      (expense) => expense.type == 'Gaji'
+                    )"
+                    :key="expense.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(1250000) }}
+                          {{ expense.name }}
                         </div>
                       </div>
                     </td>
@@ -128,7 +127,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">23/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(expense.amount) }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -136,7 +137,16 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Pembayaran Pertama
+                          {{ formatDate(expense.time) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.note }}
                         </div>
                       </div>
                     </td>
@@ -208,15 +218,15 @@
                     >
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="name"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Nama
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="name"
+                            v-model="expense.name"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -224,15 +234,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="original_weight"
+                          for="amount"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Jumlah (Rp.)
                         </label>
                         <div class="mt-1">
                           <input
-                            id="original_weight"
-                            v-model="original_weight"
+                            id="amount"
+                            v-model="expense.amount"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -240,15 +250,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="note"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Keterangan
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="note"
+                            v-model="expense.note"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -256,15 +266,15 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
-                          for="do_code"
+                          for="time"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Waktu
                         </label>
                         <div class="mt-1">
                           <input
-                            id="do_code"
-                            v-model="do_code"
+                            id="time"
+                            v-model="expense.time"
                             type="datetime-local"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -285,7 +295,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showAddSalaryForm = false"
+                      @click="createExpense()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -305,6 +315,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -339,7 +350,7 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -359,6 +370,65 @@ export default {
         }
       });
     },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/expense")
+        .then((data) => {
+          this.isLoading = false;
+          this.expenses = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              amount: item.amount,
+              note: item.note,
+              name: item.name,
+              time: item.time,
+              type: item.type,
+              trip: item.trip,
+            };
+          });
+          this.filterData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredExpenses = this.expenses.filter((expense) => {
+        let expenseDate = new Date(expense.time);
+        return expenseDate >= startDate && expenseDate <= untilDate;
+      });
+      console.log(this.filteredExpenses)
+      console.log(startDate);
+      console.log(untilDate);
+    },
+    createExpense() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/expense`, this.expense)
+        .then((data) => {
+          this.showAddSalaryForm = false;
+          this.expense = {
+            amount: null,
+            note: null,
+            name: null,
+            time: null,
+            type: "Gaji",
+          };
+          this.getAllData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
@@ -370,7 +440,19 @@ export default {
       ],
       tabs: [{ name: "Gaji", current: true }],
       currentTab: "Gaji",
+      expenses: [],
+      filteredExpenses: [],
+      expense: {
+        amount: null,
+        note: null,
+        name: null,
+        time: null,
+        type: "Gaji",
+      },
     };
+  },
+  created() {
+    this.getAllData();
   },
 };
 </script>

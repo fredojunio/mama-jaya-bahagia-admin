@@ -203,8 +203,8 @@ export default {
   data() {
     return {
       date: [
-        // new Date(new Date().setHours(0, 0, 0, 0)),
-        // new Date(new Date().setHours(23, 59, 59, 59)),
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       tabs: [{ name: "Daftar Perjalanan", current: true }],
       filteredTrips: [],
