@@ -403,9 +403,6 @@ export default {
         let expenseDate = new Date(expense.time);
         return expenseDate >= startDate && expenseDate <= untilDate;
       });
-      console.log(this.filteredExpenses)
-      console.log(startDate);
-      console.log(untilDate);
     },
     createExpense() {
       const instance = axios.create({

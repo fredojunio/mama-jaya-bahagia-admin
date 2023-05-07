@@ -120,13 +120,21 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="rit in rits.filter(
+                      (rit) =>
+                        rit.arrival_date != null &&
+                        rit.sell_price > 0 &&
+                        rit.is_hold == 0
+                    )"
+                    :key="rit.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
+                          {{ rit.item.code }} - {{ rit.arrival_date }}
                         </div>
                       </div>
                     </td>
@@ -134,7 +142,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">10.000 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.expected_tonnage) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
@@ -142,13 +152,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
+                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -163,21 +173,27 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">4.200 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 20.000</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.sell_price) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">-</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(rit.sold_date) }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -185,7 +201,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showEditRitPriceForm = true"
+                          @click="openEditRitPriceForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -197,7 +213,7 @@
                       </div>
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showRitBranchDetail = true"
+                          @click="openRitBranchDetail(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -209,7 +225,7 @@
                       </div>
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showReturnRitForm = true"
+                          @click="openReturnRitForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -221,7 +237,7 @@
                       </div>
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showRitDetail = true"
+                          @click="openRitDetail(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -297,40 +313,56 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="rit in rits.filter(
+                      (rit) =>
+                        rit.arrival_date == null && rit.finance_approved == 1
+                    )"
+                    :key="rit.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">25/03/2023</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(rit.delivery_date) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Truk A</div>
+                        <div class="font-medium text-gray-900">
+                          {{ rit.trip.vehicle.name }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">K-ABC</div>
+                        <div class="font-medium text-gray-900">
+                          {{ rit.item.code }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">10.000 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.expected_tonnage) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Importir A</div>
+                        <div class="font-medium text-gray-900">
+                          {{ rit.do_code }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -338,13 +370,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
+                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -353,7 +385,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showEditRitArrivalForm = true"
+                          @click="openEditRitArrivalForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -420,22 +452,21 @@
                     >
                       Harga Jual
                     </th>
-                    <th
-                      scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
-                      Tanggal Habis
-                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="rit in rits.filter(
+                      (rit) => rit.is_hold == 1 && sold_date == null
+                    )"
+                    :key="rit.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
+                          {{ rit.item.code }} - {{ rit.arrival_date }}
                         </div>
                       </div>
                     </td>
@@ -443,7 +474,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">10.000 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.expected_tonnage) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
@@ -451,13 +484,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
+                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -472,21 +505,18 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">4.200 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 20.000</div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">-</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.sell_price) }}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -564,14 +594,19 @@
                         </label>
                         <div class="mt-1">
                           <select
+                            v-model="newRit.vehicle_id"
                             id="vehicle"
                             name="vehicle"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
-                            <option value="long" selected>
-                              Truk A - (3 Trip)
+                            <option
+                              v-for="vehicle in vehicles"
+                              :key="vehicle.id"
+                              :value="vehicle.id"
+                            >
+                              {{ vehicle.name }} - ({{ vehicle.trip_count }}
+                              Trip)
                             </option>
-                            <option value="short">Truk B - (7 Trip)</option>
                           </select>
                         </div>
                       </div>
@@ -586,6 +621,7 @@
                         <div class="mt-1">
                           <input
                             id="do_code"
+                            v-model="newRit.do_code"
                             type="text"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -602,25 +638,32 @@
                         <div class="mt-1">
                           <select
                             id="product"
+                            v-model="newRit.item_id"
                             name="product"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
-                            <option value="long" selected>K-ABC</option>
-                            <option value="short">K-DEF</option>
+                            <option
+                              v-for="item in items"
+                              :key="item.id"
+                              :value="item.id"
+                            >
+                              {{ item.code }}
+                            </option>
                           </select>
                         </div>
                       </div>
 
                       <div class="sm:col-span-6">
                         <label
-                          for="original_weight"
+                          for="tonnage"
                           class="block text-sm font-medium text-gray-700"
                         >
                           Total Tonase (kg)
                         </label>
                         <div class="mt-1">
                           <input
-                            id="original_weight"
+                            v-model="newRit.tonnage"
+                            id="tonnage"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -636,6 +679,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="newRit.sack"
                             id="sak"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -646,16 +690,18 @@
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">
                           <Switch
-                            v-model="sendToCustomer"
+                            v-model="newRit.send_to_customer"
                             :class="[
-                              sendToCustomer ? 'bg-indigo-600' : 'bg-gray-200',
+                              newRit.send_to_customer
+                                ? 'bg-indigo-600'
+                                : 'bg-gray-200',
                               'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
                             ]"
                           >
                             <span
                               aria-hidden="true"
                               :class="[
-                                sendToCustomer
+                                newRit.send_to_customer
                                   ? 'translate-x-5'
                                   : 'translate-x-0',
                                 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200',
@@ -670,7 +716,7 @@
                         </SwitchGroup>
                       </div>
 
-                      <div class="sm:col-span-6" v-if="sendToCustomer">
+                      <div class="sm:col-span-6" v-if="newRit.send_to_customer">
                         <label
                           for="customer"
                           class="block text-sm font-medium text-gray-700"
@@ -679,16 +725,22 @@
                         </label>
                         <div class="mt-1">
                           <select
+                            v-model="newRit.customer_id"
                             id="customer"
                             name="customer"
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
-                            <option value="long" selected>Supardi</option>
-                            <option value="short">Paimin</option>
+                            <option
+                              v-for="customer in customers"
+                              :key="customer.id"
+                              :value="customer.id"
+                            >
+                              {{ customer.name }} ({{ customer.nickname }})
+                            </option>
                           </select>
                         </div>
                       </div>
-                      <div class="sm:col-span-6" v-if="sendToCustomer">
+                      <div class="sm:col-span-6" v-if="newRit.send_to_customer">
                         <label
                           for="customer_weight"
                           class="block text-sm font-medium text-gray-700"
@@ -697,6 +749,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="newRit.customer.tonnage"
                             id="customer_weight"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -713,6 +766,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="newRit.allowance"
                             id="allowance_fee"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -728,6 +782,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="newRit.gas"
                             id="gas_fee"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -743,6 +798,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="newRit.toll"
                             id="etoll_fee"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -764,8 +820,15 @@
                     </button>
                     <button
                       type="button"
-                      @click="showAddRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      :disabled="
+                        newRit.vehicle_id == null ||
+                        newRit.do_code == null ||
+                        newRit.item_id == null ||
+                        newRit.tonnage == null ||
+                        newRit.sack == null
+                      "
+                      @click="createData()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -834,16 +897,18 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Barang: {{ "K-ABC" }}
+                        Barang: {{ selectedData.item.code }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Kendaraan: Truk A
+                        Kendaraan: {{ selectedData.trip.vehicle.name }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Tonase Awal: {{ "10.000" }} kg
+                        Tonase Awal:
+                        {{ formatNumber(selectedData.main_tonnage) }} kg
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Tanggal Berangkat: 30/03/2023
+                        Tanggal Berangkat:
+                        {{ formatDate(selectedData.delivery_date) }}
                       </h3>
                     </div>
                     <hr />
@@ -860,6 +925,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="arrivedRit.tonnage"
                             id="original_weight"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -875,6 +941,7 @@
                         </label>
                         <div class="mt-1">
                           <input
+                            v-model="arrivedRit.toll_used"
                             id="etoll_fee"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -895,9 +962,13 @@
                       Cancel
                     </button>
                     <button
+                      :disabled="
+                        arrivedRit.tonnage <= 0 ||
+                        arrivedRit.tonnage > selectedData.main_tonnage
+                      "
                       type="button"
-                      @click="showEditRitArrivalForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      @click="ritHasArrived()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -968,22 +1039,24 @@
                       <h3
                         class="col-span-6 text-md leading-6 font-medium text-gray-900"
                       >
-                        Barang: {{ "K-ABC" }}
+                        Barang: {{ selectedData.item.code }}
                       </h3>
                       <h3
                         class="col-span-2 text-md leading-6 font-medium text-gray-900"
                       >
-                        Customer: {{ "2.000" }} kg
+                        Customer:
+                        {{ formatNumber(selectedData.customer_tonnage) }} kg
                       </h3>
                       <h3
                         class="col-span-2 text-md leading-6 font-medium text-gray-900"
                       >
-                        Cabang: {{ "200" }} kg
+                        Cabang:
+                        {{ formatNumber(selectedData.branch_tonnage) }} kg
                       </h3>
                       <h3
                         class="col-span-2 text-md leading-6 font-medium text-gray-900"
                       >
-                        Pusat: {{ "7.800" }} kg
+                        Pusat: {{ formatNumber(selectedData.main_tonnage) }} kg
                       </h3>
                     </div>
                     <hr />
@@ -994,15 +1067,20 @@
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">
                           <Switch
+                            v-model="pricedRit.is_hold"
                             :class="[
-                              holdRit ? 'bg-indigo-600' : 'bg-gray-200',
+                              pricedRit.is_hold
+                                ? 'bg-indigo-600'
+                                : 'bg-gray-200',
                               'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
                             ]"
                           >
                             <span
                               aria-hidden="true"
                               :class="[
-                                holdRit ? 'translate-x-5' : 'translate-x-0',
+                                pricedRit.is_hold
+                                  ? 'translate-x-5'
+                                  : 'translate-x-0',
                                 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200',
                               ]"
                             />
@@ -1024,6 +1102,7 @@
                         <div class="mt-1">
                           <input
                             id="sell_price"
+                            v-model="pricedRit.sell_price"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1039,6 +1118,7 @@
                         <div class="mt-1">
                           <input
                             id="buy_price"
+                            v-model="pricedRit.buy_price"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1059,8 +1139,11 @@
                     </button>
                     <button
                       type="button"
-                      @click="showEditRitPriceForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      :disabled="
+                        pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0
+                      "
+                      @click="ritHasBeenPriced()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1133,14 +1216,15 @@
                       <div class="flex flex-col col-span-1 h-full gap-y-2">
                         <div class="sm:col-span-6">
                           <label
-                            for="do_code"
+                            for="branch_name"
                             class="block text-sm font-medium text-gray-700"
                           >
                             Cabang
                           </label>
                           <div class="mt-1">
                             <input
-                              id="do_code"
+                              v-model="transferBranchRit.branch_name"
+                              id="branch_name"
                               type="text"
                               class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                             />
@@ -1155,14 +1239,19 @@
                           </label>
                           <div class="mt-1">
                             <select
+                              v-model="transferBranchRit.vehicle_id"
                               id="vehicle"
                               name="vehicle"
                               class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
-                              <option value="long" selected>
-                                Truk A - (3 Trip)
+                              <option
+                                v-for="vehicle in vehicles"
+                                :key="vehicle.id"
+                                :value="vehicle.id"
+                              >
+                                {{ vehicle.name }} - ({{ vehicle.trip_count }}
+                                Trip)
                               </option>
-                              <option value="short">Truk B - (7 Trip)</option>
                             </select>
                           </div>
                         </div>
@@ -1178,6 +1267,7 @@
                             </label>
                             <div class="mt-1">
                               <input
+                                v-model="transferBranchRit.allowance"
                                 id="allowance_fee"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -1193,6 +1283,7 @@
                             </label>
                             <div class="mt-1">
                               <input
+                                v-model="transferBranchRit.gas"
                                 id="gas_fee"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -1208,6 +1299,7 @@
                             </label>
                             <div class="mt-1">
                               <input
+                                v-model="transferBranchRit.toll"
                                 id="etoll_fee"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -1222,18 +1314,18 @@
                           <div class="text-md font-medium">Daftar Barang</div>
                           <button
                             type="button"
-                            @click="addNewProduct"
+                            @click="addNewBranchRit"
                             class="inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-black p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
                           >
                             <Icon
-                              icon="uil:times"
+                              icon="uil:plus"
                               class="w-6 h-6 text-white"
                             ></Icon>
                             Tambah Barang
                           </button>
                         </div>
                         <div
-                          v-for="(product, index) in products"
+                          v-for="(rit, index) in transferBranchRit.rits"
                           :key="index"
                           class="grid grid-cols-7 gap-x-2 justify-center items-center"
                         >
@@ -1246,12 +1338,27 @@
                             </label>
                             <div class="mt-1">
                               <select
+                                v-model="rit.id"
                                 id="product_id"
                                 name="product_id"
                                 class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                               >
-                                <option value="1" selected>K-ABC</option>
-                                <option value="2">K-DEF</option>
+                                <option
+                                  v-for="rite in rits.filter(
+                                    (rite) =>
+                                      rite.arrival_date != null &&
+                                      rite.tonnage_left > 0 &&
+                                      rite.is_hold == 0
+                                  )"
+                                  :key="rite.id"
+                                  :value="rite.id"
+                                >
+                                  {{ rite.item.code }} -
+                                  {{ formatDate(rite.arrival_date) }} ({{
+                                    formatNumber(rite.tonnage_left)
+                                  }}
+                                  kg)
+                                </option>
                               </select>
                             </div>
                           </div>
@@ -1264,6 +1371,7 @@
                             </label>
                             <div class="mt-1">
                               <input
+                                v-model="rit.amount"
                                 id="amount"
                                 type="number"
                                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
@@ -1271,14 +1379,12 @@
                             </div>
                           </div>
                           <div class="col-span-1">
-                            <button
-                              type="but
-                            "
-                              @click="removeProduct(index)"
-                              class="inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-red-600 p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+                            <div
+                              @click="removeRit(index)"
+                              class="cursor-pointer inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-red-600 p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
                             >
                               <Icon icon="uil:times" class="w-4 h-4"></Icon>
-                            </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1297,233 +1403,22 @@
                     </button>
                     <button
                       type="button"
-                      @click="showTransferToBranch = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      {{ "Save" }}
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </TransitionChild>
-        </div>
-      </Dialog>
-    </TransitionRoot>
-    <!-- //!SECTION -->
-    <!-- //SECTION Retur -->
-    <TransitionRoot as="template" :show="showReturnRitForm">
-      <Dialog
-        as="div"
-        class="fixed z-10 inset-0 overflow-y-auto"
-        @close="showReturnRitForm = false"
-      >
-        <div
-          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-        >
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <DialogOverlay
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <!-- This element is to trick the browser into centering the modal contents. -->
-          <span
-            class="hidden sm:inline-block sm:align-middle sm:h-screen"
-            aria-hidden="true"
-            >&#8203;</span
-          >
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enter-to="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100 translate-y-0 sm:scale-100"
-            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <div
-              v-if="!toggleRetur"
-              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
-            >
-              <form class="space-y-8 divide-y divide-gray-200">
-                <div class="space-y-8 divide-y divide-gray-200">
-                  <div>
-                    <div>
-                      <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Retur Barang
-                      </h3>
-                      <p class="mt-1 text-sm text-gray-500">
-                        Pastikan data sudah benar.
-                      </p>
-                    </div>
-                    <hr />
-                    <div
-                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
-                    >
-                      <div class="flex flex-col col-span-1 h-full gap-y-2">
-                        <div class="sm:col-span-6">
-                          <label
-                            for="vehicle"
-                            class="block text-sm font-medium text-gray-700"
-                          >
-                            Kendaraan
-                          </label>
-                          <div class="mt-1">
-                            <select
-                              id="vehicle"
-                              name="vehicle"
-                              class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
-                            >
-                              <option value="long" selected>
-                                Truk A - (3 Trip)
-                              </option>
-                              <option value="short">Truk B - (7 Trip)</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div
-                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
-                        >
-                          <div>
-                            <label
-                              for="allowance_fee"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Uang Sangu (Rp.)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="allowance_fee"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              for="gas_fee"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Uang BBM (Rp.)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="gas_fee"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              for="etoll_fee"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Uang E-Toll (Rp.)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="etoll_fee"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="grid grid-cols-1 gap-x-2 justify-center items-center"
-                        >
-                          <div>
-                            <label
-                              for="allowance_fee"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Tonase (kg)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="allowance_fee"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="pt-5">
-                  <div class="flex justify-end">
-                    <button
-                      type="button"
-                      @click="toggleRetur = !toggleRetur"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      @click="showReturnRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      {{ "Save" }}
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div
-              v-else
-              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
-            >
-              <form class="space-y-8 divide-y divide-gray-200">
-                <div class="space-y-8 divide-y divide-gray-200">
-                  <div>
-                    <div>
-                      <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Riwayat Retur Barang
-                      </h3>
-                    </div>
-                    <hr />
-                    <div
-                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
-                    >
-                      <div class="grid grid-cols-2 gap-x-4">
-                        <h3 class="text-md leading-6 font-medium text-gray-900">
-                          Jumlah Tonase: 2.000 kg
-                        </h3>
-                        <h3 class="text-md leading-6 font-medium text-gray-900">
-                          Tanggal Pengiriman: 30/03/2023
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="pt-5">
-                  <div class="flex justify-end">
-                    <button
-                      type="button"
-                      @click="toggleRetur = !toggleRetur"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      @click="showReturnRitForm = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      :disabled="
+                        transferBranchRit.branch_name == null ||
+                        transferBranchRit.vehicle_id == null ||
+                        transferBranchRit.rits.some(
+                          (rit) => rit.id == null || rit.amount <= 0
+                        ) ||
+                        transferBranchRit.rits.some(
+                          (rit) =>
+                            rits.find((oRit) => oRit.id === rit.id) &&
+                            rit.amount >
+                              rits.find((oRit) => oRit.id === rit.id)
+                                .tonnage_left
+                        )
+                      "
+                      @click="transferRitsToBranch()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -1628,13 +1523,16 @@
                                 <tbody
                                   class="divide-y divide-gray-200 bg-white"
                                 >
-                                  <tr>
+                                  <tr
+                                    v-for="ritBranch in selectedData.branches"
+                                    :key="ritBranch.id"
+                                  >
                                     <td
                                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          01/03/2023
+                                          {{ formatDate(ritBranch.created_at) }}
                                         </div>
                                       </div>
                                     </td>
@@ -1643,7 +1541,8 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          K-ABC - 29/03/2023
+                                          {{ selectedData.item.code }} -
+                                          {{ selectedData.arrival_date }}
                                         </div>
                                       </div>
                                     </td>
@@ -1652,7 +1551,10 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          10.000 kg
+                                          {{
+                                            formatNumber(ritBranch.sent_tonnage)
+                                          }}
+                                          kg
                                         </div>
                                       </div>
                                     </td>
@@ -1674,14 +1576,243 @@
                       @click="showRitBranchDetail = false"
                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION -->
+    <!-- //SECTION Retur -->
+    <TransitionRoot as="template" :show="showReturnRitForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showReturnRitForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              v-if="selectedData.retur_tonnage <= 0"
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <!-- //NOTE - ini kalo belum di retur -->
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Retur Barang
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="flex flex-col col-span-1 h-full gap-y-2">
+                        <div class="sm:col-span-6">
+                          <label
+                            for="vehicle"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Kendaraan
+                          </label>
+                          <div class="mt-1">
+                            <select
+                              v-model="returnRit.vehicle_id"
+                              id="vehicle"
+                              name="vehicle"
+                              class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            >
+                              <option
+                                v-for="vehicle in vehicles"
+                                :key="vehicle.id"
+                                :value="vehicle.id"
+                              >
+                                {{ vehicle.name }} - ({{ vehicle.trip_count }}
+                                Trip)
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="allowance_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang Sangu (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnRit.allowance"
+                                id="allowance_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="gas_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang BBM (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnRit.gas"
+                                id="gas_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="etoll_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang E-Toll (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnRit.toll"
+                                id="etoll_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-1 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="tonnage"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Tonase (kg)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnRit.tonnage"
+                                id="tonnage"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showReturnRitForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
                       Cancel
                     </button>
                     <button
+                      :disabled="
+                        returnRit.vehicle_id == null ||
+                        returnRit.tonnage > selectedData.tonnage_left ||
+                        returnRit.tonnage <= 0
+                      "
                       type="button"
-                      @click="showRitBranchDetail = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      @click="returningRit(selectedData.id)"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      {{ "Save" }}
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              v-else
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <!-- //NOTE - ini kalo udah di retur -->
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Riwayat Retur Barang
+                      </h3>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="grid grid-cols-2 gap-x-4">
+                        <h3 class="text-md leading-6 font-medium text-gray-900">
+                          Jumlah Tonase:
+                          {{ formatNumber(selectedData.retur_tonnage) }} kg
+                        </h3>
+                        <h3 class="text-md leading-6 font-medium text-gray-900">
+                          Tanggal Pengiriman:
+                          {{ formatDate(selectedData.retur_trip.created_at) }}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showReturnRitForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Close
                     </button>
                   </div>
                 </div>
@@ -1765,12 +1896,6 @@
                                       scope="col"
                                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                     >
-                                      ID
-                                    </th>
-                                    <th
-                                      scope="col"
-                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                    >
                                       Customer
                                     </th>
                                     <th
@@ -1802,13 +1927,16 @@
                                 <tbody
                                   class="divide-y divide-gray-200 bg-white"
                                 >
-                                  <tr>
+                                  <tr
+                                    v-for="ritTransaction in selectedData.transactions"
+                                    :key="ritTransaction.id"
+                                  >
                                     <td
                                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          4
+                                          {{ ritTransaction.customer_name }}
                                         </div>
                                       </div>
                                     </td>
@@ -1817,7 +1945,11 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          Bima
+                                          {{
+                                            formatDate(
+                                              ritTransaction.created_at
+                                            )
+                                          }}
                                         </div>
                                       </div>
                                     </td>
@@ -1826,7 +1958,10 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          23/03/2023
+                                          {{
+                                            formatNumber(ritTransaction.tonnage)
+                                          }}
+                                          kg
                                         </div>
                                       </div>
                                     </td>
@@ -1835,7 +1970,12 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          2.000 kg
+                                          Rp.
+                                          {{
+                                            formatNumber(
+                                              ritTransaction.total_price
+                                            )
+                                          }}
                                         </div>
                                       </div>
                                     </td>
@@ -1844,16 +1984,12 @@
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          Rp. 4.000.000
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td
-                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                    >
-                                      <div class="flex items-center">
-                                        <div class="font-medium text-gray-900">
-                                          4.200 kg
+                                          {{
+                                            formatNumber(
+                                              ritTransaction.tonnage_left
+                                            )
+                                          }}
+                                          kg
                                         </div>
                                       </div>
                                     </td>
@@ -1875,14 +2011,7 @@
                       @click="showRitDetail = false"
                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      @click="showRitDetail = false"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      {{ "Save" }}
+                      Close
                     </button>
                   </div>
                 </div>
@@ -1899,6 +2028,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import {
@@ -1930,7 +2060,7 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -1950,13 +2080,302 @@ export default {
         }
       });
     },
-    addNewProduct() {
-      var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
-      this.products.push(newProduct);
+    getAllCustomers: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/customer")
+        .then((data) => {
+          this.customers = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              nik: item.nik,
+              name: item.name,
+              nickname: item.nickname,
+              address: item.address,
+              ongkir: item.ongkir,
+              birthdate: item.birthdate,
+              type: item.type,
+              tb: item.tb,
+              tw: item.tw,
+              thr: item.thr,
+              tonnage: item.tonnage,
+              cashback_approved: item.cashback_approved,
+              savings: item.savings,
+              transactions: item.transactions,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    removeProduct(index) {
-      this.products.splice(index, 1);
+    getAllItems: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/item")
+        .then((data) => {
+          this.items = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              code: item.code,
+              brand: item.brand,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
+    getAllVehicles: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/vehicle")
+        .then((data) => {
+          this.vehicles = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              type: item.type,
+              trip_count: item.trip_count,
+              trips: item.trips,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit")
+        .then((data) => {
+          this.rits = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              do_code: item.do_code,
+              expected_tonnage: item.expected_tonnage,
+              customer_tonnage: item.customer_tonnage,
+              branch_tonnage: item.branch_tonnage,
+              main_tonnage: item.main_tonnage,
+              retur_tonnage: item.retur_tonnage,
+              arrived_tonnage: item.arrived_tonnage,
+              tonnage_left: item.tonnage_left,
+              delivery_date: item.delivery_date,
+              arrival_date: item.arrival_date,
+              sold_date: item.sold_date,
+              sell_price: item.sell_price,
+              buy_price: item.buy_price,
+              sack: item.sack,
+              finance_approved: item.finance_approved,
+              is_hold: item.is_hold,
+              item: item.item,
+              trip: item.trip,
+              retur_trip: item.retur_trip,
+              customer: item.customer,
+              branches: item.branches,
+              transactions: item.transactions,
+              created_at: item.created_at,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    createData() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("admin/rit", this.newRit)
+        .then((data) => {
+          this.showAddRitForm = false;
+          this.getAllData();
+          this.resetNewRit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    resetNewRit() {
+      this.newRit = {
+        vehicle_id: null,
+        do_code: null,
+        item_id: null,
+        tonnage: null,
+        sack: null,
+        send_to_customer: false,
+        customer: {
+          id: null,
+          tonnage: null,
+        },
+        allowance: 0,
+        gas: 0,
+        toll: 0,
+      };
+    },
+    ritHasArrived() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/rit/${this.selectedData.id}/arrived`, this.arrivedRit)
+        .then((data) => {
+          this.showEditRitArrivalForm = false;
+          this.getAllData();
+          this.resetArrivedRit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    resetArrivedRit() {
+      this.arrivedRit = {
+        tonnage: null,
+        toll_used: null,
+      };
+    },
+    ritHasBeenPriced() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/rit/${this.selectedData.id}/priced`, this.pricedRit)
+        .then((data) => {
+          this.showEditRitPriceForm = false;
+          this.getAllData();
+          this.resetPricedRit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    resetPricedRit() {
+      this.pricedRit = {
+        sell_price: null,
+        buy_price: null,
+        is_hold: false,
+      };
+    },
+    addNewBranchRit() {
+      var newRit = { product_id: "", amount: 0 };
+      this.transferBranchRit.rits.push(newRit);
+    },
+    removeRit(index) {
+      this.transferBranchRit.rits.splice(index, 1);
+    },
+    transferRitsToBranch() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/rit/transfer_to_branch`, this.transferBranchRit)
+        .then((data) => {
+          this.showTransferToBranch = false;
+          this.getAllData();
+          this.resetTransferToBranchRit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    resetTransferToBranchRit() {
+      this.transferBranchRit = {
+        rits: [{ id: null, amount: 0 }],
+        branch_name: null,
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+      };
+    },
+    returningRit() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/rit/${this.selectedData.id}/return`, this.returnRit)
+        .then((data) => {
+          this.showReturnRitForm = false;
+          this.getAllData();
+          this.resetReturnRit();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    resetReturnRit() {
+      this.returnRit = {
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+        tonnage: null,
+      };
+    },
+    openSendToCustomer(id) {
+      this.sendToCustomer = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    openEditRitArrivalForm(id) {
+      this.showEditRitArrivalForm = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    openEditRitPriceForm(id) {
+      this.showEditRitPriceForm = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+      this.pricedRit.sell_price = this.selectedData.sell_price;
+      this.pricedRit.buy_price = this.selectedData.buy_price;
+      this.pricedRit.is_hold = this.selectedData.is_hold == 1 ? true : false;
+    },
+    openRitBranchDetail(id) {
+      this.showRitBranchDetail = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    openReturnRitForm(id) {
+      this.showReturnRitForm = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    openRitDetail(id) {
+      this.showRitDetail = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
+  },
+  created() {
+    this.getAllCustomers();
+    this.getAllItems();
+    this.getAllVehicles();
+    this.getAllData();
   },
   data() {
     return {
@@ -1967,7 +2386,6 @@ export default {
       showEditRitArrivalForm: false,
       //ini buat owner kalo mau edit harga
       showEditRitPriceForm: false,
-      holdRit: false,
       //ini buat ngirim ke cabang
       showTransferToBranch: false,
       //ini buat ngeretur barang
@@ -1984,6 +2402,50 @@ export default {
       ],
       currentTab: "Stok",
       products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
+      customers: [],
+      items: [],
+      vehicles: [],
+      rits: [],
+      selectedData: null,
+      newRit: {
+        vehicle_id: null,
+        do_code: null,
+        item_id: null,
+        tonnage: null,
+        sack: null,
+        send_to_customer: false,
+        customer: {
+          id: null,
+          tonnage: null,
+        },
+        allowance: 0,
+        gas: 0,
+        toll: 0,
+      },
+      arrivedRit: {
+        tonnage: null,
+        toll_used: null,
+      },
+      pricedRit: {
+        sell_price: null,
+        buy_price: null,
+        is_hold: false,
+      },
+      transferBranchRit: {
+        rits: [{ id: null, amount: 0 }],
+        branch_name: null,
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+      },
+      returnRit: {
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+        tonnage: null,
+      },
     };
   },
 };

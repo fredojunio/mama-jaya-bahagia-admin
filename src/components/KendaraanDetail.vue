@@ -116,7 +116,12 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="trip in filteredTrips" :key="trip.id">
+                    <tr
+                      v-for="trip in filteredTrips.filter(
+                        (expense) => expense.finance_approved == 1
+                      )"
+                      :key="trip.id"
+                    >
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
