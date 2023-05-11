@@ -118,7 +118,7 @@
             </div>
             <div class="flex-shrink-0 flex bg-gray-700 p-4">
               <div
-                @click="submitLogout()"
+                @click.once="submitLogout()"
                 class="flex-shrink-0 w-full group block cursor-pointer"
               >
                 <div class="flex items-center group/logout">

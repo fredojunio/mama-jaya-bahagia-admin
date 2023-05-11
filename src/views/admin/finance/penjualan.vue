@@ -77,7 +77,10 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="transaction in filteredTransactions"
+                    v-for="transaction in filteredTransactions.filter(
+                      (transaction) =>
+                        transaction.owner_approved == 1
+                    )"
                     :key="transaction.id"
                   >
                     <td
@@ -234,7 +237,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="approveTransaction()"
+                      @click.once="approveTransaction()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}

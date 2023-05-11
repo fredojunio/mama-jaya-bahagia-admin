@@ -22,19 +22,19 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Kode - Tanggal Datang
+                      Kode - Tanggal Datang | Tonase - Harga
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Keterangan
+                      Tabungan
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tanggal Pengiriman
+                      Total
                     </th>
                     <th
                       scope="col"
@@ -45,13 +45,26 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="transaction in transactions.filter(
+                      (transaction) =>
+                        transaction.owner_approved != 0 &&
+                        transaction.type == 'Kiriman'
+                    )"
+                    :key="transaction.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ rit.rit.item.code }} - ({{ rit.rit.arrival_date }})
+                          | {{ formatNumber(rit.tonnage) }} kg - Rp.
+                          {{ formatNumber(rit.total_price) }}
                         </div>
                       </div>
                     </td>
@@ -60,13 +73,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          TB: Rp. {{ formatNumber(transaction.tb) }}
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          TW: Rp. {{ formatNumber(transaction.tw) }}
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
+                          THR: Rp. {{ formatNumber(transaction.thr) }}
                         </div>
                       </div>
                     </td>
@@ -74,15 +87,20 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">04/04/2023</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(transaction.total_price) }}
+                        </div>
                       </div>
                     </td>
                     <td
+                      v-if="transaction.owner_approved == 1"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
                         <router-link
-                          :to="{ path: `/admin/rit/nota/detail/${1}` }"
+                          :to="{
+                            path: `/admin/rit/nota/detail/${transaction.id}`,
+                          }"
                           target="_blank"
                         >
                           <div
@@ -97,52 +115,27 @@
                         </router-link>
                       </div>
                     </td>
-                  </tr>
-                  <tr>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex flex-col gap-y-2">
-                        <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
-                        </div>
-                        <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
-                        </div>
-                        <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">04/04/2023</div>
-                      </div>
-                    </td>
-                    <td
+                      v-else-if="transaction.owner_approved == 2"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
-                        <div
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        <router-link
+                          :to="{
+                            path: `/admin/rit/jual_barang_revisi/${transaction.id}`,
+                          }"
+                          target="_blank"
                         >
-                          <Icon
-                            icon="fa:repeat"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
-                          ></Icon>
-                          <span class="ml-3">Revisi</span>
-                        </div>
+                          <div
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                          >
+                            <Icon
+                              icon="fa:repeat"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                            ></Icon>
+                            <span class="ml-3">Revisi</span>
+                          </div>
+                        </router-link>
                       </div>
                     </td>
                   </tr>
@@ -159,6 +152,7 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -191,18 +185,51 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
-    addNewProduct() {
-      var newProduct = { product_id: "", amount: "0", masak: 1, is_new: false };
-      this.products.push(newProduct);
-    },
-    removeProduct(index) {
-      this.products.splice(index, 1);
+  created() {
+    this.getAllTransactions();
+  },
+  methods: {
+    getAllTransactions: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction")
+        .then((data) => {
+          this.transactions = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              created_at: item.created_at,
+              daily_id: item.daily_id,
+              tb: item.tb,
+              tw: item.tw,
+              thr: item.thr,
+              sack: item.sack,
+              sack_price: item.sack_price,
+              item_price: item.item_price,
+              discount: item.discount,
+              ongkir: item.ongkir,
+              total_price: item.total_price,
+              settled_date: item.settled_date,
+              owner_approved: item.owner_approved,
+              finance_approved: item.finance_approved,
+              customer: item.customer,
+              trip: item.trip,
+              rits: item.rits,
+              savings: item.savings,
+              type: item.type,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   data() {
     return {
-      products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
+      transactions: [],
     };
   },
 };

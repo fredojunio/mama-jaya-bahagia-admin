@@ -173,19 +173,19 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Kode - Tanggal Datang
+                      Kode - Tanggal Datang | Tonase - Harga | Tonase Asli
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Keterangan
+                      Tabungan
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tanggal Pengiriman
+                      Total
                     </th>
                     <th
                       scope="col"
@@ -196,13 +196,24 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="transaction in transactions.filter(
+                      (transaction) => transaction.owner_approved == 0
+                    )"
+                    :key="transaction.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ rit.rit.item.code }} - ({{ rit.rit.arrival_date }})
+                          | {{ formatNumber(rit.tonnage) }} kg - Rp.
+                          {{ formatNumber(rit.total_price) }} | {{ formatNumber(rit.tonnage_left) }} kg
                         </div>
                       </div>
                     </td>
@@ -211,13 +222,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          TB: Rp. {{ formatNumber(transaction.tb) }}
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          TW: Rp. {{ formatNumber(transaction.tw) }}
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
+                          THR: Rp. {{ formatNumber(transaction.thr) }}
                         </div>
                       </div>
                     </td>
@@ -225,7 +236,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">04/04/2023</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(transaction.total_price) }}
+                        </div>
                       </div>
                     </td>
                     <td
@@ -233,7 +246,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showRitApprovalForm = true"
+                          @click="openNotaApprovalForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -307,211 +320,7 @@
                       </p>
                     </div>
                     <hr />
-                    <div
-                      class="max-w-7xl mt-2 grid grid-cols-1 sm:grid-cols-5 mx-auto mb-8 gap-x-4"
-                    >
-                      <div
-                        class="flex flex-col col-span-3 sm:border-r-2 h-full sm:pr-2 gap-y-2"
-                      >
-                        <div
-                          class="grid grid-cols-1 gap-x-2 justify-center items-center"
-                        >
-                          <div>
-                            <label
-                              for="allowance_fee"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Ongkir (Rp.)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="allowance_fee"
-                                v-model="allowance_fee"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <hr class="border-2" />
-                        <!-- <div
-                          class="flex justify-between items-center gap-2 mb-2"
-                        >
-                          <div class="text-md font-medium">Daftar Barang</div>
-                          <div
-                            @click="addNewProduct"
-                            class="cursor-pointer inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-black p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
-                          >
-                            <Icon icon="fa-plus"></Icon>
-                            Tambah Barang
-                          </div>
-                        </div> -->
-                        <div
-                          v-for="(product, index) in products"
-                          :key="index"
-                          class="grid grid-cols-11 gap-x-2 justify-center items-center"
-                        >
-                          <div class="col-span-2">
-                            <label
-                              for="product_id"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Rit {{ index + 1 }}
-                            </label>
-                            <div class="mt-1">
-                              <select
-                                v-model="product.product_id"
-                                id="product_id"
-                                name="product_id"
-                                class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
-                              >
-                                <option value="1" selected>K-ABC</option>
-                                <option value="2">K-DEF</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="amount"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Tonase (kg)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="amount"
-                                v-model="product.amount"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="masak"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Masak
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="masak"
-                                v-model="product.masak"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="price"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Harga
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="price"
-                                v-model="product.price"
-                                type="number"
-                                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="price"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Total
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="price"
-                                v-model="product.price"
-                                type="number"
-                                disabled
-                                class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
-                          <!-- <div class="col-span-1">
-                            <div
-                              @click="removeProduct(index)"
-                              class="inline-flex gap-2 items-center justify-center rounded-md border border-transparent bg-red-600 p-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
-                            >
-                              <Icon icon="uil:times" class="w-4 h-4"></Icon>
-                            </div>
-                          </div> -->
-                        </div>
-                        <hr class="border-2" />
-                        <div class="text-md font-medium">Total</div>
-                        <div
-                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
-                        >
-                          <div class="col-span-1">Harga Barang:</div>
-                          <div class="col-span-2">Rp. 2.000.000</div>
-                          <div class="col-span-1">Harga Ongkir:</div>
-                          <div class="col-span-2">Rp. 20.000</div>
-                          <hr class="col-span-3 border" />
-                          <div class="col-span-1">Harga Total:</div>
-                          <div class="col-span-2">Rp. 2.020.000</div>
-                        </div>
-                        <div
-                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
-                        >
-                          <div class="col-span-1">
-                            <label
-                              for="tb"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Uang yang dibawa (Rp.)
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="tb"
-                                v-model="tb"
-                                type="number"
-                                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="money_kurang"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Kurang Bayar *nanti auto dihitung juga
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                disabled
-                                id="money_kurang"
-                                type="number"
-                                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="pt-5">
-                          <div class="flex justify-end">
-                            <button
-                              type="button"
-                              @click="showAddRitForm = false"
-                              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                            >
-                              {{ "Submit" }}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="flex flex-col col-span-2 border-t-4 mt-12 sm:border-t-0 sm:mt-0"
-                      >
-                        <CustomerDetail />
-                      </div>
-                    </div>
+                    <!-- //TODO - masukin rit jual barang kesini -->
                   </div>
                 </div>
 
@@ -859,11 +668,11 @@
     </TransitionRoot>
     <!-- //!SECTION -->
     <!-- //SECTION - Form Approve Rit -->
-    <TransitionRoot as="template" :show="showRitApprovalForm">
+    <TransitionRoot as="template" :show="showNotaApprovalForm">
       <Dialog
         as="div"
         class="fixed z-10 inset-0 overflow-y-auto"
-        @close="showRitApprovalForm = false"
+        @close="showNotaApprovalForm = false"
       >
         <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
@@ -914,22 +723,34 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        <!-- Kosong -->
+                        Customer: {{ selectedTransaction.customer.name }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        BBM: -
+                        Ongkir: Rp.
+                        {{ formatNumber(selectedTransaction.ongkir) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Kendaraan: Truk A
+                        Sak: {{ selectedTransaction.sack }} (Rp.
+                        {{ formatNumber(selectedTransaction.sack_price) }})
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        E-Toll: -
+                        BBM: Rp.
+                        {{ formatNumber(selectedTransaction.trip.gas) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        <!-- Kosong -->
+                        Diskon: Rp.
+                        {{ formatNumber(selectedTransaction.discount) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Sangu: Rp. 10.000
+                        E-Toll: Rp.
+                        {{ formatNumber(selectedTransaction.trip.toll) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        <!-- kosong -->
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sangu: Rp.
+                        {{ formatNumber(selectedTransaction.trip.allowance) }}
                       </h3>
                     </div>
                     <hr />
@@ -942,9 +763,12 @@
                           for="money"
                           class="block text-sm font-medium text-gray-700"
                         >
-                          Total (Rp.)
+                          Total
                         </label>
-                        <div class="mt-1">Rp. 10.000</div>
+                        <div class="mt-1">
+                          Rp.
+                          {{ formatNumber(selectedTransaction.total_price) }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -954,17 +778,17 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="showRitApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      @click="approveNota(2)"
+                      class="bg-red-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      Cancel
+                      Reject
                     </button>
                     <button
                       type="button"
-                      @click="showRitApprovalForm = false"
+                      @click="approveNota(1)"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      {{ "Submit" }}
+                      {{ "Approve" }}
                     </button>
                   </div>
                 </div>
@@ -982,6 +806,7 @@
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
 import CustomerDetail from "../../../components/CustomerDetail.vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -1014,7 +839,10 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  created() {
+    this.getAllTransactions();
+  },
+  methods: {
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -1034,18 +862,65 @@ export default {
         }
       });
     },
-    addNewProduct() {
-      var newProduct = {
-        product: { id: 0, name: "" },
-        amount: 0,
-        real_amount: 0,
-        masak: 1,
-        is_new: false,
-      };
-      this.products.push(newProduct);
+    //NOTE - Section Nota
+    getAllTransactions: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction")
+        .then((data) => {
+          this.transactions = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              created_at: item.created_at,
+              daily_id: item.daily_id,
+              tb: item.tb,
+              tw: item.tw,
+              thr: item.thr,
+              sack: item.sack,
+              sack_price: item.sack_price,
+              item_price: item.item_price,
+              discount: item.discount,
+              ongkir: item.ongkir,
+              total_price: item.total_price,
+              settled_date: item.settled_date,
+              owner_approved: item.owner_approved,
+              finance_approved: item.finance_approved,
+              customer: item.customer,
+              trip: item.trip,
+              rits: item.rits,
+              savings: item.savings,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    removeProduct(index) {
-      this.products.splice(index, 1);
+    openNotaApprovalForm(id) {
+      this.selectedTransaction = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+      this.showNotaApprovalForm = true;
+    },
+    approveNota(val) {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/transaction/${this.selectedTransaction.id}/approve_nota`, {
+          owner_approved: val,
+        })
+        .then((data) => {
+          this.showNotaApprovalForm = false;
+          this.getAllTransactions();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   data() {
@@ -1057,7 +932,7 @@ export default {
       //ini buat ngembalikin ke cabang
       showTransferFromBranch: false,
       // ini approval nota
-      showRitApprovalForm: false,
+      showNotaApprovalForm: false,
       tabs: [
         { name: "Rit", current: true },
         { name: "Nota", current: false },
@@ -1072,6 +947,8 @@ export default {
           is_new: false,
         },
       ],
+      transactions: [],
+      selectedTransaction: null,
     };
   },
 };

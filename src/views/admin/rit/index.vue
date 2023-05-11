@@ -731,7 +731,9 @@
                             class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                           >
                             <option
-                              v-for="customer in customers"
+                              v-for="customer in customers.filter(
+                                (customer) => customer.type == 'Owner'
+                              )"
                               :key="customer.id"
                               :value="customer.id"
                             >
@@ -827,7 +829,7 @@
                         newRit.tonnage == null ||
                         newRit.sack == null
                       "
-                      @click="createData()"
+                      @click.once="createData()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -967,7 +969,7 @@
                         arrivedRit.tonnage > selectedData.main_tonnage
                       "
                       type="button"
-                      @click="ritHasArrived()"
+                      @click.once="ritHasArrived()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -1142,7 +1144,7 @@
                       :disabled="
                         pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0
                       "
-                      @click="ritHasBeenPriced()"
+                      @click.once="ritHasBeenPriced()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -1417,7 +1419,7 @@
                                 .tonnage_left
                         )
                       "
-                      @click="transferRitsToBranch()"
+                      @click.once="transferRitsToBranch()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -1765,7 +1767,7 @@
                         returnRit.tonnage <= 0
                       "
                       type="button"
-                      @click="returningRit(selectedData.id)"
+                      @click.once="returningRit(selectedData.id)"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Submit
@@ -1928,7 +1930,10 @@
                                   class="divide-y divide-gray-200 bg-white"
                                 >
                                   <tr
-                                    v-for="ritTransaction in selectedData.transactions"
+                                    v-for="ritTransaction in selectedData.transactions.filter(
+                                      (transaction) =>
+                                        transaction.owner_approved == 1
+                                    )"
                                     :key="ritTransaction.id"
                                   >
                                     <td

@@ -291,7 +291,7 @@
                     <button
                       type="button"
                       :disabled="pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0"
-                      @click="ritHasBeenPriced()"
+                      @click.once="ritHasBeenPriced()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}

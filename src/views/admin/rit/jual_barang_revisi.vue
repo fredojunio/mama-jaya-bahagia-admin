@@ -689,6 +689,7 @@ import {
   SwitchLabel,
 } from "@headlessui/vue";
 export default {
+  props: ["id"],
   components: {
     Menu,
     MenuButton,
@@ -880,8 +881,50 @@ export default {
       instance
         .post("admin/transaction", this.newTransaction)
         .then((data) => {
-          // console.log(data)
-          this.$router.go(0);
+          //TODO - yang di owner->jual barang->nota masih nyangkut revisiannya
+          this.$router.push("/admin/rit/jual_barang");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getTransaction: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction/" + this.id)
+        .then((data) => {
+          let oldTransaction = data.data.data.results;
+          this.newTransaction.customer_id = oldTransaction.customer.id;
+          this.newTransaction.ongkir = oldTransaction.ongkir;
+          this.newTransaction.vehicle_id = oldTransaction.trip.vehicle_id;
+          this.newTransaction.allowance = oldTransaction.trip.allowance;
+          this.newTransaction.gas = oldTransaction.trip.gas;
+          this.newTransaction.toll = oldTransaction.trip.toll;
+          this.newTransaction.rits = oldTransaction.rits.map((item) => {
+            return {
+              item: item.rit,
+              tonnage: item.tonnage,
+              real_tonnage: item.tonnage_left,
+              masak: item.masak,
+              price: item.item_price,
+              total_price: item.total_price,
+            };
+          });
+          this.newTransaction.tb = oldTransaction.tb;
+          this.newTransaction.tw = oldTransaction.tw;
+          this.newTransaction.thr = oldTransaction.thr;
+          this.newTransaction.sack = oldTransaction.sack;
+          this.newTransaction.sack_fee =
+            oldTransaction.sack_fee == 0 ? false : true;
+          this.newTransaction.item_prices = oldTransaction.item_price;
+          this.newTransaction.discount = oldTransaction.discount;
+          this.newTransaction.total_price = oldTransaction.total_price;
+          setTimeout(() => {
+            this.selectCustomer(this.newTransaction.customer_id);
+          }, 1000);
         })
         .catch((err) => {
           console.log(err);
@@ -892,6 +935,7 @@ export default {
     this.getAllCustomers();
     this.getAllVehicles();
     this.getAllRits();
+    this.getTransaction();
   },
   data() {
     return {

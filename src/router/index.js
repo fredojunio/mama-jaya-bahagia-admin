@@ -9,6 +9,7 @@ import BarangIndex from "/src/views/admin/barang/index.vue";
 //Rit
 import RitIndex from "/src/views/admin/rit/index.vue";
 import RitJualBarang from "/src/views/admin/rit/jual_barang.vue";
+import RitJualBarangRevisi from "/src/views/admin/rit/jual_barang_revisi.vue";
 import RitNota from "/src/views/admin/rit/nota.vue";
 import RitNotaDetail from "/src/views/admin/rit/nota_detail.vue";
 
@@ -64,6 +65,15 @@ const routes = [
     component: RitJualBarang,
     meta: {
       title: "Rit - Jual Barang",
+    },
+  },
+  {
+    path: "/admin/rit/jual_barang_revisi/:id",
+    name: "RitJualBarangRevisi",
+    component: RitJualBarangRevisi,
+    props: true,
+    meta: {
+      title: "Rit - Revisi Jual Barang",
     },
   },
   {

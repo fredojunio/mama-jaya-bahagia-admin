@@ -284,7 +284,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="tempData.id ? updateData() : createData()"
+                      @click.once="tempData.id ? updateData() : createData()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ tempData.id ? "Update" : "Save" }}
@@ -350,6 +350,9 @@ export default {
         tb: null,
         tw: null,
         thr: null,
+        cashback_approved: null,
+        tonnage: null,
+        type: null,
         savings: [],
         transactions: [],
       },
@@ -399,6 +402,7 @@ export default {
               thr: item.thr,
               tonnage: item.tonnage,
               cashback_approved: item.cashback_approved,
+              type: item.type,
               savings: item.savings,
               transactions: item.transactions,
             };
