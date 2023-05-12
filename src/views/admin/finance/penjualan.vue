@@ -97,7 +97,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ transaction.customer.name }}
+                          {{ transaction.type == "Cabang" ? "Cabang" : transaction.customer.name }}
                         </div>
                       </div>
                     </td>
@@ -344,6 +344,7 @@ export default {
               trip: item.trip,
               rits: item.rits,
               savings: item.savings,
+              type: item.type
             };
           });
           this.filterData();

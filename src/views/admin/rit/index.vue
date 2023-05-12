@@ -125,7 +125,7 @@
                       (rit) =>
                         rit.arrival_date != null &&
                         rit.sell_price > 0 &&
-                        rit.is_hold == 0
+                        rit.is_hold != 1
                     )"
                     :key="rit.id"
                   >
@@ -134,7 +134,8 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ rit.item.code }} - {{ rit.arrival_date }}
+                          {{ rit.item.code }} -
+                          {{ formatDate(rit.arrival_date) }}
                         </div>
                       </div>
                     </td>
@@ -223,7 +224,7 @@
                           <span class="ml-3">Cabang</span>
                         </div>
                       </div>
-                      <div class="flex flex-col items-start">
+                      <div v-if="!rit.sold_date" class="flex flex-col items-start">
                         <div
                           @click="openReturnRitForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -2321,6 +2322,7 @@ export default {
         .then((data) => {
           this.showReturnRitForm = false;
           this.getAllData();
+          this.getAllVehicles();
           this.resetReturnRit();
         })
         .catch((err) => {

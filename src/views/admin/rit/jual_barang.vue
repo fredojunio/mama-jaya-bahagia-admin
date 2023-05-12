@@ -147,7 +147,7 @@
                     @keyup="filterRit"
                     :display-value="
                       (rit) =>
-                        `${rit.item.code} - ${formatDate(rit.arrival_date)}`
+                        `${rit.item.code} - ${formatDate(rit.arrival_date)} - (${formatNumber(rit.tonnage_left)} kg)`
                     "
                   />
                   <ComboboxButton
@@ -184,7 +184,7 @@
                           ]"
                         >
                           {{ rite.item.code }} -
-                          {{ formatDate(rite.arrival_date) }}
+                          {{ formatDate(rite.arrival_date) }} - ({{formatNumber(rite.tonnage_left)}} kg)
                         </span>
 
                         <span
@@ -633,7 +633,7 @@
                   type="button"
                   :disabled="
                     selectedCustomer.type == 'Kiriman' &&
-                    newTransaction.rits.some((rit) => rit.real_tonnage <= 0)
+                    newTransaction.rits.some((rit) => rit.real_tonnage < 0)
                   "
                   class="disabled:opacity-50 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black sm:ml-3 sm:w-auto sm:text-sm"
                   @click.once="createData()"
@@ -761,7 +761,7 @@ export default {
       }
       this.filteredRits = this.filteredRits.filter(
         (rit) =>
-          rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
+          rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0 && rit.sold_date == null
       );
     },
     getAllRits: function () {
@@ -800,10 +800,7 @@ export default {
               created_at: item.created_at,
             };
           });
-          this.filteredRits = this.rits.filter(
-            (rit) =>
-              rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
-          );
+          this.filterRit()
         })
         .catch((err) => {
           console.log(err);
@@ -919,7 +916,6 @@ export default {
       },
       customers: [],
       vehicles: [],
-      rits: [],
       newTransaction: {
         customer_id: null,
         ongkir: null,
