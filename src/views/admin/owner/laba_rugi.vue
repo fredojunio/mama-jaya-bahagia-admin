@@ -6,10 +6,27 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Laba Rugi</h1>
       <div class="relative flex gap-2 text-left">
         <!-- //TODO - Add Data Logic -->
+        <div class="relative rounded-md shadow-sm w-96">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+          </div>
+          <VueDatePicker
+            v-model="date"
+            @update:model-value="filterData"
+            locale="id"
+            :start-time="[
+              { hours: 0, minutes: 0, seconds: 0 },
+              { hours: 23, minutes: 59, seconds: 59 },
+            ]"
+            range
+            :enable-time-picker="false"
+          />
+        </div>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- //SECTION Tab Stok -->
       <div class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
@@ -66,13 +83,19 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr>
+                  <tr
+                    v-for="rit in filteredRits.filter(
+                      (rit) => rit.sold_date != null
+                    )"
+                    :key="rit.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          K-ABC - 29/03/2023
+                          {{ rit.item.code }} -
+                          {{ formatDate(rit.arrival_date) }}
                         </div>
                       </div>
                     </td>
@@ -80,14 +103,18 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">Rp. 2.000</div>
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.buy_price) }}
+                        </div>
                       </div>
                     </td>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">10.000 kg</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(totalTonnage(rit)) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
@@ -95,22 +122,13 @@
                     >
                       <div class="flex flex-col gap-y-2">
                         <div class="font-medium text-gray-900">
-                          Customer: 2.000 kg
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Cabang: 200 kg
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: 7.800 kg
-                        </div>
-                      </div>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                    >
-                      <div class="flex items-center">
-                        <div class="font-medium text-gray-900">
-                          Rp. 20.000.000
+                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -119,7 +137,16 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. 2.200.000
+                          Rp. {{ formatNumber(totalRevenue(rit)) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(totalProfit(rit)) }}
                         </div>
                       </div>
                     </td>
@@ -128,7 +155,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          @click="showRitDetail = true"
+                          @click="openRitDetail(rit)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -146,7 +173,6 @@
           </div>
         </div>
       </div>
-      <!-- //!SECTION -->
       <!-- //SECTION Detail -->
       <TransitionRoot as="template" :show="showRitDetail">
         <Dialog
@@ -245,7 +271,10 @@
                                   <tbody
                                     class="divide-y divide-gray-200 bg-white"
                                   >
-                                    <tr>
+                                    <tr
+                                      v-for="ritTransaction in selectedRit.transactions"
+                                      :key="ritTransaction.id"
+                                    >
                                       <td
                                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                       >
@@ -253,7 +282,11 @@
                                           <div
                                             class="font-medium text-gray-900"
                                           >
-                                            23/03/2023
+                                            {{
+                                              formatDate(
+                                                ritTransaction.created_at
+                                              )
+                                            }}
                                           </div>
                                         </div>
                                       </td>
@@ -264,7 +297,7 @@
                                           <div
                                             class="font-medium text-gray-900"
                                           >
-                                            2.000 kg
+                                            {{ formatNumber(ritTransaction.tonnage) }} kg
                                           </div>
                                         </div>
                                       </td>
@@ -275,7 +308,8 @@
                                           <div
                                             class="font-medium text-gray-900"
                                           >
-                                            Rp. 4.000.000
+                                            Rp.
+                                            {{ formatNumber(ritTransaction.total_price) }}
                                           </div>
                                         </div>
                                       </td>
@@ -286,7 +320,10 @@
                                           <div
                                             class="font-medium text-gray-900"
                                           >
-                                            4.200 kg
+                                            {{
+                                              formatNumber(ritTransaction.tonnage_left)
+                                            }}
+                                            kg
                                           </div>
                                         </div>
                                       </td>
@@ -333,8 +370,11 @@
 <script setup>
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Menu,
   MenuButton,
@@ -364,12 +404,73 @@ export default {
     SwitchGroup,
     SwitchLabel,
   },
-  methods: { 
+  created() {
+    this.getAllRits();
+  },
+  methods: {
+    getAllRits: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit")
+        .then((data) => {
+          this.rits = data.data.data.results;
+          this.filterData();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    totalTonnage(rit) {
+      var totalTonnage = 0;
+      rit.transactions.forEach((element) => {
+        totalTonnage += element.tonnage;
+      });
+      return totalTonnage;
+    },
+    totalRevenue(rit) {
+      var totalRevenue = 0;
+      rit.transactions.forEach((element) => {
+        totalRevenue += element.total_price;
+      });
+      return totalRevenue;
+    },
+    totalProfit(rit) {
+      //NOTE - mungkin perlu dipastiin lagi rumusnya
+      var totalProfit = 0;
+      rit.transactions.forEach((element) => {
+        totalProfit += element.total_price;
+        totalProfit -= element.tonnage * rit.buy_price;
+        totalProfit -= element.tonnage * 200;
+      });
+      return totalProfit;
+    },
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredRits = this.rits.filter((rit) => {
+        let ritDate = new Date(rit.arrival_date);
+        return ritDate >= startDate && ritDate <= untilDate;
+      });
+    },
+    openRitDetail(rit) {
+      this.selectedRit = rit;
+      this.showRitDetail = true;
+    },
   },
   data() {
     return {
       //ini buat cek detail
       showRitDetail: false,
+      date: [
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
+      ],
+      rits: null,
+      filteredRits: [],
+      selectedRit: null,
     };
   },
 };
