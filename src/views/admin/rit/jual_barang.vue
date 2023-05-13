@@ -743,6 +743,7 @@ export default {
     },
     removeRit(index) {
       this.newTransaction.rits.splice(index, 1);
+      this.updateTotalPrice()
     },
     filterRit() {
       if (this.ritQuery == "") {
