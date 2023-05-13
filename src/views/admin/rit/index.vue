@@ -2390,7 +2390,7 @@ export default {
       });
       const totalTonnageSoldToday = todayTransactions.reduce(
         (acc, transaction) => {
-          return transaction.tonnage * transaction.masak;
+          return acc + (transaction.tonnage * transaction.masak);
         },
         0
       );

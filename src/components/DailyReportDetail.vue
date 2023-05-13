@@ -243,7 +243,7 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Tonase Penjualan
+                        Tonase Penjualan Harian
                       </th>
                       <th
                         scope="col"
@@ -351,14 +351,7 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                      v-for="transaction in transactions.filter(
-                        (transaction) => {
-                          return (
-                            transaction.created_at.substring(0, 10) ===
-                            selectedData.created_at.substring(0, 10)
-                          );
-                        }
-                      )"
+                      v-for="transaction in selectedData.transactions"
                       :key="transaction.id"
                     >
                       <td
@@ -369,7 +362,7 @@
                             {{
                               transaction.type == "Cabang"
                                 ? "Cabang"
-                                : transaction.customer.name
+                                : transaction.transaction.customer.name
                             }}
                           </div>
                         </div>
@@ -379,7 +372,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            {{ formatNumber(transaction.total_price) }}
+                            {{ formatNumber(transaction.amount) }}
                           </div>
                         </div>
                       </td>
@@ -388,7 +381,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            {{ formatDate(transaction.created_at) }}
+                            {{ formatDate(transaction.transaction_date) }}
                           </div>
                         </div>
                       </td>
@@ -568,11 +561,7 @@ export default {
         { name: "Penjualan", current: false },
         { name: "Transaksi", current: false },
       ],
-      transactions: [],
     };
-  },
-  created() {
-    this.getAllTransactions();
   },
   methods: {
     changeTab(index) {
@@ -583,21 +572,6 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
-    },
-    getAllTransactions: function () {
-      const instance = axios.create({
-        baseURL: this.url,
-        headers: { Authorization: "Bearer " + localStorage["access_token"] },
-      });
-      instance
-        .get("/admin/transaction")
-        .then((data) => {
-          this.transactions = data.data.data.results;
-          console.log(this.transactions);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
   },
 };
