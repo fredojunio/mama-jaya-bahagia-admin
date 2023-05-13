@@ -150,15 +150,6 @@
                         `${rit.item.code} - ${formatDate(rit.arrival_date)} - (${formatNumber(rit.tonnage_left)} kg)`
                     "
                   />
-                  <ComboboxButton
-                    class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
-                  >
-                    <SelectorIcon
-                      class="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                  </ComboboxButton>
-
                   <ComboboxOptions
                     v-if="filteredRits.length > 0"
                     class="absolute z-10 mt-1 max-h-60 w-[50vw] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
@@ -185,16 +176,6 @@
                         >
                           {{ rite.item.code }} -
                           {{ formatDate(rite.arrival_date) }} - ({{formatNumber(rite.tonnage_left)}} kg)
-                        </span>
-
-                        <span
-                          v-if="selected"
-                          :class="[
-                            'absolute inset-y-0 right-0 flex items-center pr-4',
-                            active ? 'text-white' : 'text-indigo-600',
-                          ]"
-                        >
-                          <CheckIcon class="h-5 w-5" aria-hidden="true" />
                         </span>
                       </li>
                     </ComboboxOption>
