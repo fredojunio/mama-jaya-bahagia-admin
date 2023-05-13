@@ -1939,7 +1939,7 @@
                                   <tr
                                     v-for="ritTransaction in selectedData.transactions.filter(
                                       (transaction) =>
-                                        transaction.owner_approved == 1
+                                        transaction.transaction.owner_approved == 1
                                     )"
                                     :key="ritTransaction.id"
                                   >
