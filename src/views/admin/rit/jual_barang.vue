@@ -434,8 +434,20 @@
           <div class="flex justify-end">
             <button
               type="button"
+              :disabled="
+                selectedCustomer.id == null ||
+                newTransaction.rits.length <= 0 ||
+                newTransaction.rits.some(
+                  (rit) =>
+                    rit.item.tonnage_left / rit.masak < rit.tonnage * rit.masak
+                ) ||
+                newTransaction.rits.some(
+                  (rit) =>
+                    rit.tonnage <= 0
+                )
+              "
               @click="showConfirmationPopup = true"
-              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+              class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               {{ "Submit" }}
             </button>
@@ -746,7 +758,7 @@ export default {
     },
     removeRit(index) {
       this.newTransaction.rits.splice(index, 1);
-      this.updateTotalPrice()
+      this.updateTotalPrice();
     },
     filterRit() {
       if (this.ritQuery == "") {
