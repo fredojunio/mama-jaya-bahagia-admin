@@ -391,9 +391,7 @@
             Rp.
             {{
               formatNumber(
-                this.newTransaction.tb +
-                  this.newTransaction.tw +
-                  this.newTransaction.thr
+                newTransaction.tb + newTransaction.tw + newTransaction.thr
               )
             }}
           </div>
@@ -633,7 +631,7 @@
                   type="button"
                   :disabled="
                     selectedCustomer.type == 'Kiriman' &&
-                    newTransaction.rits.some((rit) => rit.real_tonnage <= 0)
+                    newTransaction.rits.some((rit) => rit.real_tonnage < 0)
                   "
                   class="disabled:opacity-50 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black sm:ml-3 sm:w-auto sm:text-sm"
                   @click.once="createData()"

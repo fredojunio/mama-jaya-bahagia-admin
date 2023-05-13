@@ -1,5 +1,5 @@
 <template>
-  <Admin>
+  <Admin v-if="newTransaction">
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
@@ -69,7 +69,6 @@
               Uang Sangu (Rp.)
             </label>
             <div class="mt-1">
-              <!-- //NOTE - ini ngga ada kalau kiriman -->
               <input
                 id="allowance_fee"
                 v-model="newTransaction.allowance"
@@ -147,7 +146,9 @@
                     @keyup="filterRit"
                     :display-value="
                       (rit) =>
-                        `${rit.item.code} - ${formatDate(rit.arrival_date)} - (${formatNumber(rit.tonnage_left)} kg)`
+                        `${rit.item.code} - ${formatDate(
+                          rit.arrival_date
+                        )} - (${formatNumber(rit.tonnage_left)} kg)`
                     "
                   />
                   <ComboboxOptions
@@ -175,7 +176,10 @@
                           ]"
                         >
                           {{ rite.item.code }} -
-                          {{ formatDate(rite.arrival_date) }} - ({{formatNumber(rite.tonnage_left)}} kg)
+                          {{ formatDate(rite.arrival_date) }} - ({{
+                            formatNumber(rite.tonnage_left)
+                          }}
+                          kg)
                         </span>
                       </li>
                     </ComboboxOption>
@@ -349,6 +353,7 @@
         </div>
         <hr class="border-2" />
         <div class="text-md font-medium">Total</div>
+
         <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
           <div class="col-span-1">Harga Barang:</div>
           <div class="col-span-2">
@@ -372,9 +377,7 @@
             Rp.
             {{
               formatNumber(
-                this.newTransaction.tb +
-                  this.newTransaction.tw +
-                  this.newTransaction.thr
+                (newTransaction.tb + newTransaction.tw + newTransaction.thr)
               )
             }}
           </div>
@@ -388,6 +391,7 @@
             Rp. {{ formatNumber(newTransaction.total_price) }}
           </div>
         </div>
+
         <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
           <div class="col-span-1">
             <label
@@ -742,7 +746,10 @@ export default {
       }
       this.filteredRits = this.filteredRits.filter(
         (rit) =>
-          rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0 && rit.sold_date == null
+          rit.arrival_date != null &&
+          rit.sell_price > 0 &&
+          rit.is_hold == 0 &&
+          rit.sold_date == null
       );
     },
     getAllRits: function () {
@@ -781,7 +788,7 @@ export default {
               created_at: item.created_at,
             };
           });
-          this.filterRit()
+          this.filterRit();
         })
         .catch((err) => {
           console.log(err);
@@ -803,6 +810,7 @@ export default {
               name: item.name,
               nickname: item.nickname,
               address: item.address,
+              phone: item.phone,
               ongkir: item.ongkir,
               birthdate: item.birthdate,
               type: item.type,
@@ -884,6 +892,7 @@ export default {
         name: null,
         nickname: null,
         address: null,
+        phone: null,
         ongkir: null,
         birthdate: null,
         type: null,
