@@ -712,6 +712,8 @@ export default {
         selectedRit.price = rit.item.sell_price;
         selectedRit.total_price =
           selectedRit.price * selectedRit.tonnage * selectedRit.masak;
+        selectedRit.total_price =
+          Math.ceil(selectedRit.total_price / 100) * 100;
         this.updateTotalPrice();
       }
     },
