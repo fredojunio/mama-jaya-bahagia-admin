@@ -20,8 +20,11 @@
           </div>
         </nav>
 
-        <div>
-          <CustomerDetail :selectedData="selectedData" />
+        <div v-if="selectedData">
+          <CustomerDetail
+            :selectedData="selectedData"
+            @toggle-form="showEdit"
+          />
         </div>
       </main>
       <aside
@@ -34,7 +37,7 @@
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
             <button
-              @click="showAddCustomerForm = true"
+              @click="showAddCustomerForm = true; resetData()"
               class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
             >
               Tambah Customer
@@ -221,6 +224,22 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
+                          for="phone"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          No. HP
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="phone"
+                            v-model="tempData.phone"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
                           for="ongkir"
                           class="block text-sm font-medium text-gray-700"
                         >
@@ -333,30 +352,14 @@ export default {
         name: null,
         nickname: null,
         address: null,
+        phone: null,
         ongkir: null,
         birthdate: null,
         type: null,
         savings: [],
         transactions: [],
       },
-      selectedData: {
-        id: null,
-        nik: null,
-        name: null,
-        nickname: null,
-        address: null,
-        ongkir: null,
-        birthdate: null,
-        type: null,
-        tb: null,
-        tw: null,
-        thr: null,
-        cashback_approved: null,
-        tonnage: null,
-        type: null,
-        savings: [],
-        transactions: [],
-      },
+      selectedData: null,
       customers: [],
       searchQuery: null,
       filteredCustomers: [],
@@ -373,6 +376,7 @@ export default {
         name: null,
         nickname: null,
         address: null,
+        phone: null,
         ongkir: null,
         birthdate: null,
         type: null,
@@ -389,28 +393,10 @@ export default {
         .get("/admin/customer")
         .then((data) => {
           this.isLoading = false;
-          this.customers = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              nik: item.nik,
-              name: item.name,
-              nickname: item.nickname,
-              address: item.address,
-              ongkir: item.ongkir,
-              birthdate: item.birthdate,
-              type: item.type,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              tonnage: item.tonnage,
-              cashback_approved: item.cashback_approved,
-              type: item.type,
-              savings: item.savings,
-              transactions: item.transactions,
-            };
-          });
+          this.customers = data.data.data.results;
           this.filteredCustomers = this.customers;
           this.selectedData = this.customers[0];
+          console.log(this.selectedData)
         })
         .catch((err) => {
           console.log(err);
@@ -422,15 +408,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .post("admin/customer", {
-          nik: this.tempData.nik,
-          name: this.tempData.name,
-          nickname: this.tempData.nickname,
-          address: this.tempData.address,
-          ongkir: this.tempData.ongkir,
-          birthdate: this.tempData.birthdate,
-          type: this.tempData.type,
-        })
+        .post("admin/customer", this.tempData)
         .then((data) => {
           this.showAddCustomerForm = false;
           this.getAllData();
@@ -452,6 +430,7 @@ export default {
           name: this.tempData.name,
           nickname: this.tempData.nickname,
           address: this.tempData.address,
+          phone: this.tempData.phone,
           ongkir: this.tempData.ongkir,
           birthdate: this.tempData.birthdate,
           type: this.tempData.type,
@@ -465,11 +444,9 @@ export default {
           console.log(err);
         });
     },
-    showEdit(id) {
-      this.showAddCustomerForm = true;
-      this.tempData = this.customers.find((obj) => {
-        return obj.id === id;
-      });
+    showEdit(openForm) {
+      this.showAddCustomerForm = openForm;
+      this.tempData = this.selectedData;
     },
     selectData(id) {
       this.selectedData = this.customers.find((obj) => {

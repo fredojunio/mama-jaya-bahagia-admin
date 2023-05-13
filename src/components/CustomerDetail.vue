@@ -11,9 +11,16 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ selectedData.nickname }}
+                {{ selectedData.nickname }} ({{ selectedData.phone }})
               </h1>
               <div class="flex flex-col gap-2">
+                <button
+                  v-if="$route.path == '/admin/customer'"
+                  @click="toggleForm"
+                  class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+                >
+                  Edit
+                </button>
                 <button
                   v-if="$route.path == '/admin/customer'"
                   @click="showCashbackApprovalForm = true"
@@ -34,8 +41,15 @@
         </div>
         <div class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2">
           <h1 class="text-2xl font-bold text-gray-900 truncate mr-auto">
-            {{ selectedData.nickname }}
+            {{ selectedData.nickname }} ({{ selectedData.phone }})
           </h1>
+          <button
+            v-if="$route.path == '/admin/customer'"
+            @click="toggleForm"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+          >
+            Edit
+          </button>
           <button
             v-if="
               $route.path == '/admin/customer' &&
@@ -459,7 +473,7 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Customer: {{ selectedData.nickname }}
+                            Customer: {{ selectedData.name }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
@@ -640,7 +654,7 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Customer: {{ selectedData.nickname }}
+                            Customer: {{ selectedData.name }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
@@ -1030,6 +1044,9 @@ export default {
     };
   },
   methods: {
+    toggleForm() {
+      this.$emit("toggle-form", true); // true to open the form, false to close it
+    },
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
