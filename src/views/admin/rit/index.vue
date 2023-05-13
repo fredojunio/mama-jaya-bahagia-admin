@@ -913,7 +913,7 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Tonase Awal:
-                        {{ formatNumber(selectedData.main_tonnage) }} kg
+                        {{ formatNumber(selectedData.arrived_tonnage) }} kg
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Tanggal Berangkat:

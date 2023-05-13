@@ -103,7 +103,7 @@
                           Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
                         </div>
                       </div>
                     </td>

@@ -59,13 +59,13 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Sisa Tonase
+                      Tonase Awal
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Harga Penjualan
+                      Total Penjualan
                     </th>
                     <th
                       scope="col"
@@ -127,7 +127,7 @@
                           Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
                         </div>
                       </div>
                     </td>
