@@ -35,6 +35,7 @@ app.mixin({
     },
   },
 });
-app.config.globalProperties.url = "http://mama-jaya-bahagia-api.test/api/";
+app.config.globalProperties.url = "https://api.mamajayabahagia.com/api/";
+app.config.globalProperties.devUrl = "http://mama-jaya-bahagia-api.test/api/";
 app.config.globalProperties.prodUrl = "https://api.mamajayabahagia.com/api/";
 app.mount("#app");
