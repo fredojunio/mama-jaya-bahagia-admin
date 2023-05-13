@@ -230,7 +230,8 @@
                 id="price"
                 v-model="rit.price"
                 type="number"
-                disabled
+                @keyup="updateRitKiriman(index, rit)"
+                :disabled="selectedCustomer.type != 'Kiriman'"
                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
@@ -246,9 +247,8 @@
               <input
                 id="total_price"
                 v-model="rit.total_price"
-                @keyup="updateRitKiriman(index, rit)"
                 type="number"
-                :disabled="selectedCustomer.type != 'Kiriman'"
+                disabled
                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
@@ -720,7 +720,10 @@ export default {
     updateRitKiriman(i, rit) {
       if (rit.item) {
         let selectedRit = this.newTransaction.rits[i];
-        selectedRit.price = rit.item.sell_price;
+        selectedRit.total_price =
+          selectedRit.price * selectedRit.tonnage * selectedRit.masak;
+        selectedRit.total_price =
+          Math.ceil(selectedRit.total_price / 100) * 100;
         this.updateTotalPrice();
       }
     },
