@@ -485,27 +485,27 @@
             </div>
           </div>
           <div class="col-span-1">
-            <label for="tonase" class="block text-sm font-medium text-gray-700">
-              Tonase (kg)
+            <label for="money" class="block text-sm font-medium text-gray-700">
+              Uang (Rp.)
             </label>
             <div class="mt-1">
               <input
-                v-model="calculator.tonnage"
-                id="tonase"
+                v-model="calculator.price"
+                id="money"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
           </div>
           <div class="col-span-1">
-            <label for="money" class="block text-sm font-medium text-gray-700">
-              Harga (Rp.)
+            <label for="tonase" class="block text-sm font-medium text-gray-700">
+              Tonase (kg)
             </label>
             <div class="mt-1">
               <input
                 disabled
-                :value="calculator.tonnage * calculator.rit.sell_price"
-                id="money"
+                :value="calculator.price / calculator.rit.sell_price"
+                id="tonase"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
