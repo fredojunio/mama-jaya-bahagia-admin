@@ -146,9 +146,11 @@
                     @keyup="filterRit"
                     :display-value="
                       (rit) =>
-                        `${rit.item.code} - ${formatDate(
-                          rit.arrival_date
-                        )} - (${formatNumber(rit.tonnage_left)} kg)`
+                        rit.item
+                          ? `${rit.item.code} - ${formatDate(
+                              rit.arrival_date
+                            )} - (${formatNumber(rit.tonnage_left)} kg)`
+                          : ``
                     "
                   />
                   <ComboboxOptions
@@ -377,7 +379,7 @@
             Rp.
             {{
               formatNumber(
-                (newTransaction.tb + newTransaction.tw + newTransaction.thr)
+                newTransaction.tb + newTransaction.tw + newTransaction.thr
               )
             }}
           </div>
@@ -691,7 +693,9 @@ export default {
   methods: {
     addNewRit() {
       var newRit = {
-        item: this.filteredRits[0],
+        item: {
+          code: null,
+        },
         tonnage: 0,
         real_tonnage: 0,
         masak: 1,
@@ -703,16 +707,20 @@ export default {
       this.updateRit(newRitIndex, this.newTransaction.rits[newRitIndex]);
     },
     updateRit(i, rit) {
-      let selectedRit = this.newTransaction.rits[i];
-      selectedRit.price = rit.item.sell_price;
-      selectedRit.total_price =
-        selectedRit.price * selectedRit.tonnage * selectedRit.masak;
-      this.updateTotalPrice();
+      if (rit.item) {
+        let selectedRit = this.newTransaction.rits[i];
+        selectedRit.price = rit.item.sell_price;
+        selectedRit.total_price =
+          selectedRit.price * selectedRit.tonnage * selectedRit.masak;
+        this.updateTotalPrice();
+      }
     },
     updateRitKiriman(i, rit) {
-      let selectedRit = this.newTransaction.rits[i];
-      selectedRit.price = rit.item.sell_price;
-      this.updateTotalPrice();
+      if (rit.item) {
+        let selectedRit = this.newTransaction.rits[i];
+        selectedRit.price = rit.item.sell_price;
+        this.updateTotalPrice();
+      }
     },
     updateTotalPrice() {
       this.newTransaction.item_prices = 0;
