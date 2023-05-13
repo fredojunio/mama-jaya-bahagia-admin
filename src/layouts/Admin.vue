@@ -345,6 +345,7 @@ var navigation = [
       { name: "Daftar Pengeluaran", href: "/admin/finance" },
       { name: "Daftar Rit", href: "/admin/finance/rit" },
       { name: "Daftar Penjualan", href: "/admin/finance/penjualan" },
+      { name: "Daftar Cashback", href: "/admin/finance/cashback" },
     ],
   },
   {

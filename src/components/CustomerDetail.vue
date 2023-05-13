@@ -666,7 +666,7 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Jumlah Transaksi: {{ "nanti diliat" }} Hari
+                            Jumlah Transaksi: {{ getUniqueDays(selectedData.transactions) }} Hari
                           </h3>
                         </div>
                         <hr class="border-2" />
