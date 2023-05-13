@@ -455,7 +455,7 @@ export default {
     },
     filterData() {
       this.filteredCustomers = this.customers.filter((customer) => {
-        return customer.name.toLowerCase().includes(this.searchQuery);
+        return customer.nickname.toLowerCase().includes(this.searchQuery);
       });
     },
   },
