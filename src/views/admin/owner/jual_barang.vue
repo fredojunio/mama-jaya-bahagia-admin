@@ -3,9 +3,7 @@
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
-      <h1 class="text-2xl font-semibold text-gray-900 mr-auto">
-        Jual Barang (Owner)
-      </h1>
+      <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Jual Barang</h1>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="sm:hidden">
@@ -207,7 +205,19 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Kode - Tanggal Datang | Tonase - Harga | Tonase Asli
+                      Customer
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode - Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase - Harga
                     </th>
                     <th
                       scope="col"
@@ -220,6 +230,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Total
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Asli
                     </th>
                     <th
                       scope="col"
@@ -244,13 +260,35 @@
                       <div class="flex flex-col items-start">
                         <div
                           class="font-medium text-gray-900"
+                        >
+                          {{ transaction.customer.name }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
                           v-for="rit in transaction.rits"
                           :key="rit.id"
                         >
                           {{ rit.rit.item.code }} - ({{ rit.rit.arrival_date }})
-                          | {{ formatNumber(rit.tonnage) }} kg - Rp.
-                          {{ formatNumber(rit.total_price) }} |
-                          {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage * rit.masak) }} kg - Rp.
+                          {{ formatNumber(rit.total_price) }}
                         </div>
                       </div>
                     </td>
@@ -275,6 +313,19 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp. {{ formatNumber(transaction.total_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage_left) }} kg
                         </div>
                       </div>
                     </td>
@@ -464,7 +515,7 @@
                               for="tonnage"
                               class="block text-sm font-medium text-gray-700"
                             >
-                              Tonase (kg) 
+                              Tonase (kg)
                             </label>
                             <div class="mt-1">
                               <input
@@ -869,7 +920,8 @@
                       type="button"
                       :disabled="
                         selectedRit.branches.some(
-                          (ritBranch) => ritBranch.income <= 0 && ritBranch.sent_tonnage > 0
+                          (ritBranch) =>
+                            ritBranch.income <= 0 && ritBranch.sent_tonnage > 0
                         )
                       "
                       @click.once="submitBranchTransaction()"
@@ -1013,7 +1065,9 @@
                     </button>
                     <button
                       type="button"
-                      :disabled="selectedRit.branch_tonnage < transferData.tonnage"
+                      :disabled="
+                        selectedRit.branch_tonnage < transferData.tonnage
+                      "
                       @click.once="submitTransferFromBranch()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
