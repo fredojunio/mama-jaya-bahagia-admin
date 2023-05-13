@@ -167,7 +167,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">-</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(totalTonnageSoldToday(rit)) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
@@ -224,7 +226,10 @@
                           <span class="ml-3">Cabang</span>
                         </div>
                       </div>
-                      <div v-if="!rit.sold_date" class="flex flex-col items-start">
+                      <div
+                        v-if="!rit.sold_date"
+                        class="flex flex-col items-start"
+                      >
                         <div
                           @click="openReturnRitForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -499,7 +504,9 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
-                        <div class="font-medium text-gray-900">-</div>
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(totalTonnageSoldToday(rit)) }} kg
+                        </div>
                       </div>
                     </td>
                     <td
@@ -2376,6 +2383,19 @@ export default {
       this.selectedData = this.rits.find((obj) => {
         return obj.id === id;
       });
+    },
+    totalTonnageSoldToday(rit) {
+      const today = new Date().toISOString().substring(0, 10);
+      const todayTransactions = rit.transactions.filter((transaction) => {
+        return transaction.created_at.substring(0, 10) === today;
+      });
+      const totalTonnageSoldToday = todayTransactions.reduce(
+        (acc, transaction) => {
+          return acc + transaction.tonnage;
+        },
+        0
+      );
+      return totalTonnageSoldToday;
     },
   },
   created() {
