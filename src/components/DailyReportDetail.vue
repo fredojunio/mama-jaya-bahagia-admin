@@ -20,7 +20,7 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            Laporan - {{ formatDate(selectedData.created_at) }}
+            Laporan - {{ formatDate(selectedData.created_at ?? new Date().toLocaleDateString()) }}
           </h1>
         </div>
       </div>

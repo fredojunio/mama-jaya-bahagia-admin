@@ -229,6 +229,7 @@ export default {
   },
   created() {
     this.getAllReports();
+    this.getTodayReport();
   },
   methods: {
     getAllReports: function () {
@@ -240,7 +241,22 @@ export default {
         .get("/admin/report")
         .then((data) => {
           this.reports = data.data.data.results;
-          this.selectedData = this.reports[0];
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getTodayReport: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/report/get_today_report")
+        .then((data) => {
+          this.selectedData = data.data.data.results[0]
+          this.selectedData.rits = data.data.data.results[1]
+          this.selectedData.transactions = data.data.data.results[2]
         })
         .catch((err) => {
           console.log(err);
