@@ -30,7 +30,7 @@
                 :key="customer.id"
                 :value="customer.id"
               >
-                {{ customer.name }} ({{ customer.nickname }})
+                {{ customer.nickname }} ({{ customer.name }})
               </option>
             </select>
           </div>
