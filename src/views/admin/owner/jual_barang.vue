@@ -889,7 +889,7 @@
                           (ritBranch) => ritBranch.income <= 0 && ritBranch.sent_tonnage > 0
                         )
                       "
-                      @click="submitBranchTransaction()"
+                      @click.once="submitBranchTransaction()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -1031,7 +1031,7 @@
                     <button
                       type="button"
                       :disabled="selectedRit.branch_tonnage < transferData.tonnage"
-                      @click="submitTransferFromBranch()"
+                      @click.once="submitTransferFromBranch()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -1156,14 +1156,14 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="approveNota(2)"
+                      @click.once="approveNota(2)"
                       class="bg-red-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Reject
                     </button>
                     <button
                       type="button"
-                      @click="approveNota(1)"
+                      @click.once="approveNota(1)"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Approve" }}

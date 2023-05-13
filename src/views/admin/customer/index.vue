@@ -51,6 +51,7 @@
                 </div>
                 <input
                   v-model="searchQuery"
+                  @keyup="filterData()"
                   type="search"
                   name="search"
                   id="search"
@@ -71,7 +72,7 @@
             </div>
             <ul role="list" class="relative z-0 divide-y divide-gray-200">
               <li
-                v-for="customer in customers"
+                v-for="customer in filteredCustomers"
                 :key="customer.id"
                 @click="selectData(customer.id)"
               >
@@ -358,6 +359,7 @@ export default {
       },
       customers: [],
       searchQuery: null,
+      filteredCustomers: [],
     };
   },
   created() {
@@ -407,6 +409,7 @@ export default {
               transactions: item.transactions,
             };
           });
+          this.filteredCustomers = this.customers;
           this.selectedData = this.customers[0];
         })
         .catch((err) => {
@@ -471,6 +474,11 @@ export default {
     selectData(id) {
       this.selectedData = this.customers.find((obj) => {
         return obj.id === id;
+      });
+    },
+    filterData() {
+      this.filteredCustomers = this.customers.filter((customer) => {
+        return customer.name.toLowerCase().includes(this.searchQuery);
       });
     },
   },

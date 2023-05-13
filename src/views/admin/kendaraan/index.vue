@@ -51,6 +51,7 @@
                 </div>
                 <input
                   v-model="searchQuery"
+                  @keyup="filterData()"
                   type="search"
                   name="search"
                   id="search"
@@ -71,7 +72,7 @@
             </div>
             <ul role="list" class="relative z-0 divide-y divide-gray-200">
               <li
-                v-for="vehicle in vehicles"
+                v-for="vehicle in filteredVehicles"
                 :key="vehicle.id"
                 @click="selectData(vehicle.id)"
               >
@@ -266,6 +267,7 @@ export default {
       },
       vehicles: [],
       searchQuery: null,
+      filteredVehicles: [],
     };
   },
   created() {
@@ -287,16 +289,8 @@ export default {
       instance
         .get("/admin/vehicle")
         .then((data) => {
-          this.isLoading = false;
-          this.vehicles = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              name: item.name,
-              type: item.type,
-              trip_count: item.trip_count,
-              trips: item.trips,
-            };
-          });
+          this.vehicles = data.data.data.results;
+          this.filteredVehicles = this.vehicles;
           this.selectedData = this.vehicles[0];
         })
         .catch((err) => {
@@ -351,6 +345,11 @@ export default {
     selectData(id) {
       this.selectedData = this.vehicles.find((obj) => {
         return obj.id === id;
+      });
+    },
+    filterData() {
+      this.filteredVehicles = this.vehicles.filter((vehicle) => {
+        return vehicle.name.toLowerCase().includes(this.searchQuery);
       });
     },
   },

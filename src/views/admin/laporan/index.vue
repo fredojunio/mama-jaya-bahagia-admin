@@ -20,8 +20,8 @@
           </div>
         </nav>
 
-        <div>
-          <DailyReportDetail />
+        <div v-if="selectedData">
+          <DailyReportDetail :selectedData="selectedData" />
         </div>
       </main>
       <aside
@@ -34,13 +34,20 @@
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
             <button
+              v-if="
+                reports.some(
+                  (report) =>
+                    report.created_at.substring(0, 10) !=
+                    new Date().toISOString().substring(0, 10)
+                ) || reports.length <= 0
+              "
               @click="showSaveDailyReportForm = true"
               class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
             >
               Simpan Laporan Harian
             </button>
           </div>
-          <form class="mt-6 flex space-x-4" action="#">
+          <!-- <form class="mt-6 flex space-x-4" action="#">
             <div class="flex-1 min-w-0">
               <label for="search" class="sr-only">Search</label>
               <div class="relative rounded-md shadow-sm">
@@ -58,7 +65,7 @@
                 />
               </div>
             </div>
-          </form>
+          </form> -->
         </div>
         <!-- Directory list -->
         <nav class="flex-1 min-h-0 overflow-y-auto" aria-label="Directory">
@@ -69,7 +76,11 @@
               <h3>Laporan</h3>
             </div>
             <ul role="list" class="relative z-0 divide-y divide-gray-200">
-              <li v-for="person in directory" :key="person.id">
+              <li
+                v-for="report in reports"
+                :key="report.id"
+                @click="selectData(report.id)"
+              >
                 <div
                   class="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500"
                 >
@@ -78,10 +89,7 @@
                       <!-- Extend touch target to entire panel -->
                       <span class="absolute inset-0" aria-hidden="true" />
                       <p class="text-sm font-medium text-gray-900">
-                        {{ person.name }}
-                      </p>
-                      <p class="text-sm text-gray-500 truncate">
-                        {{ person.role }}
+                        {{ formatDate(report.created_at) }}
                       </p>
                     </a>
                   </div>
@@ -134,23 +142,28 @@
               class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
             >
               <form class="space-y-8 divide-y divide-gray-200">
-                <div class="space-y-8 divide-y divide-gray-200">
-                  <div>
-                    <div>
-                      <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        {{ isEditing ? "Edit Note" : "Simpan Laporan Harian" }}
-                      </h3>
-                      <p class="mt-1 text-sm text-gray-500">
-                        Pastikan semua data sudah benar.
+                <div class="sm:flex sm:items-start">
+                  <div
+                    class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10"
+                  >
+                    <Icon
+                      icon="fa:exclamation-triangle"
+                      class="h-6 w-6 text-yellow-400"
+                    />
+                  </div>
+                  <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <DialogTitle
+                      as="h3"
+                      class="text-lg leading-6 font-medium text-gray-900"
+                    >
+                      Submit Data
+                    </DialogTitle>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-500">
+                        Pastikan data sudah benar ketika mensubmit laporan
+                        harian!
                       </p>
                     </div>
-                    <!-- <hr />
-                  <div
-                    class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
-                  >
-                    <div class="flex flex-col col-span-1 h-full gap-y-2">
-                    </div>
-                  </div> -->
                   </div>
                 </div>
 
@@ -165,7 +178,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="showSaveDailyReportForm = false"
+                      @click.once="createDailyReport()"
                       class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -185,10 +198,12 @@
 import Admin from "../../../layouts/Admin.vue";
 import DailyReportDetail from "../../../components/DailyReportDetail.vue";
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import {
   Dialog,
+  DialogTitle,
   DialogOverlay,
   TransitionChild,
   TransitionRoot,
@@ -196,6 +211,7 @@ import {
 export default {
   components: {
     Dialog,
+    DialogTitle,
     DialogOverlay,
     TransitionChild,
     TransitionRoot,
@@ -207,36 +223,48 @@ export default {
     return {
       showSaveDailyReportForm: false,
       showDirectory: false,
-      profile: {
-        name: "Ricardo Cooper",
-        about: `
-    <p>Tincidunt quam neque in cursus viverra orci, dapibus nec tristique. Nullam ut sit dolor consectetur urna, dui cras nec sed. Cursus risus congue arcu aenean posuere aliquam.</p>
-    <p>Et vivamus lorem pulvinar nascetur non. Pulvinar a sed platea rhoncus ac mauris amet. Urna, sem pretium sit pretium urna, senectus vitae. Scelerisque fermentum, cursus felis dui suspendisse velit pharetra. Augue et duis cursus maecenas eget quam lectus. Accumsan vitae nascetur pharetra rhoncus praesent dictum risus suspendisse.</p>
-  `,
-        fields: {
-          Phone: "(555) 123-4567",
-          Email: "ricardocooper@example.com",
-          Title: "Senior Front-End Developer",
-          Team: "Product Development",
-          Location: "San Francisco",
-          Sits: "Oasis, 4th floor",
-          Salary: "$145,000",
-          Birthday: "June 8, 1990",
-        },
-      },
-      directory: [
-        {
-          id: 1,
-          name: "24/03/2023",
-          role: "",
-        },
-        {
-          id: 2,
-          name: "23/03/2023",
-          role: "",
-        },
-      ],
+      selectedData: null,
+      reports: [],
     };
+  },
+  created() {
+    this.getAllReports();
+  },
+  methods: {
+    getAllReports: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/report")
+        .then((data) => {
+          this.reports = data.data.data.results;
+          this.selectedData = this.reports[0];
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    createDailyReport: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/report/create_daily_report")
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    selectData(id) {
+      this.selectedData = this.reports.find((obj) => {
+        return obj.id === id;
+      });
+    },
   },
 };
 </script>

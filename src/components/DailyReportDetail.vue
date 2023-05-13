@@ -20,7 +20,7 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            Laporan - 23/03/2023
+            Laporan - {{ formatDate(selectedData.created_at) }}
           </h1>
         </div>
       </div>
@@ -30,55 +30,82 @@
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div class="sm:col-span-2">
           <!-- //NOTE - ini itu total pemasukan - total pengeluaran - transaksi yang belum bayar -->
-          <dt class="text-sm font-medium text-gray-500">Total Penerimaan Uang</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 1.000.000</dd>
+          <dt class="text-sm font-medium text-gray-500">
+            Total Penerimaan Uang
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.money) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Total Pemasukan</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 35.000.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.income) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Total Pengeluaran</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 34.000.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.expense) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Penjualan</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 25.000.000 - 12.300 kg</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.item_income) }} -
+            {{ formatNumber(selectedData.tonnage) }} kg
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pengeluaran Gaji</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 24.000.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.salary_expense) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan TB</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 2.000.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.tb_income) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pengeluaran TB</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 2.000.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.tb_expense) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan TW</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 350.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.tb_income) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pengeluaran TW</dt>
-          <dd class="mt-1 text-sm text-gray-900">Rp. 350.000</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.tw_expense) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan THR</dt>
-          <dd class="mt-1 text-sm text-gray-900">-</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.thr_income) }}
+          </dd>
         </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pengeluaran THR</dt>
-          <dd class="mt-1 text-sm text-gray-900">-</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.thr_expense) }}
+          </dd>
         </div>
         <div class="sm:col-span-1"></div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">
             Pengeluaran Operasional
           </dt>
-          <dd class="mt-1 text-sm text-gray-900">-</dd>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.operational_expense) }}
+          </dd>
         </div>
         <div class="w-full col-span-2 border-t">
           <div class="border-b border-gray-200">
@@ -102,7 +129,7 @@
           </div>
         </div>
         <div v-if="tabs[0].current" class="col-span-2">
-          <form class="flex space-x-4" action="#">
+          <!-- <form class="flex space-x-4" action="#">
             <div class="relative rounded-md shadow-sm w-full">
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -120,8 +147,8 @@
                 :enable-time-picker="false"
               />
             </div>
-          </form>
-          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          </form> -->
+          <div class="mb-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div
               class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
             >
@@ -146,13 +173,17 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
+                    <tr
+                      v-for="ritReport in selectedData.rits"
+                      :key="ritReport.id"
+                    >
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            K-ABC - 01/04/2023
+                            {{ ritReport.rit.item.code }} -
+                            {{ formatDate(ritReport.rit.arrival_date) }}
                           </div>
                         </div>
                       </td>
@@ -160,7 +191,9 @@
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">4.200 kg</div>
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(ritReport.tonnage_left) }} kg
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -171,7 +204,7 @@
           </div>
         </div>
         <div v-if="tabs[1].current" class="col-span-2">
-          <form class="flex space-x-4" action="#">
+          <!-- <form class="flex space-x-4" action="#">
             <div class="relative rounded-md shadow-sm w-full">
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -189,8 +222,8 @@
                 :enable-time-picker="false"
               />
             </div>
-          </form>
-          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          </form> -->
+          <div class="mb-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div
               class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
             >
@@ -204,7 +237,7 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Kode - Tanggal
+                        Kode - Tanggal Datang
                       </th>
                       <th
                         scope="col"
@@ -221,13 +254,17 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
+                    <tr
+                      v-for="ritReport in selectedData.rits"
+                      :key="ritReport.id"
+                    >
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            K-ABC - 23/03/2023
+                            {{ ritReport.rit.item.code }} -
+                            {{ formatDate(ritReport.rit.arrival_date) }}
                           </div>
                         </div>
                       </td>
@@ -235,14 +272,18 @@
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">200 kg</div>
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(ritReport.tonnage_sold) }} kg
+                          </div>
                         </div>
                       </td>
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">2.200 kg</div>
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(ritReport.total_tonnage_sold) }} kg
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -253,7 +294,7 @@
           </div>
         </div>
         <div v-if="tabs[2].current" class="col-span-2">
-          <form class="flex space-x-4" action="#">
+          <!-- <form class="flex space-x-4" action="#">
             <div class="relative rounded-md shadow-sm w-full">
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -271,8 +312,8 @@
                 :enable-time-picker="false"
               />
             </div>
-          </form>
-          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          </form> -->
+          <div class="mb-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div
               class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
             >
@@ -298,12 +339,6 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
                         Tanggal Transaksi
                       </th>
                       <th
@@ -315,20 +350,27 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">Supardi</div>
-                        </div>
-                      </td>
+                    <tr
+                      v-for="transaction in transactions.filter(
+                        (transaction) => {
+                          return (
+                            transaction.created_at.substring(0, 10) ===
+                            selectedData.created_at.substring(0, 10)
+                          );
+                        }
+                      )"
+                      :key="transaction.id"
+                    >
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            {{ formatNumber(10000) }}
+                            {{
+                              transaction.type == "Cabang"
+                                ? "Cabang"
+                                : transaction.customer.name
+                            }}
                           </div>
                         </div>
                       </td>
@@ -337,7 +379,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Belum dibayar
+                            {{ formatNumber(transaction.total_price) }}
                           </div>
                         </div>
                       </td>
@@ -346,7 +388,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            20/03/2023
+                            {{ formatDate(transaction.created_at) }}
                           </div>
                         </div>
                       </td>
@@ -355,50 +397,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            20/03/2023
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">Supardi</div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            {{ formatNumber(10000) }}
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">Lunas</div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            20/03/2023
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            20/03/2023
+                            {{ formatDate(transaction.settled_date) }}
                           </div>
                         </div>
                       </td>
@@ -532,6 +531,7 @@
 
 <script setup>
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -543,15 +543,18 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 export default {
+  props: ["selectedData"],
+  watch: {
+    selectedData: function (newVal, oldVal) {
+      this.getAllTransactions();
+    },
+  },
   components: {
     VueDatePicker,
     Dialog,
     DialogOverlay,
     TransitionChild,
     TransitionRoot,
-  },
-  setup() {
-    return {};
   },
   data() {
     return {
@@ -565,263 +568,11 @@ export default {
         { name: "Penjualan", current: false },
         { name: "Transaksi", current: false },
       ],
-      rits: [
-        {
-          id: 1,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 0,
-          branch_weight: 200,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: {
-            id: 1,
-            name: "Supardi",
-            weight: 2000,
-          },
-          arrive_date: "29/03/2023",
-          empty_date: "29/03/2023",
-          hold: false,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 2,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 2,
-            name: "On Delivery",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 2,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 20000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 3,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: null,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: null,
-          empty_date: null,
-          hold: false,
-          arrived: false,
-          transaction: null,
-          status: {
-            id: 1,
-            name: "Needs Finance Approval",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 3,
-            vehicle_id: 1,
-            request_bbm: 100000,
-            request_etoll: 120000,
-            request_allowance: 50000,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: null,
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: 10100,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: 5000,
-          branch_weight: null,
-          // branches: [
-          //   {
-          //     id: 1,
-          //     rit_id: 1,
-          //     weight: 50,
-          //     sold: true,
-          //     price: 10500,
-          //     sold_date: "29/03/2023"
-          //   },
-          //   {
-          //     id: 2,
-          //     rit_id: 1,
-          //     weight: 150,
-          //     sold: false,
-          //     price: null,
-          //     sold_date: null
-          //   },
-          // ],
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          transaction: {
-            id: 1,
-            created_date: "29/03/2023",
-            customer_id: 1,
-            weight: 800,
-          },
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-        {
-          id: 4,
-          product: {
-            id: 1,
-            code: "K-ABC",
-            name: "Kedelai ABC",
-          },
-          buy_price: 10000,
-          sell_price: null,
-          original_weight: 10000,
-          arrive_weight: 9990,
-          current_weight: null,
-          branch_weight: null,
-          at_customer: null,
-          arrive_date: "29/03/2023",
-          empty_date: null,
-          hold: true,
-          arrived: true,
-          status: {
-            id: 3,
-            name: "Arrived",
-          },
-          from_branch: false,
-          vehicle: {
-            id: 1,
-            name: "Truk A",
-            trip_count: 3,
-            etoll: 100000,
-          },
-          trip: {
-            id: 1,
-            vehicle_id: 1,
-            request_bbm: 0,
-            request_etoll: 0,
-            request_allowance: 0,
-            customer_id: 1,
-            shipping_fee: 25000,
-          },
-          departure_date: "30/03/2023",
-        },
-      ],
+      transactions: [],
     };
+  },
+  created() {
+    this.getAllTransactions();
   },
   methods: {
     changeTab(index) {
@@ -832,7 +583,22 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
-    }, 
+    },
+    getAllTransactions: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction")
+        .then((data) => {
+          this.transactions = data.data.data.results;
+          console.log(this.transactions);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
