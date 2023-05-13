@@ -439,7 +439,7 @@
                 newTransaction.rits.length <= 0 ||
                 newTransaction.rits.some(
                   (rit) =>
-                    rit.item.tonnage_left / rit.masak < rit.tonnage * rit.masak
+                    rit.item.tonnage_left < rit.tonnage * rit.masak
                 ) ||
                 newTransaction.rits.some(
                   (rit) =>

@@ -1971,7 +1971,7 @@
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
                                           {{
-                                            formatNumber(ritTransaction.tonnage)
+                                            formatNumber(ritTransaction.tonnage * ritTransaction.masak)
                                           }}
                                           kg
                                         </div>
@@ -2390,7 +2390,7 @@ export default {
       });
       const totalTonnageSoldToday = todayTransactions.reduce(
         (acc, transaction) => {
-          return acc + transaction.tonnage;
+          return transaction.tonnage * transaction.masak;
         },
         0
       );

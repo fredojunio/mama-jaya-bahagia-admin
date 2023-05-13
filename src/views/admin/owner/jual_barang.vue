@@ -371,7 +371,7 @@
                         <div
                           v-for="(rit, index) in newTransaction.rits"
                           :key="index"
-                          class="grid grid-cols-10 gap-x-2 justify-center items-center"
+                          class="grid grid-cols-8 gap-x-2 justify-center items-center"
                         >
                           <div class="col-span-2">
                             <label
@@ -464,7 +464,7 @@
                               for="tonnage"
                               class="block text-sm font-medium text-gray-700"
                             >
-                              Tonase (kg)
+                              Tonase (kg) 
                             </label>
                             <div class="mt-1">
                               <input
@@ -474,23 +474,6 @@
                                 @keyup="updateRit(index, rit)"
                                 type="number"
                                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-span-2">
-                            <label
-                              for="masak"
-                              class="block text-sm font-medium text-gray-700"
-                            >
-                              Masak
-                            </label>
-                            <div class="mt-1">
-                              <input
-                                id="masak"
-                                v-model="rit.masak"
-                                @keyup="updateRit(index, rit)"
-                                type="number"
-                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
                           </div>

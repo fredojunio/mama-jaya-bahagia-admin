@@ -810,31 +810,13 @@
                                     scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                   >
-                                    TB Total (Rp.)
-                                  </th>
-                                  <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                  >
                                     TW (Rp.)
                                   </th>
                                   <th
                                     scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                   >
-                                    TW Total (Rp.)
-                                  </th>
-                                  <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                  >
                                     THR (Rp.)
-                                  </th>
-                                  <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                  >
-                                    THR Total (Rp.)
                                   </th>
                                 </tr>
                               </thead>
@@ -843,7 +825,7 @@
                                   <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                   >
-                                    <div class="flex flex-col items-center">
+                                    <div class="flex flex-col">
                                       <div
                                         class="font-medium text-gray-900"
                                         v-for="rit in selectedTransaction.rits"
@@ -856,13 +838,13 @@
                                   <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                   >
-                                    <div class="flex flex-col items-center">
+                                    <div class="flex flex-col">
                                       <div
                                         class="font-medium text-gray-900"
                                         v-for="rit in selectedTransaction.rits"
                                         :key="rit.id"
                                       >
-                                        {{ rit.tonnage }}
+                                        {{ formatNumber(rit.tonnage * rit.masak) }}
                                       </div>
                                     </div>
                                   </td>
@@ -874,23 +856,6 @@
                                         Rp.
                                         {{
                                           formatNumber(selectedTransaction.tb)
-                                        }}
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td
-                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                  >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        Rp.
-                                        {{
-                                          formatNumber(
-                                            selectedTransaction.savings
-                                              ? selectedTransaction.savings
-                                                  .total_tb
-                                              : 0
-                                          )
                                         }}
                                       </div>
                                     </div>
@@ -914,41 +879,7 @@
                                       <div class="font-medium text-gray-900">
                                         Rp.
                                         {{
-                                          formatNumber(
-                                            selectedTransaction.savings
-                                              ? selectedTransaction.savings
-                                                  .total_tw
-                                              : 0
-                                          )
-                                        }}
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td
-                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                  >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        Rp.
-                                        {{
                                           formatNumber(selectedTransaction.thr)
-                                        }}
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td
-                                    class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                  >
-                                    <div class="flex items-center">
-                                      <div class="font-medium text-gray-900">
-                                        Rp.
-                                        {{
-                                          formatNumber(
-                                            selectedTransaction.savings
-                                              ? selectedTransaction.savings
-                                                  .total_thr
-                                              : 0
-                                          )
                                         }}
                                       </div>
                                     </div>
