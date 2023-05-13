@@ -158,7 +158,7 @@
                           Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -381,7 +381,7 @@
                           Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -495,7 +495,7 @@
                           Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
                         </div>
                         <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.main_tonnage) }} kg
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
                         </div>
                       </div>
                     </td>
@@ -1065,7 +1065,7 @@
                       <h3
                         class="col-span-2 text-md leading-6 font-medium text-gray-900"
                       >
-                        Pusat: {{ formatNumber(selectedData.main_tonnage) }} kg
+                        Pusat: {{ formatNumber(selectedData.arrived_tonnage) }} kg
                       </h3>
                     </div>
                     <hr />
