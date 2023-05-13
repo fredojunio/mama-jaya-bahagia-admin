@@ -15,14 +15,27 @@
             <div
               class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
             >
-              <table class="min-w-full divide-y divide-gray-300">
+              
+            <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Kode - Tanggal Datang | Tonase - Harga
+                      Customer
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode - Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase - Harga
                     </th>
                     <th
                       scope="col"
@@ -35,6 +48,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Total
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Asli
                     </th>
                     <th
                       scope="col"
@@ -59,11 +78,34 @@
                       <div class="flex flex-col items-start">
                         <div
                           class="font-medium text-gray-900"
+                        >
+                          {{ transaction.customer.name }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
                           v-for="rit in transaction.rits"
                           :key="rit.id"
                         >
                           {{ rit.rit.item.code }} - ({{ rit.rit.arrival_date }})
-                          | {{ formatNumber(rit.tonnage) }} kg - Rp.
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage * rit.masak) }} kg - Rp.
                           {{ formatNumber(rit.total_price) }}
                         </div>
                       </div>
@@ -89,6 +131,19 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp. {{ formatNumber(transaction.total_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage_left) }} kg
                         </div>
                       </div>
                     </td>

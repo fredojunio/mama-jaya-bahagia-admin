@@ -2,42 +2,38 @@
   <div class="flex items-center justify-center">
     <table>
       <tr>
-        <td></td>
-        <td class="text-2xl">NOTA PENJUALAN</td>
-        <td></td>
+        <td class="text-xl text-center" colspan="5">NOTA PENJUALAN</td>
       </tr>
       <tr>
-        <td>TOKO KEDELAI MAMA JAYA</td>
+        <td colspan="2">TOKO KEDELAI MAMA JAYA</td>
         <td></td>
-        <td></td>
-        <td>HARI :</td>
+        <td>HARI:</td>
         <td>{{ dayOfWeek }}</td>
       </tr>
       <tr>
-        <td>KALIJATEN Gg. II/12 SEPANJANG</td>
+        <td colspan="2">KALIJATEN Gg. II/12 SEPANJANG</td>
         <td></td>
-        <td></td>
-        <td>TANGGAL :</td>
+        <td>TANGGAL:</td>
         <td>{{ currentDate }}</td>
       </tr>
       <tr>
         <td>SIDOARJO .</td>
         <td></td>
         <td></td>
-        <td>NAMA :</td>
+        <td>NAMA:</td>
         <td>{{ transaction.customer.name }}</td>
       </tr>
       <tr>
-        <td>TELP : 081281371762</td>
+        <td>TELP: 081281371762</td>
         <td></td>
         <td></td>
-        <td>ALAMAT :</td>
+        <td>ALAMAT:</td>
         <td>{{ transaction.customer.address }}</td>
       </tr>
       <tr class="border-y-2 border-black">
         <td>NO</td>
-        <td>NAMA BARANG</td>
-        <td>BANYAK</td>
+        <td width="150">NAMA BARANG</td>
+        <td width="100">BANYAK</td>
         <td>HARGA</td>
         <td>JUMLAH</td>
       </tr>
@@ -50,17 +46,6 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 1 }}</td>
-        <td>SAK</td>
-        <td>{{ formatNumber(transaction.sack) }}</td>
-        <td>
-          {{ formatNumber(1000) }}
-        </td>
-        <td>
-          {{ formatNumber(transaction.sack_price) }}
-        </td>
-      </tr>
-      <tr>
-        <td>{{ transaction.rits.length + 2 }}</td>
         <td>TABUNGAN</td>
         <td>1</td>
         <td>
@@ -71,7 +56,7 @@
         </td>
       </tr>
       <tr>
-        <td>{{ transaction.rits.length + 3 }}</td>
+        <td>{{ transaction.rits.length + 2 }}</td>
         <td>ONGKOS KIRIM</td>
         <td>1</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
@@ -91,7 +76,7 @@
         <td>-</td>
         <td>-</td>
       </tr>
-      <tr>
+      <tr class="border-t-2 border-black">
         <td>TANDA TERIMA</td>
         <td>HORMAT KAMI</td>
         <td></td>
