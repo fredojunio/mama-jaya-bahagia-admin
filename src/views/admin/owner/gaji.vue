@@ -4,8 +4,7 @@
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Gaji</h1>
-      <div class="relative flex gap-2 text-left">
-        <!-- //TODO - Add Data Logic -->
+      <div class="relative flex gap-2 text-left"> 
         <div class="relative rounded-md shadow-sm w-96">
           <div
             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"

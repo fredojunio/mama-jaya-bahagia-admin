@@ -4,8 +4,7 @@
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Barang</h1>
-      <div class="relative inline-block text-left">
-        <!-- //TODO - Add Data Logic -->
+      <div class="relative inline-block text-left"> 
         <button
           @click="showForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -71,7 +70,6 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
-                        <!-- //TODO - Edit Logic -->
                         <div
                           @click="showEdit(item.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"

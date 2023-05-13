@@ -101,12 +101,10 @@
           <dd class="mt-1 text-sm text-gray-900">{{ selectedData.type }}</dd>
         </div>
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">
-            Cashback (sejak 21/03/2022)
-          </dt>
-          <!-- //TODO - perlu ngitung jumlah past consecutive transactions  -->
-          <!-- ini itu kalo putus sehari ilang? -->
-          <dd class="mt-1 text-sm text-gray-900">mau tanya</dd>
+          <dt class="text-sm font-medium text-gray-500">Cashback</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            {{ getUniqueDays(selectedData.transactions) }} Hari
+          </dd>
         </div>
         <div class="w-full col-span-2 border-t">
           <div class="border-b border-gray-200">
@@ -1126,6 +1124,16 @@ export default {
           console.log(err);
         });
     },
+    getUniqueDays(transactions) {
+      const uniqueDays = transactions.reduce((acc, transaction) => {
+        const date = transaction.created_at.split(" ")[0]; // get the date part only
+        if (!acc[date]) {
+          acc[date] = true; // add the date to the object if it doesn't exist yet
+        }
+        return acc;
+      }, {});
+      return Object.keys(uniqueDays).length; // get the number of unique dates
+    },
     approveCashback() {
       const instance = axios.create({
         baseURL: this.url,
@@ -1137,10 +1145,6 @@ export default {
           this.cashback
         )
         .then((data) => {
-          this.showCashbackApprovalForm = false;
-          this.cashback = {
-            amount: null,
-          };
           this.$router.go(0);
         })
         .catch((err) => {
