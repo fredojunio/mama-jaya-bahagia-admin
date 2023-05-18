@@ -311,7 +311,7 @@
           <div class="relative flex items-start">
             <div class="text-sm">
               <label for="sak" class="font-medium text-gray-700"
-                >Sak - Stok: 190</label
+                >Sak - Stok: {{ sacks }}</label
               >
             </div>
             <div
@@ -438,13 +438,10 @@
                 selectedCustomer.id == null ||
                 newTransaction.rits.length <= 0 ||
                 newTransaction.rits.some(
-                  (rit) =>
-                    rit.item.tonnage_left < rit.tonnage * rit.masak
+                  (rit) => rit.item.tonnage_left < rit.tonnage * rit.masak
                 ) ||
-                newTransaction.rits.some(
-                  (rit) =>
-                    rit.tonnage <= 0
-                )
+                newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
+                newTransaction.sack > sacks
               "
               @click="showConfirmationPopup = true"
               class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -877,6 +874,20 @@ export default {
           console.log(err);
         });
     },
+    getRemaningSacks: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction/get_remaining_sack")
+        .then((data) => {
+          this.sacks = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     selectCustomer(id) {
       this.selectedCustomer = this.customers.find((obj) => {
         return obj.id === id;
@@ -901,6 +912,7 @@ export default {
     },
   },
   created() {
+    this.getRemaningSacks();
     this.getAllCustomers();
     this.getAllVehicles();
     this.getAllRits();
@@ -909,6 +921,7 @@ export default {
     return {
       //ini buat confirmation
       showConfirmationPopup: false,
+      sacks: 0,
       rits: [],
       filteredRits: [],
       ritQuery: "",

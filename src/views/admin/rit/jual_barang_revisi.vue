@@ -444,9 +444,19 @@
         <div class="pt-5">
           <div class="flex justify-end">
             <button
+              :disabled="
+                selectedCustomer.id == null ||
+                newTransaction.rits.length <= 0 ||
+                newTransaction.rits.some(
+                  (rit) =>
+                    rit.item.tonnage_left / rit.masak < rit.tonnage * rit.masak
+                ) ||
+                newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
+                newTransaction.sack > sacks
+              "
               type="button"
               @click="showConfirmationPopup = true"
-              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+              class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
             >
               {{ "Submit" }}
             </button>
@@ -763,6 +773,20 @@ export default {
           rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
       );
     },
+    getRemaningSacks: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction/get_remaining_sack")
+        .then((data) => {
+          this.sacks = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getAllRits: function () {
       const instance = axios.create({
         baseURL: this.url,
@@ -930,6 +954,7 @@ export default {
     },
   },
   created() {
+    this.getRemaningSacks();
     this.getAllCustomers();
     this.getAllVehicles();
     this.getAllRits();
@@ -939,6 +964,7 @@ export default {
     return {
       //ini buat confirmation
       showConfirmationPopup: false,
+      sacks: 0,
       rits: [],
       filteredRits: [],
       ritQuery: "",
