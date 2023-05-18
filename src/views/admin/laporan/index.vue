@@ -35,7 +35,7 @@
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
             <button
               v-if="
-                reports.some(
+                reports.every(
                   (report) =>
                     report.created_at.substring(0, 10) !=
                     new Date().toISOString().substring(0, 10)
@@ -47,25 +47,26 @@
               Simpan Laporan Harian
             </button>
           </div>
-          <!-- <form class="mt-6 flex space-x-4" action="#">
-            <div class="flex-1 min-w-0">
-              <label for="search" class="sr-only">Search</label>
-              <div class="relative rounded-md shadow-sm">
-                <div
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                >
-                  <Icon icon="uil:search" class="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="search"
-                  name="search"
-                  id="search"
-                  class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Search"
-                />
+          <form class="mt-6 flex space-x-4" action="#">
+            <div class="relative rounded-md shadow-sm w-96">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
               </div>
+              <VueDatePicker
+                v-model="date"
+                @update:model-value="filterData"
+                locale="id"
+                :start-time="[
+                  { hours: 0, minutes: 0, seconds: 0 },
+                  { hours: 23, minutes: 59, seconds: 59 },
+                ]"
+                range
+                :enable-time-picker="false"
+              />
             </div>
-          </form> -->
+          </form>
         </div>
         <!-- Directory list -->
         <nav class="flex-1 min-h-0 overflow-y-auto" aria-label="Directory">
@@ -77,7 +78,7 @@
             </div>
             <ul role="list" class="relative z-0 divide-y divide-gray-200">
               <li
-                v-for="report in reports"
+                v-for="report in filteredReports"
                 :key="report.id"
                 @click="selectData(report.id)"
               >
@@ -201,6 +202,8 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Dialog,
   DialogTitle,
@@ -210,6 +213,7 @@ import {
 } from "@headlessui/vue";
 export default {
   components: {
+    VueDatePicker,
     Dialog,
     DialogTitle,
     DialogOverlay,
@@ -225,6 +229,11 @@ export default {
       showDirectory: false,
       selectedData: null,
       reports: [],
+      filteredReports: [],
+      date: [
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
+      ],
     };
   },
   created() {
@@ -241,6 +250,7 @@ export default {
         .get("/admin/report")
         .then((data) => {
           this.reports = data.data.data.results;
+          this.filteredReports = this.reports;
         })
         .catch((err) => {
           console.log(err);
@@ -254,9 +264,9 @@ export default {
       instance
         .get("/admin/report/get_today_report")
         .then((data) => {
-          this.selectedData = data.data.data.results[0]
-          this.selectedData.rits = data.data.data.results[1]
-          this.selectedData.transactions = data.data.data.results[2]
+          this.selectedData = data.data.data.results[0];
+          this.selectedData.rits = data.data.data.results[1];
+          this.selectedData.reports = data.data.data.results[2];
         })
         .catch((err) => {
           console.log(err);
@@ -279,6 +289,14 @@ export default {
     selectData(id) {
       this.selectedData = this.reports.find((obj) => {
         return obj.id === id;
+      });
+    },
+    filterData() {
+      let startDate = new Date(this.date[0]);
+      let untilDate = new Date(this.date[1]);
+      this.filteredReports = this.reports.filter((report) => {
+        let reportDate = new Date(report.created_at);
+        return reportDate >= startDate && reportDate <= untilDate;
       });
     },
   },
