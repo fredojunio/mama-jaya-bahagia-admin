@@ -141,6 +141,7 @@
               >
                 <div class="relative mt-1">
                   <ComboboxInput
+                    autocomplete="off"
                     class="w-full rounded-md border border-gray-300 bg-white py-2 px-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                     @change="ritQuery = $event.target.value"
                     @keyup="filterRit"
@@ -265,6 +266,20 @@
         <hr class="border-2" />
         <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
           <div class="col-span-1">
+            <label for="thr" class="block text-sm font-medium text-gray-700">
+              THR (Rp.)
+            </label>
+            <div class="mt-1">
+              <input
+                id="thr"
+                v-model="newTransaction.thr"
+                @keyup="updateTotalPrice"
+                type="number"
+                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+              />
+            </div>
+          </div>
+          <div class="col-span-1">
             <label for="tb" class="block text-sm font-medium text-gray-700">
               TB (Rp.)
             </label>
@@ -286,20 +301,6 @@
               <input
                 id="tw"
                 v-model="newTransaction.tw"
-                @keyup="updateTotalPrice"
-                type="number"
-                class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-              />
-            </div>
-          </div>
-          <div class="col-span-1">
-            <label for="thr" class="block text-sm font-medium text-gray-700">
-              THR (Rp.)
-            </label>
-            <div class="mt-1">
-              <input
-                id="thr"
-                v-model="newTransaction.thr"
                 @keyup="updateTotalPrice"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -705,7 +706,7 @@ export default {
         item: {
           code: null,
         },
-        tonnage: 0,
+        tonnage: null,
         real_tonnage: 0,
         masak: 1,
         price: null,

@@ -97,7 +97,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ transaction.type == "Cabang" ? "Cabang" : transaction.customer.name }}
+                          {{ transaction.type == "Cabang" ? "Cabang" : transaction.customer.nickname }}
                         </div>
                       </div>
                     </td>
