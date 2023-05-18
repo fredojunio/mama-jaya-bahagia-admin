@@ -15,8 +15,7 @@
             <div
               class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
             >
-              
-            <table class="min-w-full divide-y divide-gray-300">
+              <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                   <tr>
                     <th
@@ -68,6 +67,7 @@
                     v-for="transaction in transactions.filter(
                       (transaction) =>
                         transaction.owner_approved != 0 &&
+                        transaction.owner_approved != 3 &&
                         transaction.type == 'Kiriman'
                     )"
                     :key="transaction.id"
@@ -76,9 +76,7 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
-                        <div
-                          class="font-medium text-gray-900"
-                        >
+                        <div class="font-medium text-gray-900">
                           {{ transaction.customer.name }}
                         </div>
                       </div>

@@ -912,6 +912,7 @@ export default {
       this.updateTotalPrice();
     },
     createData() {
+      this.newTransaction.old_id = this.id
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -1020,6 +1021,7 @@ export default {
         item_prices: null,
         discount: null,
         total_price: null,
+        old_id: null,
       },
       money_brought: null,
       calculator: {
