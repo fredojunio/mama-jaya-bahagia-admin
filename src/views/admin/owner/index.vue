@@ -422,9 +422,7 @@ export default {
       instance
         .post(`admin/rit/${this.selectedData.id}/priced`, this.pricedRit)
         .then((data) => {
-          this.showEditRitPriceForm = false;
-          this.getAllData();
-          this.resetPricedRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

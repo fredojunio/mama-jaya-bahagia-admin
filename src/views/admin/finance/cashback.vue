@@ -271,9 +271,7 @@ export default {
       instance
         .get("admin/cashback/" + this.selectedData.id)
         .then((data) => {
-          console.log(data)
-          // this.showCashbackApprovalForm = false;
-          // this.getAllData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

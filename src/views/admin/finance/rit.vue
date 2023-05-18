@@ -252,10 +252,10 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="showRitApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      @click.once="rejectRit()"
+                      class="bg-red-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      Cancel
+                      Reject
                     </button>
                     <button
                       type="button"
@@ -389,8 +389,21 @@ export default {
       instance
         .get("admin/rit/" + this.selectedData.id + "/approve_finance")
         .then((data) => {
-          this.showRitApprovalForm = false;
-          this.getAllData();
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    rejectRit() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("admin/rit/" + this.selectedData.id + "/reject_finance")
+        .then((data) => {
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

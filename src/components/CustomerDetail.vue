@@ -1040,15 +1040,6 @@ export default {
           this.savings
         )
         .then((data) => {
-          this.showWithdrawSavingsForm = false;
-          this.savings = {
-            type: "tb",
-            amount: null,
-            tb: 0,
-            tw: 0,
-            thr: 0,
-            difference: 0,
-          };
           this.$router.go(0);
         })
         .catch((err) => {

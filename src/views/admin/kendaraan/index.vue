@@ -309,9 +309,7 @@ export default {
           type: this.tempData.type,
         })
         .then((data) => {
-          this.showAddVehicleForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -329,9 +327,7 @@ export default {
           type: this.tempData.type,
         })
         .then((data) => {
-          this.showAddVehicleForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

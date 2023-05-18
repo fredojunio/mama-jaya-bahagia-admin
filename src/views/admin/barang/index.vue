@@ -274,7 +274,6 @@ export default {
       instance
         .get("/admin/item")
         .then((data) => {
-          this.isLoading = false;
           this.items = data.data.data.results.map((item) => {
             return {
               id: item.id,
@@ -298,9 +297,7 @@ export default {
           brand: this.tempData.brand,
         })
         .then((data) => {
-          this.showForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -318,9 +315,7 @@ export default {
           brand: this.tempData.brand,
         })
         .then((data) => {
-          this.showForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

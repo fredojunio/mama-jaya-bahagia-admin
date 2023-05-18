@@ -1599,8 +1599,7 @@ export default {
           owner_approved: val,
         })
         .then((data) => {
-          this.showNotaApprovalForm = false;
-          this.getAllTransactions();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

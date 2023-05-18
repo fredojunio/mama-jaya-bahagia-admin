@@ -826,7 +826,6 @@ export default {
       instance
         .get("/admin/customer")
         .then((data) => {
-          this.isLoading = false;
           this.customers = data.data.data.results.map((item) => {
             return {
               id: item.id,
@@ -904,7 +903,6 @@ export default {
       instance
         .post("admin/transaction", this.newTransaction)
         .then((data) => {
-          // console.log(data)
           this.$router.go(0);
         })
         .catch((err) => {

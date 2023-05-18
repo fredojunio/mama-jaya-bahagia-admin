@@ -94,7 +94,6 @@ export default {
             password: this.userPassword,
           })
           .then((data) => {
-            console.log(data);
             localStorage["access_token"] = data.data.data.results.access_token;
             localStorage["user_id"] = data.data.data.results.user_id;
             localStorage["role_id"] = data.data.data.results.role_id;

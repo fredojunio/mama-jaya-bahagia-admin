@@ -752,7 +752,6 @@ export default {
       instance
         .get("/admin/expense")
         .then((data) => {
-          this.isLoading = false;
           this.expenses = data.data.data.results.map((item) => {
             return {
               id: item.id,
@@ -786,15 +785,7 @@ export default {
       instance
         .post(`admin/expense`, this.expense)
         .then((data) => {
-          this.showAddExpenseForm = false;
-          this.expense = {
-            amount: null,
-            note: null,
-            name: null,
-            time: null,
-            type: "Operasional",
-          };
-          this.getAllData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

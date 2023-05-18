@@ -392,8 +392,7 @@ export default {
       instance
         .get("admin/transaction/" + this.selectedData.id + "/approve_finance")
         .then((data) => {
-          this.showSaleApprovalForm = false;
-          this.getAllData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

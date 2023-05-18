@@ -396,7 +396,6 @@ export default {
           this.customers = data.data.data.results;
           this.filteredCustomers = this.customers;
           this.selectedData = this.customers[0];
-          console.log(this.selectedData)
         })
         .catch((err) => {
           console.log(err);
@@ -410,9 +409,7 @@ export default {
       instance
         .post("admin/customer", this.tempData)
         .then((data) => {
-          this.showAddCustomerForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -436,9 +433,7 @@ export default {
           type: this.tempData.type,
         })
         .then((data) => {
-          this.showAddCustomerForm = false;
-          this.getAllData();
-          this.resetData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

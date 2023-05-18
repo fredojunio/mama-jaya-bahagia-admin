@@ -2215,9 +2215,7 @@ export default {
       instance
         .post("admin/rit", this.newRit)
         .then((data) => {
-          this.showAddRitForm = false;
-          this.getAllData();
-          this.resetNewRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -2248,9 +2246,7 @@ export default {
       instance
         .post(`admin/rit/${this.selectedData.id}/arrived`, this.arrivedRit)
         .then((data) => {
-          this.showEditRitArrivalForm = false;
-          this.getAllData();
-          this.resetArrivedRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -2270,9 +2266,7 @@ export default {
       instance
         .post(`admin/rit/${this.selectedData.id}/priced`, this.pricedRit)
         .then((data) => {
-          this.showEditRitPriceForm = false;
-          this.getAllData();
-          this.resetPricedRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -2300,9 +2294,7 @@ export default {
       instance
         .post(`admin/rit/transfer_to_branch`, this.transferBranchRit)
         .then((data) => {
-          this.showTransferToBranch = false;
-          this.getAllData();
-          this.resetTransferToBranchRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -2326,10 +2318,7 @@ export default {
       instance
         .post(`admin/rit/${this.selectedData.id}/return`, this.returnRit)
         .then((data) => {
-          this.showReturnRitForm = false;
-          this.getAllData();
-          this.getAllVehicles();
-          this.resetReturnRit();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);

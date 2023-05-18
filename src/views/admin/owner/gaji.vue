@@ -411,15 +411,7 @@ export default {
       instance
         .post(`admin/expense`, this.expense)
         .then((data) => {
-          this.showAddSalaryForm = false;
-          this.expense = {
-            amount: null,
-            note: null,
-            name: null,
-            time: null,
-            type: "Gaji",
-          };
-          this.getAllData();
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
