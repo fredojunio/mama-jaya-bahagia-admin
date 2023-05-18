@@ -264,6 +264,7 @@ export default {
         type: null,
         trip_count: null,
         trips: [],
+        toll: null,
       },
       vehicles: [],
       searchQuery: null,

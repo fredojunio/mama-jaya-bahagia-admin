@@ -11,7 +11,7 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ selectedData.name }}
+                {{ selectedData.name }} (Toll: {{selectedData.toll}})
               </h1>
             </div>
           </div>
@@ -20,7 +20,7 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            {{ selectedData.name }}
+            {{ selectedData.name }} (Toll: {{selectedData.toll}})
             <span class="text-gray-400 text-sm font-normal">{{
               selectedData.type
             }}</span>
