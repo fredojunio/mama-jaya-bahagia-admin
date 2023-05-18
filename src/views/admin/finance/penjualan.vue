@@ -78,8 +78,7 @@
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
                     v-for="transaction in filteredTransactions.filter(
-                      (transaction) =>
-                        transaction.owner_approved == 1
+                      (transaction) => transaction.owner_approved == 1
                     )"
                     :key="transaction.id"
                   >
@@ -97,7 +96,11 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ transaction.type == "Cabang" ? "Cabang" : transaction.customer.nickname }}
+                          {{
+                            transaction.type == "Cabang"
+                              ? "Cabang"
+                              : transaction.customer.nickname
+                          }}
                         </div>
                       </div>
                     </td>
@@ -135,11 +138,9 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div
-                        class="flex flex-col items-start"
-                        v-if="transaction.finance_approved == 0"
-                      >
+                      <div class="flex flex-col items-start">
                         <div
+                          v-if="transaction.finance_approved == 0"
                           @click="showApprovalForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -149,6 +150,22 @@
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
+                        <router-link
+                          :to="{
+                            path: `/admin/rit/nota/detail/${transaction.id}`,
+                          }"
+                          target="_blank"
+                        >
+                          <div
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                          >
+                            <Icon
+                              icon="uil:print"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                            ></Icon>
+                            <span class="ml-3">Print</span>
+                          </div>
+                        </router-link>
                       </div>
                     </td>
                   </tr>
@@ -344,7 +361,7 @@ export default {
               trip: item.trip,
               rits: item.rits,
               savings: item.savings,
-              type: item.type
+              type: item.type,
             };
           });
           this.filterData();
