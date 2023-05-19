@@ -162,6 +162,7 @@
             <Menu as="div" class="ml-3 relative">
               <div>
                 <MenuButton
+                  @click="getNotifications()"
                   class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <span class="sr-only">Open user menu</span>
@@ -187,7 +188,8 @@
                       class="flex flex-col gap-y-2 p-2 overflow-y-scroll max-h-96"
                     >
                       <div
-                        to="/admin/rit/owner_jual_barang"
+                        v-for="(notification, index) in notifications"
+                        :key="index"
                         class="rounded-md !bg-yellow-50 p-4"
                       >
                         <div class="flex">
@@ -199,82 +201,11 @@
                           </div>
                           <div class="ml-3">
                             <h3 class="text-sm font-medium text-yellow-800">
-                              Barang Cabang
+                              {{ notification.title }}
                             </h3>
                             <div class="mt-2 text-sm text-yellow-700">
                               <p>
-                                Ada barang di cabang yang sudah lebih dari 2
-                                minggu!
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div to="/admin/rit" class="rounded-md !bg-yellow-50 p-4">
-                        <div class="flex">
-                          <div class="flex-shrink-0">
-                            <Icon
-                              icon="fa:exclamation-triangle"
-                              class="h-5 w-5 text-yellow-400"
-                            ></Icon>
-                          </div>
-                          <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                              Barang Dalam Perjalanan
-                            </h3>
-                            <div class="mt-2 text-sm text-yellow-700">
-                              <p>
-                                Ada barang yang sedang dalam perjalanan.
-                                Pastikan sudah dimasukan jumlah tonase yang
-                                datang.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        to="/admin/customer"
-                        class="rounded-md !bg-yellow-50 p-4"
-                      >
-                        <div class="flex">
-                          <div class="flex-shrink-0">
-                            <Icon
-                              icon="fa:exclamation-triangle"
-                              class="h-5 w-5 text-yellow-400"
-                            ></Icon>
-                          </div>
-                          <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                              Cashback Supardi Akan Hangus
-                            </h3>
-                            <div class="mt-2 text-sm text-yellow-700">
-                              <p>
-                                Jika tidak ada transaksi dari Supardi, maka
-                                cashback customer tersebut akan hangus.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        to="/admin/finance"
-                        class="rounded-md !bg-yellow-50 p-4"
-                      >
-                        <div class="flex">
-                          <div class="flex-shrink-0">
-                            <Icon
-                              icon="fa:exclamation-triangle"
-                              class="h-5 w-5 text-yellow-400"
-                            ></Icon>
-                          </div>
-                          <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                              Input Pemasukan
-                            </h3>
-                            <div class="mt-2 text-sm text-yellow-700">
-                              <p>
-                                Ada penjualan yang sudah dikirim namun pemasukan
-                                yang didapat belum dicatat.
+                                {{ notification.description }}
                               </p>
                             </div>
                           </div>
@@ -302,6 +233,7 @@
 
 <script setup>
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 
 <script>
@@ -402,10 +334,26 @@ export default {
       localStorage["role_id"] = null;
       this.$router.push("/");
     },
+    getNotifications: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/get_notification")
+        .then((data) => {
+          this.notifications = data.data.data.results;
+          console.log(this.notifications);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
       sidebarOpen: false,
+      notifications: [],
     };
   },
 };
