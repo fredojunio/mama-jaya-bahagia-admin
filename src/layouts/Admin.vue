@@ -192,24 +192,38 @@
                         :key="index"
                         class="rounded-md !bg-yellow-50 p-4"
                       >
-                        <div class="flex">
-                          <div class="flex-shrink-0">
-                            <Icon
-                              icon="fa:exclamation-triangle"
-                              class="h-5 w-5 text-yellow-400"
-                            ></Icon>
-                          </div>
-                          <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                              {{ notification.title }}
-                            </h3>
-                            <div class="mt-2 text-sm text-yellow-700">
-                              <p>
-                                {{ notification.description }}
-                              </p>
+                        <a
+                          :href="
+                            notification.title != 'Barang Cabang'
+                              ? notification.title != 'Barang Dalam Perjalanan'
+                                ? notification.title != 'Input Pemasukan'
+                                  ? notification.title != 'Penjualan Customer'
+                                    ? ''
+                                    : '/admin/owner/jual_barang'
+                                  : '/admin/finance/penjualan'
+                                : '/admin/rit'
+                              : '/admin/owner/jual_barang'
+                          "
+                        >
+                          <div class="flex">
+                            <div class="flex-shrink-0">
+                              <Icon
+                                icon="fa:exclamation-triangle"
+                                class="h-5 w-5 text-yellow-400"
+                              ></Icon>
                             </div>
-                          </div>
-                        </div>
+                            <div class="ml-3">
+                              <h3 class="text-sm font-medium text-yellow-800">
+                                {{ notification.title }}
+                              </h3>
+                              <div class="mt-2 text-sm text-yellow-700">
+                                <p>
+                                  {{ notification.description }}
+                                </p>
+                              </div>
+                            </div>
+                          </div></a
+                        >
                       </div>
                     </div>
                   </MenuItem>
