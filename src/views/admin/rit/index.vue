@@ -1042,7 +1042,8 @@
                         newRit.do_code == null ||
                         newRit.item_id == null ||
                         newRit.tonnage == null ||
-                        newRit.sack == null
+                        newRit.sack == null ||
+                        (newRit.send_to_customer && (newRit.customer_id == null || newRit.customer.tonnage <= 0))
                       "
                       @click.once="createData()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
