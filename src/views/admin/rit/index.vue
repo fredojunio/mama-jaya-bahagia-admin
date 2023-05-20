@@ -1043,7 +1043,9 @@
                         newRit.item_id == null ||
                         newRit.tonnage == null ||
                         newRit.sack == null ||
-                        (newRit.send_to_customer && (newRit.customer_id == null || newRit.customer.tonnage <= 0))
+                        (newRit.send_to_customer &&
+                          (newRit.customer_id == null ||
+                            newRit.customer.tonnage <= 0))
                       "
                       @click.once="createData()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -1139,7 +1141,7 @@
                           for="original_weight"
                           class="block text-sm font-medium text-gray-700"
                         >
-                          Tonase Asli (kg) {{selectedData.main_tonnage}}
+                          Tonase Asli (kg) {{ selectedData.main_tonnage }}
                         </label>
                         <div class="mt-1">
                           <input
@@ -1183,7 +1185,7 @@
                       :disabled="
                         arrivedRit.tonnage <= 0 ||
                         arrivedRit.tonnage > selectedData.main_tonnage ||
-                        (selectedData.main_tonnage - 20) > arrivedRit.tonnage
+                        selectedData.main_tonnage - 20 > arrivedRit.tonnage
                       "
                       type="button"
                       @click.once="ritHasArrived()"
@@ -2089,8 +2091,31 @@
                       </h3>
                     </div>
                     <hr />
+                    <form class="mt-6 flex space-x-4" action="#">
+                      <div class="flex-1 min-w-0">
+                        <label for="search" class="sr-only">Search</label>
+                        <div class="relative rounded-md shadow-sm">
+                          <div
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                          >
+                            <Icon
+                              icon="uil:search"
+                              class="h-5 w-5 text-gray-400"
+                            />
+                          </div>
+                          <input
+                            v-model="searchRitDetailQuery"
+                            type="search"
+                            name="search"
+                            id="search"
+                            class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Search"
+                          />
+                        </div>
+                      </div>
+                    </form>
                     <div
-                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                      class="max-w-7xl grid grid-cols-1 mx-auto mb-8 gap-x-4"
                     >
                       <div class="mt-8 flex flex-col">
                         <div
@@ -2146,7 +2171,12 @@
                                     v-for="ritTransaction in selectedData.transactions.filter(
                                       (transaction) =>
                                         transaction.transaction
-                                          .owner_approved == 1
+                                          .owner_approved == 1 &&
+                                        (searchRitDetailQuery
+                                          ? transaction.customer_name
+                                              .toLowerCase()
+                                              .includes(searchRitDetailQuery)
+                                          : true)
                                     )"
                                     :key="ritTransaction.id"
                                   >
@@ -2620,6 +2650,7 @@ export default {
     },
     openRitDetail(id) {
       this.showRitDetail = true;
+      this.searchRitDetailQuery = null;
       this.selectedData = this.rits.find((obj) => {
         return obj.id === id;
       });
@@ -2662,6 +2693,7 @@ export default {
       showRitDetail: false,
       //ini buat cek pengiriman ke cabang
       showRitBranchDetail: false,
+      searchRitDetailQuery: null,
       toggleRetur: false,
       tabs: [
         { name: "Stok", current: true },
