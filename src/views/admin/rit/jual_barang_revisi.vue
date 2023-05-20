@@ -244,7 +244,8 @@
                 id="price"
                 v-model="rit.price"
                 type="number"
-                disabled
+                @keyup="updateRitKiriman(index, rit)"
+                :disabled="selectedCustomer.type != 'Kiriman'"
                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>
@@ -260,9 +261,8 @@
               <input
                 id="total_price"
                 v-model="rit.total_price"
-                @keyup="updateRitKiriman(index, rit)"
                 type="number"
-                :disabled="selectedCustomer.type != 'Kiriman'"
+                disabled
                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
             </div>

@@ -150,7 +150,7 @@
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
-                        <router-link
+                        <!-- <router-link
                           :to="{
                             path: `/admin/rit/nota/detail/${transaction.id}`,
                           }"
@@ -165,7 +165,7 @@
                             ></Icon>
                             <span class="ml-3">Print</span>
                           </div>
-                        </router-link>
+                        </router-link> -->
                       </div>
                     </td>
                   </tr>
