@@ -1,10 +1,20 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Rit</h1>
-      <div class="relative flex gap-2 text-left"> 
+      <div class="relative flex gap-2 text-left">
         <button
           @click="showTransferToBranch = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -124,7 +134,8 @@
                       (rit) =>
                         rit.arrival_date != null &&
                         rit.sell_price > 0 &&
-                        rit.is_hold != 1
+                        rit.is_hold != 1 &&
+                        rit.sold_date == null
                     )"
                     :key="rit.id"
                   >
@@ -534,6 +545,203 @@
         </div>
       </div>
       <!-- //!SECTION  -->
+      <!-- //SECTION Tab Stok Habis  -->
+      <div v-if="currentTab == tabs[3].name" class="mt-8 flex flex-col">
+        <div class="flex items-center justify-end mb-4 gap-4">
+          <input type="date" v-model="tabDate" />
+          <button
+            @click="getEmptyRit"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+          >
+            Search
+          </button>
+        </div>
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode - Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Total
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Keterangan
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Penjualan Harian
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Sisa Tonase
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Harga Jual
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal Habis
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr
+                    v-for="rit in rits.filter((rit) => rit.sold_date != null)"
+                    :key="rit.id"
+                  >
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ rit.item.code }} -
+                          {{ formatDate(rit.arrival_date) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.expected_tonnage) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col gap-y-2">
+                        <div class="font-medium text-gray-900">
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(totalTonnageSoldToday(rit)) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.sell_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(rit.sold_date) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="openRitBranchDetail(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:home"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Cabang</span>
+                        </div>
+                      </div>
+                      <div
+                        v-if="!rit.sold_date"
+                        class="flex flex-col items-start"
+                      >
+                        <div
+                          @click="openReturnRitForm(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:truck"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Retur</span>
+                        </div>
+                      </div>
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="openRitDetail(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:eye"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Detail</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- //!SECTION -->
     </div>
     <!-- //SECTION Tambah Rit -->
     <TransitionRoot as="template" :show="showAddRitForm">
@@ -1065,7 +1273,8 @@
                       <h3
                         class="col-span-2 text-md leading-6 font-medium text-gray-900"
                       >
-                        Pusat: {{ formatNumber(selectedData.arrived_tonnage) }} kg
+                        Pusat:
+                        {{ formatNumber(selectedData.arrived_tonnage) }} kg
                       </h3>
                     </div>
                     <hr />
@@ -1353,12 +1562,7 @@
                                 class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
                               >
                                 <option
-                                  v-for="rite in rits.filter(
-                                    (rite) =>
-                                      rite.arrival_date != null &&
-                                      rite.tonnage_left > 0 &&
-                                      rite.is_hold == 0
-                                  )"
+                                  v-for="rite in availableRits"
                                   :key="rite.id"
                                   :value="rite.id"
                                 >
@@ -1939,7 +2143,8 @@
                                   <tr
                                     v-for="ritTransaction in selectedData.transactions.filter(
                                       (transaction) =>
-                                        transaction.transaction.owner_approved == 1
+                                        transaction.transaction
+                                          .owner_approved == 1
                                     )"
                                     :key="ritTransaction.id"
                                   >
@@ -1971,7 +2176,10 @@
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
                                           {{
-                                            formatNumber(ritTransaction.tonnage * ritTransaction.masak)
+                                            formatNumber(
+                                              ritTransaction.tonnage *
+                                                ritTransaction.masak
+                                            )
                                           }}
                                           kg
                                         </div>
@@ -2073,6 +2281,71 @@ export default {
     SwitchLabel,
   },
   methods: {
+    getAllRit() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit/get_all_stock")
+        .then((data) => {
+          this.rits = data.data.data.results;
+          this.availableRits = this.rits;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getOtwRit() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit/get_otw_stock")
+        .then((data) => {
+          this.rits = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getHoldRit() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit/get_hold_stock")
+        .then((data) => {
+          this.rits = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getEmptyRit() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("/admin/rit/get_empty_stock", { date: this.tabDate })
+        .then((data) => {
+          this.rits = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -2081,6 +2354,15 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
+      if (this.currentTab == "Stok") {
+        this.getAllRit();
+      } else if (this.currentTab == "Dalam Perjalanan") {
+        this.getOtwRit();
+      } else if (this.currentTab == "Hold") {
+        this.getHoldRit();
+      } else if (this.currentTab == "Stok Habis") {
+        this.getEmptyRit();
+      }
     },
     changeTabMobile(event) {
       this.tabs.forEach((tab) => {
@@ -2091,6 +2373,15 @@ export default {
           tab.current = false;
         }
       });
+      if (this.currentTab == "Stok") {
+        this.getAllRit();
+      } else if (this.currentTab == "Dalam Perjalanan") {
+        this.getOtwRit();
+      } else if (this.currentTab == "Hold") {
+        this.getHoldRit();
+      } else if (this.currentTab == "Stok Habis") {
+        this.getEmptyRit();
+      }
     },
     getAllCustomers: function () {
       const instance = axios.create({
@@ -2159,47 +2450,6 @@ export default {
               type: item.type,
               trip_count: item.trip_count,
               trips: item.trips,
-            };
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    getAllData: function () {
-      const instance = axios.create({
-        baseURL: this.url,
-        headers: { Authorization: "Bearer " + localStorage["access_token"] },
-      });
-      instance
-        .get("/admin/rit")
-        .then((data) => {
-          this.rits = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              do_code: item.do_code,
-              expected_tonnage: item.expected_tonnage,
-              customer_tonnage: item.customer_tonnage,
-              branch_tonnage: item.branch_tonnage,
-              main_tonnage: item.main_tonnage,
-              retur_tonnage: item.retur_tonnage,
-              arrived_tonnage: item.arrived_tonnage,
-              tonnage_left: item.tonnage_left,
-              delivery_date: item.delivery_date,
-              arrival_date: item.arrival_date,
-              sold_date: item.sold_date,
-              sell_price: item.sell_price,
-              buy_price: item.buy_price,
-              sack: item.sack,
-              finance_approved: item.finance_approved,
-              is_hold: item.is_hold,
-              item: item.item,
-              trip: item.trip,
-              retur_trip: item.retur_trip,
-              customer: item.customer,
-              branches: item.branches,
-              transactions: item.transactions,
-              created_at: item.created_at,
             };
           });
         })
@@ -2379,7 +2629,7 @@ export default {
       });
       const totalTonnageSoldToday = todayTransactions.reduce(
         (acc, transaction) => {
-          return acc + (transaction.tonnage * transaction.masak);
+          return acc + transaction.tonnage * transaction.masak;
         },
         0
       );
@@ -2390,10 +2640,11 @@ export default {
     this.getAllCustomers();
     this.getAllItems();
     this.getAllVehicles();
-    this.getAllData();
+    this.getAllRit();
   },
   data() {
     return {
+      isLoading: false,
       //ini buat tambah rit
       showAddRitForm: false,
       sendToCustomer: false,
@@ -2414,13 +2665,16 @@ export default {
         { name: "Stok", current: true },
         { name: "Dalam Perjalanan", current: false },
         { name: "Hold", current: false },
+        { name: "Stok Habis", current: false },
       ],
       currentTab: "Stok",
+      tabDate: new Date().toISOString().split("T")[0],
       products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
       customers: [],
       items: [],
       vehicles: [],
       rits: [],
+      availableRits: [],
       selectedData: null,
       newRit: {
         vehicle_id: null,
