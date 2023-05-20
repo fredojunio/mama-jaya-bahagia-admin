@@ -548,7 +548,40 @@
       <!-- //SECTION Tab Stok Habis  -->
       <div v-if="currentTab == tabs[3].name" class="mt-8 flex flex-col">
         <div class="flex items-center justify-end mb-4 gap-4">
-          <input type="date" v-model="tabDate" />
+          <select
+            id="product"
+            v-model="tabItemID"
+            name="product"
+            class="shadow-sm focus:ring-black focus:border-ring-black block sm:text-sm border-gray-300 rounded-md"
+          >
+            <option v-for="item in items" :key="item.id" :value="item.id">
+              {{ item.code }}
+            </option>
+          </select>
+          <!-- <input
+            type="date"
+            v-model="tabDate"
+            class="shadow-sm focus:ring-black focus:border-ring-black block sm:text-sm border-gray-300 rounded-md"
+          /> -->
+          <form class="flex space-x-4" action="#">
+            <div class="relative rounded-md shadow-sm w-full">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+              </div>
+              <VueDatePicker
+                v-model="tabDate"
+                locale="id"
+                :start-time="[
+                  { hours: 0, minutes: 0, seconds: 0 },
+                  { hours: 23, minutes: 59, seconds: 59 },
+                ]"
+                range
+                :enable-time-picker="false"
+              />
+            </div>
+          </form>
           <button
             @click="getEmptyRit"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -2283,6 +2316,8 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Menu,
   MenuButton,
@@ -2299,6 +2334,7 @@ import {
 } from "@headlessui/vue";
 export default {
   components: {
+    VueDatePicker,
     Menu,
     MenuButton,
     MenuItem,
@@ -2369,7 +2405,11 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .post("/admin/rit/get_empty_stock", { date: this.tabDate })
+        .post("/admin/rit/get_empty_stock", {
+          start_date: this.tabDate[0],
+          end_date: this.tabDate[1],
+          item_id: this.tabItemID,
+        })
         .then((data) => {
           this.rits = data.data.data.results;
           this.isLoading = false;
@@ -2702,7 +2742,11 @@ export default {
         { name: "Stok Habis", current: false },
       ],
       currentTab: "Stok",
-      tabDate: new Date().toISOString().split("T")[0],
+      tabDate: [
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
+      ],
+      tabItemID: null,
       products: [{ product_id: "", amount: "0", masak: 1, is_new: false }],
       customers: [],
       items: [],
