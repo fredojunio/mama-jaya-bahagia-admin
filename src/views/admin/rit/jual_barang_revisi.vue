@@ -453,7 +453,7 @@
                     rit.item.tonnage_left / rit.masak < rit.tonnage * rit.masak
                 ) ||
                 newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
-                newTransaction.sack > sacks
+                newTransaction.sack > sacks || newTransaction.sack == null
               "
               type="button"
               @click="showConfirmationPopup = true"
