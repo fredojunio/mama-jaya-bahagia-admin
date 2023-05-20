@@ -362,7 +362,7 @@
                             {{
                               transaction.type == "Cabang"
                                 ? "Cabang"
-                                : transaction.transaction.customer.name
+                                : transaction.transaction.customer.nickname
                             }}
                           </div>
                         </div>

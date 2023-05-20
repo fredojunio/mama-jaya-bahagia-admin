@@ -261,7 +261,7 @@
                         <div
                           class="font-medium text-gray-900"
                         >
-                          {{ transaction.customer.name }}
+                          {{ transaction.customer.nickname }}
                         </div>
                       </div>
                     </td>
@@ -1138,7 +1138,7 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Customer: {{ selectedTransaction.customer.name }}
+                        Customer: {{ selectedTransaction.customer.nickname }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Ongkir: Rp.

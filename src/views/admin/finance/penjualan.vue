@@ -231,7 +231,7 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Customer: {{ selectedData.customer.name }}
+                        Customer: {{ selectedData.customer.nickname }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Jumlah: Rp. {{ formatNumber(selectedData.total_price) }}

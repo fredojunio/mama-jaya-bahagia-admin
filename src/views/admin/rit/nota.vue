@@ -77,7 +77,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div class="font-medium text-gray-900">
-                          {{ transaction.customer.name }}
+                          {{ transaction.customer.nickname }}
                         </div>
                       </div>
                     </td>

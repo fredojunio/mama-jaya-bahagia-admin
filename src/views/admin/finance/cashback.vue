@@ -51,7 +51,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ cashback.customer.name }}
+                          {{ cashback.customer.nickname }}
                         </div>
                       </div>
                     </td>
