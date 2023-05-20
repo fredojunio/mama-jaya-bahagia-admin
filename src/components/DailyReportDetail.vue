@@ -11,7 +11,7 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                Laporan - 23/03/2023
+                Laporan - {{ formatDate(selectedData.created_at ?? new Date().toLocaleDateString()) }}
               </h1>
             </div>
           </div>
@@ -351,7 +351,7 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                      v-for="transaction in selectedData.transactions"
+                      v-for="transaction in selectedData.reports"
                       :key="transaction.id"
                     >
                       <td
