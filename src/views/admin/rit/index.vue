@@ -1138,7 +1138,7 @@
                           for="original_weight"
                           class="block text-sm font-medium text-gray-700"
                         >
-                          Tonase Asli (kg)
+                          Tonase Asli (kg) {{selectedData.main_tonnage}}
                         </label>
                         <div class="mt-1">
                           <input
@@ -1181,7 +1181,8 @@
                     <button
                       :disabled="
                         arrivedRit.tonnage <= 0 ||
-                        arrivedRit.tonnage > selectedData.main_tonnage
+                        arrivedRit.tonnage > selectedData.main_tonnage ||
+                        (selectedData.main_tonnage - 20) > arrivedRit.tonnage
                       "
                       type="button"
                       @click.once="ritHasArrived()"
