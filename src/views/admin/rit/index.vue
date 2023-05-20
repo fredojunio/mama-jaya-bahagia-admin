@@ -34,6 +34,7 @@
         <label for="tabs" class="sr-only">Select a tab</label>
         <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
         <select
+          v-if="role_id == 1"
           @change="changeTabMobile($event)"
           id="tabs"
           name="tabs"
@@ -43,13 +44,48 @@
             {{ tab.name }}
           </option>
         </select>
+        <select
+          v-else
+          @change="changeTabMobile($event)"
+          id="tabs"
+          name="tabs"
+          class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          <option
+            v-for="tab in tabs.filter((tab) => tab.name != 'Hold')"
+            :key="tab.name"
+            :selected="tab.current"
+          >
+            {{ tab.name }}
+          </option>
+        </select>
       </div>
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav
+            v-if="role_id == 1"
+            class="-mb-px flex space-x-8"
+            aria-label="Tabs"
+          >
             <div
-              @click="changeTab(index)"
-              v-for="(tab, index) in tabs"
+              @click="changeTab(tab.name)"
+              v-for="tab in tabs"
+              :key="tab.name"
+              :class="[
+                tab.current
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+              ]"
+              :aria-current="tab.current ? 'page' : undefined"
+            >
+              {{ tab.name }}
+            </div>
+          </nav>
+          <nav v-else class="-mb-px flex space-x-8" aria-label="Tabs">
+            <div
+              @click="changeTab(tab.name)"
+              v-for="tab in tabs.filter((tab) => tab.name != 'Hold')"
               :key="tab.name"
               :class="[
                 tab.current
@@ -212,7 +248,10 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex flex-col items-start">
+                      <div
+                        class="flex flex-col items-start"
+                        v-if="role_id == 1"
+                      >
                         <div
                           @click="openEditRitPriceForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -2418,14 +2457,14 @@ export default {
           console.log(err);
         });
     },
-    changeTab(index) {
+    changeTab(tabName) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
           tab.current = false;
         }
       });
-      this.tabs[index].current = true;
-      this.currentTab = this.tabs[index].name;
+      this.tabs.find(tab => tab.name === tabName).current = true;
+      this.currentTab = tabName;
       if (this.currentTab == "Stok") {
         this.getAllRit();
       } else if (this.currentTab == "Dalam Perjalanan") {

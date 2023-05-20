@@ -76,6 +76,7 @@
                     v-slot="{ open }"
                   >
                     <DisclosureButton
+                      v-if="role_id == 1 || item.name != 'Owner'"
                       :class="[
                         item.current
                           ? 'bg-gray-100 text-gray-900'
@@ -313,11 +314,6 @@ var navigation = [
       { name: "Gaji", href: "/admin/owner/gaji" },
       { name: "Laba Rugi", href: "/admin/owner/laba_rugi" },
     ],
-  },
-  {
-    name: "Pengaturan",
-    icon: "mdi:cog",
-    children: [{ name: "Overview", href: "#" }],
   },
 ];
 

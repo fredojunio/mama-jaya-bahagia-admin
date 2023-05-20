@@ -34,6 +34,11 @@ app.mixin({
       }
     },
   },
+  data() {
+    return {
+      role_id: localStorage["role_id"],
+    };
+  },
 });
 app.config.globalProperties.url = "https://api.mamajayabahagia.com/api/";
 app.config.globalProperties.devUrl = "http://mama-jaya-bahagia-api.test/api/";
