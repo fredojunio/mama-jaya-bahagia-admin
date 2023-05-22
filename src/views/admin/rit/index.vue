@@ -957,23 +957,6 @@
                         </div>
                       </div>
 
-                      <div class="sm:col-span-6">
-                        <label
-                          for="sak"
-                          class="block text-sm font-medium text-gray-700"
-                        >
-                          Sak
-                        </label>
-                        <div class="mt-1">
-                          <input
-                            v-model="newRit.sack"
-                            id="sak"
-                            type="number"
-                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
-                          />
-                        </div>
-                      </div>
-
                       <div class="sm:col-span-6 mt-1">
                         <SwitchGroup as="div" class="flex items-center">
                           <Switch
@@ -1114,7 +1097,6 @@
                         newRit.do_code == null ||
                         newRit.item_id == null ||
                         newRit.tonnage == null ||
-                        newRit.sack == null ||
                         (newRit.send_to_customer &&
                           (newRit.customer_id == null ||
                             newRit.customer.tonnage <= 0))
@@ -1213,12 +1195,29 @@
                           for="original_weight"
                           class="block text-sm font-medium text-gray-700"
                         >
-                          Tonase Asli (kg) {{ selectedData.main_tonnage }}
+                          Tonase Asli (kg)
                         </label>
                         <div class="mt-1">
                           <input
                             v-model="arrivedRit.tonnage"
                             id="original_weight"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="sm:col-span-6">
+                        <label
+                          for="sak"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Sak
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            v-model="arrivedRit.sack"
+                            id="sak"
                             type="number"
                             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -1257,6 +1256,7 @@
                       :disabled="
                         arrivedRit.tonnage <= 0 ||
                         arrivedRit.tonnage > selectedData.main_tonnage ||
+                        arrivedRit.sack <= 0 ||
                         selectedData.main_tonnage - 20 > arrivedRit.tonnage
                       "
                       type="button"
@@ -2463,7 +2463,7 @@ export default {
           tab.current = false;
         }
       });
-      this.tabs.find(tab => tab.name === tabName).current = true;
+      this.tabs.find((tab) => tab.name === tabName).current = true;
       this.currentTab = tabName;
       if (this.currentTab == "Stok") {
         this.getAllRit();
@@ -2582,23 +2582,6 @@ export default {
           console.log(err);
         });
     },
-    resetNewRit() {
-      this.newRit = {
-        vehicle_id: null,
-        do_code: null,
-        item_id: null,
-        tonnage: null,
-        sack: null,
-        send_to_customer: false,
-        customer: {
-          id: null,
-          tonnage: null,
-        },
-        allowance: 0,
-        gas: 0,
-        toll: 0,
-      };
-    },
     ritHasArrived() {
       const instance = axios.create({
         baseURL: this.url,
@@ -2613,12 +2596,6 @@ export default {
           console.log(err);
         });
     },
-    resetArrivedRit() {
-      this.arrivedRit = {
-        tonnage: null,
-        toll_used: null,
-      };
-    },
     ritHasBeenPriced() {
       const instance = axios.create({
         baseURL: this.url,
@@ -2632,13 +2609,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    resetPricedRit() {
-      this.pricedRit = {
-        sell_price: null,
-        buy_price: null,
-        is_hold: false,
-      };
     },
     addNewBranchRit() {
       var newRit = { product_id: "", amount: 0 };
@@ -2661,16 +2631,6 @@ export default {
           console.log(err);
         });
     },
-    resetTransferToBranchRit() {
-      this.transferBranchRit = {
-        rits: [{ id: null, amount: 0 }],
-        branch_name: null,
-        vehicle_id: null,
-        allowance: null,
-        gas: null,
-        toll: null,
-      };
-    },
     returningRit() {
       const instance = axios.create({
         baseURL: this.url,
@@ -2684,15 +2644,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    resetReturnRit() {
-      this.returnRit = {
-        vehicle_id: null,
-        allowance: null,
-        gas: null,
-        toll: null,
-        tonnage: null,
-      };
     },
     openSendToCustomer(id) {
       this.sendToCustomer = true;
@@ -2798,7 +2749,6 @@ export default {
         do_code: null,
         item_id: null,
         tonnage: null,
-        sack: null,
         send_to_customer: false,
         customer: {
           id: null,
@@ -2810,6 +2760,7 @@ export default {
       },
       arrivedRit: {
         tonnage: null,
+        sack: null,
         toll_used: null,
       },
       pricedRit: {
