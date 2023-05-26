@@ -76,13 +76,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="rit in rits.filter(
-                      (rit) =>
-                        (rit.arrival_date != null && rit.sell_price == null) || rit.is_hold == 1
-                    )"
-                    :key="rit.id"
-                  >
+                  <tr v-for="rit in rits" :key="rit.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -290,7 +284,9 @@
                     </button>
                     <button
                       type="button"
-                      :disabled="pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0"
+                      :disabled="
+                        pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0
+                      "
                       @click.once="ritHasBeenPriced()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
@@ -370,36 +366,10 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/rit")
+        .get("/admin/rit/get_owner_stock")
         .then((data) => {
-          this.rits = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              do_code: item.do_code,
-              expected_tonnage: item.expected_tonnage,
-              customer_tonnage: item.customer_tonnage,
-              branch_tonnage: item.branch_tonnage,
-              main_tonnage: item.main_tonnage,
-              retur_tonnage: item.retur_tonnage,
-              arrived_tonnage: item.arrived_tonnage,
-              tonnage_left: item.tonnage_left,
-              delivery_date: item.delivery_date,
-              arrival_date: item.arrival_date,
-              sold_date: item.sold_date,
-              sell_price: item.sell_price,
-              buy_price: item.buy_price,
-              sack: item.sack,
-              finance_approved: item.finance_approved,
-              is_hold: item.is_hold,
-              item: item.item,
-              trip: item.trip,
-              retur_trip: item.retur_trip,
-              customer: item.customer,
-              branches: item.branches,
-              transactions: item.transactions,
-              created_at: item.created_at,
-            };
-          });
+          this.rits = data.data.data.results;
+          console.log(this.rits);
         })
         .catch((err) => {
           console.log(err);
@@ -410,9 +380,9 @@ export default {
       this.selectedData = this.rits.find((obj) => {
         return obj.id === id;
       });
-      this.pricedRit.sell_price = this.selectedData.sell_price
-      this.pricedRit.buy_price = this.selectedData.buy_price
-      this.pricedRit.is_hold = this.selectedData.is_hold == 1 ? true : false
+      this.pricedRit.sell_price = this.selectedData.sell_price;
+      this.pricedRit.buy_price = this.selectedData.buy_price;
+      this.pricedRit.is_hold = this.selectedData.is_hold == 1 ? true : false;
     },
     ritHasBeenPriced() {
       const instance = axios.create({
