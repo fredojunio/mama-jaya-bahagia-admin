@@ -239,6 +239,25 @@
                       </div>
                       <div class="sm:col-span-6">
                         <label
+                          for="tonnage_left"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Sisa Tonase
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="tonnage_left"
+                            v-model="pricedRit.tonnage"
+                            type="number"
+                            :disabled="
+                              selectedData.tonnage_left > 20 || selectedData.tonnage_left == 0
+                            "
+                            class="disabled:opacity-50 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
                           for="sell_price"
                           class="block text-sm font-medium text-gray-700"
                         >
@@ -285,7 +304,10 @@
                     <button
                       type="button"
                       :disabled="
-                        pricedRit.sell_price <= 0 || pricedRit.buy_price <= 0
+                        pricedRit.sell_price <= 0 ||
+                        pricedRit.buy_price <= 0 ||
+                        pricedRit.tonnage < 0 ||
+                        pricedRit.tonnage > 20
                       "
                       @click.once="ritHasBeenPriced()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -380,6 +402,7 @@ export default {
       this.selectedData = this.rits.find((obj) => {
         return obj.id === id;
       });
+      this.pricedRit.tonnage = this.selectedData.tonnage_left;
       this.pricedRit.sell_price = this.selectedData.sell_price;
       this.pricedRit.buy_price = this.selectedData.buy_price;
       this.pricedRit.is_hold = this.selectedData.is_hold == 1 ? true : false;
@@ -419,6 +442,7 @@ export default {
       rits: [],
       selectedData: null,
       pricedRit: {
+        tonnage: null,
         sell_price: null,
         buy_price: null,
         is_hold: false,
