@@ -442,7 +442,8 @@
                   (rit) => rit.item.tonnage_left < rit.tonnage * rit.masak
                 ) ||
                 newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
-                newTransaction.sack > sacks || newTransaction.sack == null
+                newTransaction.sack > sacks ||
+                newTransaction.sack == null
               "
               @click="showConfirmationPopup = true"
               class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -630,7 +631,10 @@
                   type="button"
                   :disabled="
                     selectedCustomer.type == 'Kiriman' &&
-                    newTransaction.rits.some((rit) => rit.real_tonnage < 0)
+                    (newTransaction.rits.some((rit) => rit.real_tonnage < 0) ||
+                      newTransaction.rits.some(
+                        (rit) => rit.real_tonnage < rit.item.tonnage_left - 50
+                      ))
                   "
                   class="disabled:opacity-50 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black sm:ml-3 sm:w-auto sm:text-sm"
                   @click.once="createData()"

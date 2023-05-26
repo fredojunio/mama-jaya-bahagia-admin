@@ -235,6 +235,12 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Tonase Sistem
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Tonase Asli
                     </th>
                     <th
@@ -326,6 +332,19 @@
                           :key="rit.id"
                         >
                           {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.actual_tonnage) }} kg
                         </div>
                       </div>
                     </td>
