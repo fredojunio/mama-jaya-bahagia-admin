@@ -5,7 +5,7 @@
         <td class="text-xl text-center" colspan="5">NOTA PENJUALAN</td>
       </tr>
       <tr>
-        <td colspan="2">TOKO KEDELAI MAMA JAYA</td>
+        <td colspan="2">TOKO KEDELAI MAMA JAYA BAHAGIA</td>
         <td></td>
         <td>HARI:</td>
         <td>{{ dayOfWeek }}</td>
