@@ -155,6 +155,17 @@
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
+                        <div
+                          v-if="transaction.payments.length > 0"
+                          @click="openTransactionDetail(transaction.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:eye"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Detail</span>
+                        </div>
                         <router-link
                           :to="{
                             path: `/admin/rit/nota/detail/${transaction.id}`,
@@ -181,6 +192,7 @@
         </div>
       </div>
     </div>
+    <!-- //SECTION - Approval Form  -->
     <TransitionRoot as="template" :show="showSaleApprovalForm">
       <Dialog
         as="div"
@@ -301,6 +313,144 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <!-- //!SECTION -->
+    <!-- //SECTION Detail Transaction -->
+    <TransitionRoot as="template" :show="showTransactionDetail">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showTransactionDetail = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Riwayat Pembayaran
+                      </h3>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="mt-8 flex flex-col">
+                        <div
+                          class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8"
+                        >
+                          <div
+                            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+                          >
+                            <div
+                              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+                            >
+                              <table
+                                class="min-w-full divide-y divide-gray-300"
+                              >
+                                <thead class="bg-gray-50">
+                                  <tr>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Tanggal
+                                    </th>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Jumlah
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody
+                                  class="divide-y divide-gray-200 bg-white"
+                                >
+                                  <tr
+                                    v-for="payment in selectedData.payments"
+                                    :key="payment.id"
+                                  >
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <div class="flex items-center">
+                                        <div class="font-medium text-gray-900">
+                                          {{ formatDate(payment.created_at) }}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <div class="flex items-center">
+                                        <div class="font-medium text-gray-900">
+                                          Rp. {{ formatNumber(payment.amount) }}
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showTransactionDetail = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION -->
   </Admin>
 </template>
 
@@ -392,6 +542,12 @@ export default {
         return obj.id === id;
       });
     },
+    openTransactionDetail(id) {
+      this.showTransactionDetail = true;
+      this.selectedData = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+    },
     getTotalPayments() {
       return this.selectedData.payments.reduce((total, pay) => {
         return total + pay.amount;
@@ -419,6 +575,7 @@ export default {
     return {
       isLoading: false,
       showSaleApprovalForm: false,
+      showTransactionDetail: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
