@@ -1,9 +1,39 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Nota</h1>
+      <div class="relative flex gap-2 text-left">
+        <div class="relative rounded-md shadow-sm w-96">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+          </div>
+          <VueDatePicker
+            v-model="date"
+            @update:model-value="getAllTransactions"
+            locale="id"
+            :start-time="[
+              { hours: 0, minutes: 0, seconds: 0 },
+              { hours: 23, minutes: 59, seconds: 59 },
+            ]"
+            range
+            :enable-time-picker="false"
+          />
+        </div>
+      </div>
     </div>
     <!-- //SECTION - Main Page  -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -209,6 +239,8 @@ import axios from "axios";
 </script>
 
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Menu,
   MenuButton,
@@ -225,6 +257,7 @@ import {
 } from "@headlessui/vue";
 export default {
   components: {
+    VueDatePicker,
     Menu,
     MenuButton,
     MenuItem,
@@ -243,37 +276,19 @@ export default {
   },
   methods: {
     getAllTransactions: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/transaction")
+        .post("/admin/transaction/get_nota", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
         .then((data) => {
-          this.transactions = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              created_at: item.created_at,
-              daily_id: item.daily_id,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              sack: item.sack,
-              sack_price: item.sack_price,
-              item_price: item.item_price,
-              discount: item.discount,
-              ongkir: item.ongkir,
-              total_price: item.total_price,
-              settled_date: item.settled_date,
-              owner_approved: item.owner_approved,
-              finance_approved: item.finance_approved,
-              customer: item.customer,
-              trip: item.trip,
-              rits: item.rits,
-              savings: item.savings,
-              type: item.type,
-            };
-          });
+          this.transactions = data.data.data.results;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -282,7 +297,12 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       transactions: [],
+      date: [
+        new Date(new Date().setHours(0, 0, 0, 0)),
+        new Date(new Date().setHours(23, 59, 59, 59)),
+      ],
     };
   },
 };
