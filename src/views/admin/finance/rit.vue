@@ -1,4 +1,14 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -283,6 +293,8 @@ import axios from "axios";
 </script>
 
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Menu,
   MenuButton,
@@ -299,6 +311,7 @@ import {
 } from "@headlessui/vue";
 export default {
   components: {
+    VueDatePicker,
     Menu,
     MenuButton,
     MenuItem,
@@ -316,60 +329,17 @@ export default {
     this.getAllData();
   },
   methods: {
-    changeTab(index) {
-      this.tabs.forEach((tab) => {
-        if (tab.current) {
-          tab.current = false;
-        }
-      });
-      this.tabs[index].current = true;
-      this.currentTab = this.tabs[index].name;
-    },
-    changeTabMobile(event) {
-      this.tabs.forEach((tab) => {
-        if (tab.name == event.target.value) {
-          tab.current = true;
-          this.currentTab = tab.name;
-        } else {
-          tab.current = false;
-        }
-      });
-    },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/rit")
+        .get("/admin/rit/get_created_stock")
         .then((data) => {
           this.isLoading = false;
-          this.rits = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              expected_tonnage: item.expected_tonnage,
-              customer_tonnage: item.customer_tonnage,
-              branch_tonnage: item.branch_tonnage,
-              main_tonnage: item.main_tonnage,
-              retur_tonnage: item.retur_tonnage,
-              arrived_tonnage: item.arrived_tonnage,
-              tonnage_left: item.tonnage_left,
-              delivery_date: item.delivery_date,
-              arrival_date: item.arrival_date,
-              sold_date: item.sold_date,
-              sell_price: item.sell_price,
-              buy_price: item.buy_price,
-              sack: item.sack,
-              finance_approved: item.finance_approved,
-              is_hold: item.is_hold,
-              item: item.item,
-              trip: item.trip,
-              retur_trip: item.retur_trip,
-              branches: item.branches,
-              transactions: item.transactions,
-              created_at: item.created_at,
-            };
-          });
+          this.rits = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -415,6 +385,7 @@ export default {
       showRitApprovalForm: false,
       rits: [],
       selectedData: null,
+      isLoading: false,
     };
   },
 };

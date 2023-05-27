@@ -297,8 +297,8 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       transactions: [],
+      isLoading: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
