@@ -1,4 +1,14 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -40,12 +50,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="cashback in cashbacks.filter(
-                      (cashback) => cashback.approval_date == null
-                    )"
-                    :key="cashback.id"
-                  >
+                  <tr v-for="cashback in cashbacks" :key="cashback.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -244,6 +249,7 @@ export default {
       });
     },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -251,6 +257,7 @@ export default {
       instance
         .get("/admin/cashback")
         .then((data) => {
+          this.isLoading = false;
           this.cashbacks = data.data.data.results;
         })
         .catch((err) => {
@@ -286,6 +293,7 @@ export default {
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       cashbacks: [],
+      isLoading: false,
     };
   },
 };
