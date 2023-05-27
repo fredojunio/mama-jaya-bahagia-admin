@@ -1,4 +1,14 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -14,7 +24,7 @@
         </div>
         <VueDatePicker
           v-model="date"
-          @update:model-value="filterData"
+          @update:model-value="getCompletedTransactions"
           locale="id"
           :start-time="[
             { hours: 0, minutes: 0, seconds: 0 },
@@ -76,12 +86,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="transaction in filteredTransactions.filter(
-                      (transaction) => transaction.owner_approved == 1
-                    )"
-                    :key="transaction.id"
-                  >
+                  <tr v-for="transaction in transactions" :key="transaction.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -150,7 +155,7 @@
                           ></Icon>
                           <span class="ml-3">Approve</span>
                         </div>
-                        <!-- <router-link
+                        <router-link
                           :to="{
                             path: `/admin/rit/nota/detail/${transaction.id}`,
                           }"
@@ -165,7 +170,7 @@
                             ></Icon>
                             <span class="ml-3">Print</span>
                           </div>
-                        </router-link> -->
+                        </router-link>
                       </div>
                     </td>
                   </tr>
@@ -234,12 +239,36 @@
                         Customer: {{ selectedData.customer.nickname }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Jumlah: Rp. {{ formatNumber(selectedData.total_price) }}
+                        Total: Rp. {{ formatNumber(selectedData.total_price) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Tanggal: {{ formatDate(selectedData.created_at) }}
                       </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Kurang Bayar: Rp.
+                        {{
+                          formatNumber(
+                            selectedData.total_price - getTotalPayments()
+                          )
+                        }}
+                      </h3>
                     </div>
+                  </div>
+                </div>
+                <div class="sm:col-span-6">
+                  <label
+                    for="amount"
+                    class="block text-sm font-medium text-gray-700"
+                  >
+                    Jumlah (Rp.)
+                  </label>
+                  <div class="mt-1">
+                    <input
+                      id="amount"
+                      v-model="payment.amount"
+                      type="number"
+                      class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                    />
                   </div>
                 </div>
 
@@ -254,8 +283,13 @@
                     </button>
                     <button
                       type="button"
+                      :disabled="
+                        payment.amount <= 0 ||
+                        payment.amount >
+                          selectedData.total_price - getTotalPayments()
+                      "
                       @click.once="approveTransaction()"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Submit" }}
                     </button>
@@ -310,7 +344,7 @@ export default {
     SwitchLabel,
   },
   created() {
-    this.getAllData();
+    this.getCompletedTransactions();
   },
   methods: {
     changeTab(index) {
@@ -332,51 +366,25 @@ export default {
         }
       });
     },
-    getAllData: function () {
+    getCompletedTransactions() {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/transaction")
+        .post("/admin/transaction/get_completed_transactions", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
         .then((data) => {
-          this.transactions = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              created_at: item.created_at,
-              daily_id: item.daily_id,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              sack: item.sack,
-              sack_price: item.sack_price,
-              item_price: item.item_price,
-              discount: item.discount,
-              ongkir: item.ongkir,
-              total_price: item.total_price,
-              settled_date: item.settled_date,
-              owner_approved: item.owner_approved,
-              finance_approved: item.finance_approved,
-              customer: item.customer,
-              trip: item.trip,
-              rits: item.rits,
-              savings: item.savings,
-              type: item.type,
-            };
-          });
-          this.filterData();
+          this.transactions = data.data.data.results;
+          console.log(this.transactions);
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    filterData() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredTransactions = this.transactions.filter((transaction) => {
-        let transactionDate = new Date(transaction.created_at);
-        return transactionDate >= startDate && transactionDate <= untilDate;
-      });
     },
     showApprovalForm(id) {
       this.showSaleApprovalForm = true;
@@ -384,13 +392,21 @@ export default {
         return obj.id === id;
       });
     },
+    getTotalPayments() {
+      return this.selectedData.payments.reduce((total, pay) => {
+        return total + pay.amount;
+      }, 0);
+    },
     approveTransaction() {
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("admin/transaction/" + this.selectedData.id + "/approve_finance")
+        .post(
+          "admin/transaction/" + this.selectedData.id + "/approve_finance",
+          { amount: this.payment.amount }
+        )
         .then((data) => {
           this.$router.go(0);
         })
@@ -401,13 +417,16 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       showSaleApprovalForm: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       transactions: [],
-      filteredTransactions: [],
+      payment: {
+        amount: null,
+      },
     };
   },
 };

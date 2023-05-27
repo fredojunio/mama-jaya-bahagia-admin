@@ -2467,8 +2467,8 @@ export default {
       });
       instance
         .post("/admin/rit/get_empty_stock", {
-          start_date: this.tabDate[0],
-          end_date: this.tabDate[1],
+          start_date: this.tabDate[0].toString(),
+          end_date: this.tabDate[1].toString(),
           item_id: this.tabItemID,
         })
         .then((data) => {
