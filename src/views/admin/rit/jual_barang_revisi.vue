@@ -447,13 +447,15 @@
             <button
               :disabled="
                 selectedCustomer.id == null ||
-                newTransaction.rits.length <= 0 ||
                 newTransaction.rits.some(
                   (rit) =>
                     rit.item.tonnage_left / rit.masak < rit.tonnage * rit.masak
                 ) ||
                 newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
-                newTransaction.sack > sacks || newTransaction.sack == null
+                newTransaction.sack > sacks ||
+                newTransaction.sack == null ||
+                newTransaction.sack < 0 ||
+                (newTransaction.rits.length == 0 && newTransaction.sack <= 0)
               "
               type="button"
               @click="showConfirmationPopup = true"
@@ -912,7 +914,7 @@ export default {
       this.updateTotalPrice();
     },
     createData() {
-      this.newTransaction.old_id = this.id
+      this.newTransaction.old_id = this.id;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
