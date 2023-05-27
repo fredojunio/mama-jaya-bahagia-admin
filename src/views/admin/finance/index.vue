@@ -1,4 +1,14 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 gap-x-4"
@@ -6,7 +16,7 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">
         Daftar Pengeluaran
       </h1>
-      <div class="relative flex gap-2 text-left"> 
+      <div class="relative flex gap-2 text-left">
         <div class="relative rounded-md shadow-sm w-96">
           <div
             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -15,7 +25,7 @@
           </div>
           <VueDatePicker
             v-model="date"
-            @update:model-value="filterData"
+            @update:model-value="getAllData"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
@@ -52,8 +62,8 @@
         <div class="border-b border-gray-200">
           <nav class="-mb-px flex space-x-8" aria-label="Tabs">
             <div
-              @click="changeTab(index)"
-              v-for="(tab, index) in tabs"
+              @click="changeTab(tab.name)"
+              v-for="tab in tabs"
               :key="tab.name"
               :class="[
                 tab.current
@@ -121,12 +131,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) => expense.type == 'Kendaraan'
-                    )"
-                    :key="expense.id"
-                  >
+                  <tr v-for="expense in expenses" :key="expense.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -228,15 +233,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) =>
-                        expense.type == 'TW' ||
-                        expense.type == 'TB' ||
-                        expense.type == 'THR'
-                    )"
-                    :key="expense.id"
-                  >
+                  <tr v-for="expense in expenses" :key="expense.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -314,12 +311,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) => expense.type == 'Cashback'
-                    )"
-                    :key="expense.id"
-                  >
+                  <tr v-for="expense in expenses" :key="expense.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -388,12 +380,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) => expense.type == 'Operasional'
-                    )"
-                    :key="expense.id"
-                  >
+                  <tr v-for="expense in expenses" :key="expense.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -468,12 +455,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) => expense.type == 'Gaji'
-                    )"
-                    :key="expense.id"
-                  >
+                  <tr v-for="expense in expenses" :key="expense.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -696,6 +678,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat tambah rit
       showAddExpenseForm: false,
       date: [
@@ -725,14 +708,15 @@ export default {
     this.getAllData();
   },
   methods: {
-    changeTab(index) {
+    changeTab(tabName) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
           tab.current = false;
         }
       });
-      this.tabs[index].current = true;
-      this.currentTab = this.tabs[index].name;
+      this.tabs.find((tab) => tab.name === tabName).current = true;
+      this.currentTab = tabName;
+      this.getAllData();
     },
     changeTabMobile(event) {
       this.tabs.forEach((tab) => {
@@ -743,39 +727,27 @@ export default {
           tab.current = false;
         }
       });
+      this.getAllData();
     },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/expense")
+        .post("/admin/expense/filter", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+          filter: this.currentTab,
+        })
         .then((data) => {
-          this.expenses = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              amount: item.amount,
-              note: item.note,
-              name: item.name,
-              time: item.time,
-              type: item.type,
-              trip: item.trip,
-            };
-          });
-          this.filterData();
+          this.expenses = data.data.data.results;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    filterData() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredExpenses = this.expenses.filter((expense) => {
-        let expenseDate = new Date(expense.time);
-        return expenseDate >= startDate && expenseDate <= untilDate;
-      });
     },
     createExpense() {
       const instance = axios.create({
