@@ -82,17 +82,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="rit in rits.filter(
-                      (rit) =>
-                        rit.arrival_date != null &&
-                        rit.sell_price > 0 &&
-                        ((rit.customer_tonnage > 0 &&
-                          rit.customer_transaction == null) ||
-                          (rit.branch_tonnage > 0 &&
-                            rit.branches.some(
-                              (ritBranch) => ritBranch.income == null
-                            )))
-                    )"
+                    v-for="rit in rits"
                     :key="rit.id"
                   >
                     <td
@@ -253,11 +243,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="transaction in transactions.filter(
-                      (transaction) =>
-                        transaction.owner_approved == 0 &&
-                        transaction.type == 'Kiriman'
-                    )"
+                    v-for="transaction in transactions"
                     :key="transaction.id"
                   >
                     <td
@@ -479,11 +465,11 @@
                                   </ComboboxButton>
 
                                   <ComboboxOptions
-                                    v-if="filteredRits.length > 0"
+                                    v-if="availableRits.length > 0"
                                     class="absolute z-10 mt-1 max-h-60 w-[50vw] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                   >
                                     <ComboboxOption
-                                      v-for="rite in filteredRits"
+                                      v-for="rite in availableRits"
                                       :key="rite.id"
                                       v-model="rit.item"
                                       :value="rite"
@@ -762,7 +748,6 @@
         </div>
       </Dialog>
     </TransitionRoot>
-    <!-- //!SECTION  -->
     <!-- //!SECTION  -->
     <!-- //SECTION - Popup Penjualan (Cabang)  -->
     <TransitionRoot as="template" :show="showAddBranchTransaction">
@@ -1343,7 +1328,7 @@ export default {
     },
     addNewRit() {
       var newRit = {
-        item: this.filteredRits[0],
+        item: this.availableRits[0],
         tonnage: 0,
         real_tonnage: 0,
         masak: 1,
@@ -1388,15 +1373,15 @@ export default {
     },
     filterRit() {
       if (this.ritQuery == "") {
-        this.filteredRits = this.rits;
+        this.availableRits = this.rits;
       } else {
-        this.filteredRits = this.rits.filter((rit) => {
+        this.availableRits = this.rits.filter((rit) => {
           return rit.item.code
             .toLowerCase()
             .includes(this.ritQuery.toLowerCase());
         });
       }
-      this.filteredRits = this.filteredRits.filter(
+      this.availableRits = this.availableRits.filter(
         (rit) =>
           rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
       );
@@ -1407,41 +1392,23 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/rit")
+        .get("/admin/rit/get_sell_owner_stock")
         .then((data) => {
-          this.rits = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              do_code: item.do_code,
-              expected_tonnage: item.expected_tonnage,
-              customer_tonnage: item.customer_tonnage,
-              branch_tonnage: item.branch_tonnage,
-              main_tonnage: item.main_tonnage,
-              retur_tonnage: item.retur_tonnage,
-              arrived_tonnage: item.arrived_tonnage,
-              tonnage_left: item.tonnage_left,
-              delivery_date: item.delivery_date,
-              arrival_date: item.arrival_date,
-              sold_date: item.sold_date,
-              sell_price: item.sell_price,
-              buy_price: item.buy_price,
-              sack: item.sack,
-              finance_approved: item.finance_approved,
-              is_hold: item.is_hold,
-              item: item.item,
-              trip: item.trip,
-              retur_trip: item.retur_trip,
-              customer: item.customer,
-              branches: item.branches,
-              transactions: item.transactions,
-              customer_transaction: item.customer_transaction,
-              created_at: item.created_at,
-            };
-          });
-          this.filteredRits = this.rits.filter(
-            (rit) =>
-              rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
-          );
+          this.rits = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllRit() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/rit/get_all_stock")
+        .then((data) => {
+          this.availableRits = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -1456,26 +1423,7 @@ export default {
         .get("/admin/customer")
         .then((data) => {
           this.isLoading = false;
-          this.customers = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              nik: item.nik,
-              name: item.name,
-              nickname: item.nickname,
-              address: item.address,
-              ongkir: item.ongkir,
-              birthdate: item.birthdate,
-              type: item.type,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              tonnage: item.tonnage,
-              cashback_approved: item.cashback_approved,
-              type: item.type,
-              savings: item.savings,
-              transactions: item.transactions,
-            };
-          });
+          this.customers = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -1489,15 +1437,7 @@ export default {
       instance
         .get("/admin/vehicle")
         .then((data) => {
-          this.vehicles = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              name: item.name,
-              type: item.type,
-              trip_count: item.trip_count,
-              trips: item.trips,
-            };
-          });
+          this.vehicles = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -1571,32 +1511,9 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/transaction")
+        .get("/admin/transaction/get_owner_nota")
         .then((data) => {
-          this.transactions = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              created_at: item.created_at,
-              daily_id: item.daily_id,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              sack: item.sack,
-              sack_price: item.sack_price,
-              item_price: item.item_price,
-              discount: item.discount,
-              ongkir: item.ongkir,
-              total_price: item.total_price,
-              settled_date: item.settled_date,
-              owner_approved: item.owner_approved,
-              finance_approved: item.finance_approved,
-              customer: item.customer,
-              trip: item.trip,
-              rits: item.rits,
-              savings: item.savings,
-              type: item.type,
-            };
-          });
+          this.transactions = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -1654,7 +1571,7 @@ export default {
       selectedTransaction: null,
       //NOTE - Section Jual ke Customer
       rits: [],
-      filteredRits: [],
+      availableRits: [],
       ritQuery: "",
       selectedCustomer: {
         id: null,
