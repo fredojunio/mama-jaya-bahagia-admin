@@ -1,10 +1,20 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div class="absolute z-50 min-w-full min-h-screen"></div>
+    <div class="text-6xl animate-spin z-50">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Laba Rugi</h1>
-      <div class="relative flex gap-2 text-left"> 
+      <div class="relative flex gap-2 text-left">
         <div class="relative rounded-md shadow-sm w-96">
           <div
             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -13,7 +23,7 @@
           </div>
           <VueDatePicker
             v-model="date"
-            @update:model-value="filterData"
+            @update:model-value="getAllRits"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
@@ -82,12 +92,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="rit in filteredRits.filter(
-                      (rit) => rit.sold_date != null
-                    )"
-                    :key="rit.id"
-                  >
+                  <tr v-for="rit in rits" :key="rit.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -296,7 +301,12 @@
                                           <div
                                             class="font-medium text-gray-900"
                                           >
-                                            {{ formatNumber(ritTransaction.tonnage) }} kg
+                                            {{
+                                              formatNumber(
+                                                ritTransaction.tonnage
+                                              )
+                                            }}
+                                            kg
                                           </div>
                                         </div>
                                       </td>
@@ -308,7 +318,11 @@
                                             class="font-medium text-gray-900"
                                           >
                                             Rp.
-                                            {{ formatNumber(ritTransaction.total_price) }}
+                                            {{
+                                              formatNumber(
+                                                ritTransaction.total_price
+                                              )
+                                            }}
                                           </div>
                                         </div>
                                       </td>
@@ -320,7 +334,9 @@
                                             class="font-medium text-gray-900"
                                           >
                                             {{
-                                              formatNumber(ritTransaction.tonnage_left)
+                                              formatNumber(
+                                                ritTransaction.tonnage_left
+                                              )
                                             }}
                                             kg
                                           </div>
@@ -408,15 +424,19 @@ export default {
   },
   methods: {
     getAllRits: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/rit")
+        .post("/admin/rit/get_empty_stock", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
         .then((data) => {
           this.rits = data.data.data.results;
-          this.filterData();
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -437,7 +457,6 @@ export default {
       return totalRevenue;
     },
     totalProfit(rit) {
-      //NOTE - mungkin perlu dipastiin lagi rumusnya
       var totalProfit = 0;
       rit.transactions.forEach((element) => {
         totalProfit += element.total_price;
@@ -446,14 +465,6 @@ export default {
       });
       return totalProfit;
     },
-    filterData() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredRits = this.rits.filter((rit) => {
-        let ritDate = new Date(rit.arrival_date);
-        return ritDate >= startDate && ritDate <= untilDate;
-      });
-    },
     openRitDetail(rit) {
       this.selectedRit = rit;
       this.showRitDetail = true;
@@ -461,6 +472,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat cek detail
       showRitDetail: false,
       date: [
@@ -468,7 +480,6 @@ export default {
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       rits: null,
-      filteredRits: [],
       selectedRit: null,
     };
   },
