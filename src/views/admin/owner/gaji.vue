@@ -13,7 +13,7 @@
           </div>
           <VueDatePicker
             v-model="date"
-            @update:model-value="filterData"
+            @update:model-value="getAllData"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
@@ -32,44 +32,8 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="sm:hidden">
-        <label for="tabs" class="sr-only">Select a tab</label>
-        <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
-        <select
-          @change="changeTabMobile($event)"
-          id="tabs"
-          name="tabs"
-          class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-        >
-          <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
-            {{ tab.name }}
-          </option>
-        </select>
-      </div>
-      <div class="hidden sm:block">
-        <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-            <div
-              @click="changeTab(index)"
-              v-for="(tab, index) in tabs"
-              :key="tab.name"
-              :class="[
-                tab.current
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
-              ]"
-              :aria-current="tab.current ? 'page' : undefined"
-            >
-              {{ tab.name }}
-            </div>
-          </nav>
-        </div>
-      </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- //SECTION - Tab Gaji -->
-      <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
+      <div class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -108,9 +72,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="expense in filteredExpenses.filter(
-                      (expense) => expense.type == 'Gaji'
-                    )"
+                    v-for="expense in expenses"
                     :key="expense.id"
                   >
                     <td
@@ -350,58 +312,25 @@ export default {
     SwitchLabel,
   },
   methods: {
-    changeTab(index) {
-      this.tabs.forEach((tab) => {
-        if (tab.current) {
-          tab.current = false;
-        }
-      });
-      this.tabs[index].current = true;
-      this.currentTab = this.tabs[index].name;
-    },
-    changeTabMobile(event) {
-      this.tabs.forEach((tab) => {
-        if (tab.name == event.target.value) {
-          tab.current = true;
-          this.currentTab = tab.name;
-        } else {
-          tab.current = false;
-        }
-      });
-    },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/expense")
+        .post("/admin/expense/filter", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+          filter: "Gaji",
+        })
         .then((data) => {
+          this.expenses = data.data.data.results;
           this.isLoading = false;
-          this.expenses = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              amount: item.amount,
-              note: item.note,
-              name: item.name,
-              time: item.time,
-              type: item.type,
-              trip: item.trip,
-            };
-          });
-          this.filterData();
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    filterData() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredExpenses = this.expenses.filter((expense) => {
-        let expenseDate = new Date(expense.time);
-        return expenseDate >= startDate && expenseDate <= untilDate;
-      });
     },
     createExpense() {
       const instance = axios.create({
@@ -420,16 +349,14 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat tambah rit
       showAddSalaryForm: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
-      tabs: [{ name: "Gaji", current: true }],
-      currentTab: "Gaji",
       expenses: [],
-      filteredExpenses: [],
       expense: {
         amount: null,
         note: null,
