@@ -295,7 +295,7 @@
           </div>
           <div class="col-span-1">
             <label for="tw" class="block text-sm font-medium text-gray-700">
-              TW (Rp.)
+              Lain-lain (Rp.)
             </label>
             <div class="mt-1">
               <input
