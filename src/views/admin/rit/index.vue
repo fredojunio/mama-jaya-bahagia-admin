@@ -1257,6 +1257,7 @@
                         arrivedRit.tonnage <= 0 ||
                         arrivedRit.tonnage > selectedData.main_tonnage ||
                         arrivedRit.sack <= 0 ||
+                        arrivedRit.toll_used <= 0 ||
                         selectedData.main_tonnage - 20 > arrivedRit.tonnage
                       "
                       type="button"
@@ -1399,7 +1400,8 @@
                             v-model="pricedRit.tonnage"
                             type="number"
                             :disabled="
-                              selectedData.tonnage_left > 20 || selectedData.tonnage_left == 0
+                              selectedData.tonnage_left > 20 ||
+                              selectedData.tonnage_left == 0
                             "
                             class="disabled:opacity-50 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
