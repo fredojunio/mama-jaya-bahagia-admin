@@ -214,7 +214,8 @@
                             v-model="pricedRit.tonnage"
                             type="number"
                             :disabled="
-                              selectedData.tonnage_left > 20 || selectedData.tonnage_left == 0
+                              selectedData.tonnage_left > 20 ||
+                              selectedData.tonnage_left == 0
                             "
                             class="disabled:opacity-50 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
@@ -271,7 +272,8 @@
                         pricedRit.sell_price <= 0 ||
                         pricedRit.buy_price <= 0 ||
                         pricedRit.tonnage < 0 ||
-                        pricedRit.tonnage > 20
+                        (selectedData.tonnage_left <= 20 &&
+                          pricedRit.tonnage > 20)
                       "
                       @click.once="ritHasBeenPriced()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
