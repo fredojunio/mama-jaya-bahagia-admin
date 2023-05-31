@@ -248,7 +248,8 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div
+                      <!-- //NOTE - ini di hide aja karena udah ada di owner -->
+                      <!-- <div
                         class="flex flex-col items-start"
                         v-if="role_id == 1"
                       >
@@ -262,7 +263,7 @@
                           ></Icon>
                           <span class="ml-3">Edit</span>
                         </div>
-                      </div>
+                      </div> -->
                       <div class="flex flex-col items-start">
                         <div
                           @click="openRitBranchDetail(rit.id)"
