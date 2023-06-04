@@ -455,7 +455,11 @@
                 newTransaction.sack > sacks ||
                 newTransaction.sack == null ||
                 newTransaction.sack < 0 ||
-                (newTransaction.rits.length == 0 && newTransaction.sack <= 0)
+                (newTransaction.rits.length == 0 &&
+                  newTransaction.sack <= 0 &&
+                  newTransaction.tb <= 0 &&
+                  newTransaction.thr <= 0 &&
+                  newTransaction.tw <= 0)
               "
               type="button"
               @click="showConfirmationPopup = true"
