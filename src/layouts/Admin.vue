@@ -353,7 +353,6 @@ export default {
         .get("/admin/get_notification")
         .then((data) => {
           this.notifications = data.data.data.results;
-          console.log(this.notifications);
         })
         .catch((err) => {
           console.log(err);

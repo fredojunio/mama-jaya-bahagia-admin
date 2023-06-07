@@ -205,7 +205,7 @@
                       <div class="flex flex-col items-start">
                         <router-link
                           :to="{
-                            path: `/admin/rit/jual_barang_revisi/${transaction.id}`,
+                            path: `/admin/rit/jual_barang/${transaction.id}`,
                           }"
                           target="_blank"
                         >

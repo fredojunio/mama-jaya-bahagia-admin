@@ -286,6 +286,7 @@
                             <option value="Owner" selected>Owner</option>
                             <option value="Kiriman">Kiriman</option>
                             <option value="Eceran">Eceran</option>
+                            <option value="Pabrik">Pabrik</option>
                           </select>
                         </div>
                       </div>

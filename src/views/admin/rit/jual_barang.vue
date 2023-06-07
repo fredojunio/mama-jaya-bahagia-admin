@@ -1,5 +1,5 @@
 <template>
-  <Admin v-if="newTransaction">
+  <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
@@ -154,6 +154,7 @@
                           : ``
                     "
                   />
+
                   <ComboboxOptions
                     v-if="filteredRits.length > 0"
                     class="absolute z-10 mt-1 max-h-60 w-[50vw] overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
@@ -356,7 +357,6 @@
         </div>
         <hr class="border-2" />
         <div class="text-md font-medium">Total</div>
-
         <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
           <div class="col-span-1">Harga Barang:</div>
           <div class="col-span-2">
@@ -394,7 +394,6 @@
             Rp. {{ formatNumber(newTransaction.total_price) }}
           </div>
         </div>
-
         <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
           <div class="col-span-1">
             <label
@@ -697,6 +696,7 @@ import {
   SwitchLabel,
 } from "@headlessui/vue";
 export default {
+  props: ["id"],
   components: {
     Menu,
     MenuButton,
@@ -795,35 +795,11 @@ export default {
       instance
         .get("/admin/rit")
         .then((data) => {
-          this.rits = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              do_code: item.do_code,
-              expected_tonnage: item.expected_tonnage,
-              customer_tonnage: item.customer_tonnage,
-              branch_tonnage: item.branch_tonnage,
-              main_tonnage: item.main_tonnage,
-              retur_tonnage: item.retur_tonnage,
-              arrived_tonnage: item.arrived_tonnage,
-              tonnage_left: item.tonnage_left,
-              delivery_date: item.delivery_date,
-              arrival_date: item.arrival_date,
-              sold_date: item.sold_date,
-              sell_price: item.sell_price,
-              buy_price: item.buy_price,
-              sack: item.sack,
-              finance_approved: item.finance_approved,
-              is_hold: item.is_hold,
-              item: item.item,
-              trip: item.trip,
-              retur_trip: item.retur_trip,
-              customer: item.customer,
-              branches: item.branches,
-              transactions: item.transactions,
-              created_at: item.created_at,
-            };
-          });
-          this.filterRit();
+          this.rits = data.data.data.results;
+          this.filteredRits = this.rits.filter(
+            (rit) =>
+              rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -837,27 +813,7 @@ export default {
       instance
         .get("/admin/customer")
         .then((data) => {
-          this.customers = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              nik: item.nik,
-              name: item.name,
-              nickname: item.nickname,
-              address: item.address,
-              phone: item.phone,
-              ongkir: item.ongkir,
-              birthdate: item.birthdate,
-              type: item.type,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              tonnage: item.tonnage,
-              cashback_approved: item.cashback_approved,
-              type: item.type,
-              savings: item.savings,
-              transactions: item.transactions,
-            };
-          });
+          this.customers = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -871,15 +827,7 @@ export default {
       instance
         .get("/admin/vehicle")
         .then((data) => {
-          this.vehicles = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              name: item.name,
-              type: item.type,
-              trip_count: item.trip_count,
-              trips: item.trips,
-            };
-          });
+          this.vehicles = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
@@ -907,6 +855,7 @@ export default {
       this.updateTotalPrice();
     },
     createData() {
+      this.newTransaction.old_id = this.id;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -914,7 +863,50 @@ export default {
       instance
         .post("admin/transaction", this.newTransaction)
         .then((data) => {
-          this.$router.go(0);
+          const baseUrl = window.location.origin;
+          window.location.assign(baseUrl + "/admin/rit/jual_barang");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getTransaction: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction/" + this.id)
+        .then((data) => {
+          let oldTransaction = data.data.data.results;
+          this.newTransaction.customer_id = oldTransaction.customer.id;
+          this.newTransaction.ongkir = oldTransaction.ongkir;
+          this.newTransaction.vehicle_id = oldTransaction.trip.vehicle_id;
+          this.newTransaction.allowance = oldTransaction.trip.allowance;
+          this.newTransaction.gas = oldTransaction.trip.gas;
+          this.newTransaction.toll = oldTransaction.trip.toll;
+          this.newTransaction.rits = oldTransaction.rits.map((item) => {
+            return {
+              item: item.rit,
+              tonnage: item.tonnage,
+              real_tonnage: item.tonnage_left,
+              masak: item.masak,
+              price: item.item_price,
+              total_price: item.total_price,
+            };
+          });
+          this.newTransaction.tb = oldTransaction.tb;
+          this.newTransaction.tw = oldTransaction.tw;
+          this.newTransaction.thr = oldTransaction.thr;
+          this.newTransaction.sack = oldTransaction.sack;
+          this.newTransaction.sack_fee =
+            oldTransaction.sack_fee == 0 ? false : true;
+          this.newTransaction.item_prices = oldTransaction.item_price;
+          this.newTransaction.discount = oldTransaction.discount;
+          this.newTransaction.total_price = oldTransaction.total_price;
+          setTimeout(() => {
+            this.selectCustomer(this.newTransaction.customer_id);
+          }, 1000);
         })
         .catch((err) => {
           console.log(err);
@@ -926,10 +918,12 @@ export default {
     this.getAllCustomers();
     this.getAllVehicles();
     this.getAllRits();
+    if (this.id) {
+      this.getTransaction();
+    }
   },
   data() {
     return {
-      //ini buat confirmation
       showConfirmationPopup: false,
       sacks: 0,
       rits: [],
@@ -971,6 +965,7 @@ export default {
         item_prices: null,
         discount: null,
         total_price: null,
+        old_id: null,
       },
       money_brought: null,
       calculator: {
