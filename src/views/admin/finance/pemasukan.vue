@@ -16,23 +16,32 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">
         Daftar Pemasukan
       </h1>
-      <div class="relative rounded-md shadow-sm w-96">
-        <div
-          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-        >
-          <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+      <div class="relative flex gap-2 text-left">
+        <div class="relative rounded-md shadow-sm w-96">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
+          </div>
+          <VueDatePicker
+            v-model="date"
+            @update:model-value="changeTab(this.currentTab)"
+            locale="id"
+            :start-time="[
+              { hours: 0, minutes: 0, seconds: 0 },
+              { hours: 23, minutes: 59, seconds: 59 },
+            ]"
+            range
+            :enable-time-picker="false"
+          />
         </div>
-        <VueDatePicker
-          v-model="date"
-          @update:model-value="changeTab(this.currentTab)"
-          locale="id"
-          :start-time="[
-            { hours: 0, minutes: 0, seconds: 0 },
-            { hours: 23, minutes: 59, seconds: 59 },
-          ]"
-          range
-          :enable-time-picker="false"
-        />
+        <button
+          v-if="currentTab == tabs[2].name"
+          @click="showTopUpForm = true"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+        >
+          Top Up
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -271,91 +280,91 @@
             <div
               class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
             >
-                <table class="min-w-full divide-y divide-gray-300">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Tanggal
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Customer
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        TW
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        TB
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        THR
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="saving in savings" :key="saving.id">
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            {{ formatDate(saving.created_at) }}
-                          </div>
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Customer
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      TW
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      TB
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      THR
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="saving in savings" :key="saving.id">
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(saving.created_at) }}
                         </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            {{ saving.customer.nickname }}
-                          </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ saving.customer.nickname }}
                         </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(saving.tw) }}
-                          </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(saving.tw) }}
                         </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(saving.tb) }}
-                          </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(saving.tb) }}
                         </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(saving.thr) }}
-                          </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(saving.thr) }}
                         </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -620,6 +629,252 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION -->
+    <!-- //SECTION - Form Tambah Pengeluaran  -->
+    <TransitionRoot as="template" :show="showTopUpForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showTopUpForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        {{ "Tambah Deposit Uang Cas" }}
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div class="grid grid-cols-3 gap-x-4 my-2">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Koin: Rp. {{ formatNumber(casBalance.koin) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        1.000: Rp. {{ formatNumber(casBalance.seribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        2.000: Rp. {{ formatNumber(casBalance.duaribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        5.000: Rp. {{ formatNumber(casBalance.limaribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        10.000: Rp. {{ formatNumber(casBalance.sepuluhribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        20.000: Rp. {{ formatNumber(casBalance.duapuluhribu) }}
+                      </h3>
+                    </div>
+                    <hr />
+                    <div
+                      class="grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-1"
+                    >
+                      <div>
+                        <label
+                          for="total"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Total (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="total"
+                            v-model="deposit.total"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sisa uang:
+                        {{
+                          deposit.total -
+                          (deposit.koin +
+                            deposit.seribu +
+                            deposit.duaribu +
+                            deposit.limaribu +
+                            deposit.sepuluhribu +
+                            deposit.duapuluhribu)
+                        }}
+                      </h3>
+                    </div>
+
+                    <div
+                      class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-3"
+                    >
+                      <div>
+                        <label
+                          for="koin"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Koin (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="koin"
+                            v-model="deposit.koin"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="seribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          1.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="seribu"
+                            v-model="deposit.seribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="duaribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          2.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="duaribu"
+                            v-model="deposit.duaribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="limaribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          5.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="limaribu"
+                            v-model="deposit.limaribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="sepuluhribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          10.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="sepuluhribu"
+                            v-model="deposit.sepuluhribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="duapuluhribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          20.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="duapuluhribu"
+                            v-model="deposit.duapuluhribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showTopUpForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      :disabled="
+                        deposit.total -
+                          (deposit.koin +
+                            deposit.seribu +
+                            deposit.duaribu +
+                            deposit.limaribu +
+                            deposit.sepuluhribu +
+                            deposit.duapuluhribu) !=
+                          0 || deposit.total <= 0
+                      "
+                      @click.once="topUp()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      {{ "Save" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION  -->
   </Admin>
 </template>
 
@@ -679,6 +934,7 @@ export default {
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
       } else if (this.currentTab == "Cas") {
+        this.getCurrentCasBalance();
       }
     },
     changeTabMobile(event) {
@@ -695,6 +951,7 @@ export default {
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
       } else if (this.currentTab == "Cas") {
+        this.getCurrentCasBalance();
       }
     },
     //STUB - Penjualan
@@ -765,8 +1022,38 @@ export default {
         })
         .then((data) => {
           this.savings = data.data.data.results;
-          console.log(this.savings);
           this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //STUB - Cas
+    getCurrentCasBalance() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/cas_deposit")
+        .then((data) => {
+          this.casBalance = data.data.api_results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    topUp() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/cas_deposit`, this.deposit)
+        .then((data) => {
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -795,6 +1082,18 @@ export default {
       },
       //STUB - Tabungan
       savings: [],
+      //STUB - Cas
+      showTopUpForm: false,
+      casBalance: null,
+      deposit: {
+        total: null,
+        koin: null,
+        seribu: null,
+        duaribu: null,
+        limaribu: null,
+        sepuluhribu: null,
+        duapuluhribu: null,
+      },
     };
   },
 };

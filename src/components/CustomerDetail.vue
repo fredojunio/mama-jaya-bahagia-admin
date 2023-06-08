@@ -476,40 +476,28 @@
                         Pastikan data sudah benar.
                       </p>
                     </div>
-                        <div class="grid grid-cols-2 gap-x-4">
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            Customer: {{ selectedData.name }}
-                          </h3>
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            TB: Rp. {{ formatNumber(selectedData.tb) }}
-                          </h3>
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            Tonase Akumulatif:
-                            {{ formatNumber(selectedData.tonnage) }} kg
-                          </h3>
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            TW: Rp. {{ formatNumber(selectedData.tw) }}
-                          </h3>
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            <!-- kosong -->
-                          </h3>
-                          <h3
-                            class="text-md leading-6 font-medium text-gray-900"
-                          >
-                            THR: Rp. {{ formatNumber(selectedData.thr) }}
-                          </h3>
-                        </div>
-                        <hr class="border-2" />
+                    <div class="grid grid-cols-2 gap-x-4">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Customer: {{ selectedData.name }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        TB: Rp. {{ formatNumber(selectedData.tb) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Tonase Akumulatif:
+                        {{ formatNumber(selectedData.tonnage) }} kg
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        TW: Rp. {{ formatNumber(selectedData.tw) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        <!-- kosong -->
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        THR: Rp. {{ formatNumber(selectedData.thr) }}
+                      </h3>
+                    </div>
+                    <hr class="border-2" />
                     <hr />
                     <div
                       class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
@@ -583,7 +571,9 @@
                     </button>
                     <button
                       :disabled="
-                        newSavings.tb < 0 || newSavings.thr < 0 || newSavings.tw < 0
+                        newSavings.tb < 0 ||
+                        newSavings.thr < 0 ||
+                        newSavings.tw < 0
                       "
                       type="button"
                       @click.once="depositSavings()"
@@ -857,7 +847,8 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            Jumlah Transaksi: {{ getUniqueDays(selectedData.transactions) }} Hari
+                            Jumlah Transaksi:
+                            {{ getUniqueDays(selectedData.transactions) }} Hari
                           </h3>
                         </div>
                         <hr class="border-2" />
@@ -1035,7 +1026,9 @@
                                         v-for="rit in selectedTransaction.rits"
                                         :key="rit.id"
                                       >
-                                        {{ formatNumber(rit.tonnage * rit.masak) }}
+                                        {{
+                                          formatNumber(rit.tonnage * rit.masak)
+                                        }}
                                       </div>
                                     </div>
                                   </td>
