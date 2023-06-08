@@ -42,6 +42,13 @@
         >
           Top Up
         </button>
+        <button
+          v-if="currentTab == tabs[2].name"
+          @click="showExchangeForm = true"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+        >
+          Tukar Uang
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -369,6 +376,148 @@
           </div>
         </div>
       </div>
+      <div v-if="currentTab == tabs[2].name" class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Total
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Koin
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      1.000
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      2.000
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      5.000
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      10.000
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      20.000
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="cas in cases" :key="cas.id">
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatDate(cas.created_at) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.total) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.koin) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.seribu) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.duaribu) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.limaribu) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.sepuluhribu) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(cas.duapuluhribu) }}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- //SECTION - Approval Form  -->
     <TransitionRoot as="template" :show="showSaleApprovalForm">
@@ -629,7 +778,7 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION -->
-    <!-- //SECTION - Form Tambah Pengeluaran  -->
+    <!-- //SECTION - Form Top Up  -->
     <TransitionRoot as="template" :show="showTopUpForm">
       <Dialog
         as="div"
@@ -875,6 +1024,267 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION  -->
+    <!-- //SECTION - Form Exchange  -->
+    <TransitionRoot as="template" :show="showExchangeForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showExchangeForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        {{ "Cas - Tukar Uang" }}
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div class="grid grid-cols-3 gap-x-4 my-2">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Koin: Rp. {{ formatNumber(casBalance.koin) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        1.000: Rp. {{ formatNumber(casBalance.seribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        2.000: Rp. {{ formatNumber(casBalance.duaribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        5.000: Rp. {{ formatNumber(casBalance.limaribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        10.000: Rp. {{ formatNumber(casBalance.sepuluhribu) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        20.000: Rp. {{ formatNumber(casBalance.duapuluhribu) }}
+                      </h3>
+                    </div>
+                    <hr />
+                    <div
+                      class="grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-2"
+                    >
+                      <div class="col-span-2">
+                        <label
+                          for="total"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Total (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="total"
+                            v-model="exchange.total"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sisa uang:
+                        {{
+                          exchange.total -
+                          (exchange.koin +
+                            exchange.seribu +
+                            exchange.duaribu +
+                            exchange.limaribu +
+                            exchange.sepuluhribu +
+                            exchange.duapuluhribu)
+                        }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Biaya:
+                        {{
+                          formatNumber(
+                            Math.ceil(exchange.total / 2000000) * 5000
+                          )
+                        }}
+                      </h3>
+                    </div>
+
+                    <div
+                      class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-3"
+                    >
+                      <div>
+                        <label
+                          for="koin"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Koin (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="koin"
+                            v-model="exchange.koin"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="seribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          1.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="seribu"
+                            v-model="exchange.seribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="duaribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          2.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="duaribu"
+                            v-model="exchange.duaribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="limaribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          5.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="limaribu"
+                            v-model="exchange.limaribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="sepuluhribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          10.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="sepuluhribu"
+                            v-model="exchange.sepuluhribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          for="duapuluhribu"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          20.000 (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="duapuluhribu"
+                            v-model="exchange.duapuluhribu"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showExchangeForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      :disabled="
+                        exchange.total -
+                          (exchange.koin +
+                            exchange.seribu +
+                            exchange.duaribu +
+                            exchange.limaribu +
+                            exchange.sepuluhribu +
+                            exchange.duapuluhribu) !=
+                          0 ||
+                        exchange.total <= 0 ||
+                        exchange.koin > casBalance.koin ||
+                        exchange.seribu > casBalance.seribu ||
+                        exchange.duaribu > casBalance.duaribu ||
+                        exchange.limaribu > casBalance.limaribu ||
+                        exchange.sepuluhribu > casBalance.sepuluhribu ||
+                        exchange.duapuluhribu > casBalance.duapuluhribu
+                      "
+                      @click.once="exchangeMoney()"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      {{ "Save" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION  -->
   </Admin>
 </template>
 
@@ -935,6 +1345,7 @@ export default {
         this.getSavingsIncomes();
       } else if (this.currentTab == "Cas") {
         this.getCurrentCasBalance();
+        this.getCases();
       }
     },
     changeTabMobile(event) {
@@ -952,6 +1363,7 @@ export default {
         this.getSavingsIncomes();
       } else if (this.currentTab == "Cas") {
         this.getCurrentCasBalance();
+        this.getCases();
       }
     },
     //STUB - Penjualan
@@ -1029,6 +1441,25 @@ export default {
         });
     },
     //STUB - Cas
+    getCases() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("/admin/cas/get_cas", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
+        .then((data) => {
+          this.cases = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getCurrentCasBalance() {
       this.isLoading = true;
       const instance = axios.create({
@@ -1040,6 +1471,21 @@ export default {
         .then((data) => {
           this.casBalance = data.data.api_results;
           this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    exchangeMoney() {
+      this.exchange.fee = Math.ceil(this.exchange.total / 2000000) * 5000;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/cas`, this.exchange)
+        .then((data) => {
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
@@ -1083,8 +1529,20 @@ export default {
       //STUB - Tabungan
       savings: [],
       //STUB - Cas
+      showExchangeForm: false,
       showTopUpForm: false,
       casBalance: null,
+      cases: [],
+      exchange: {
+        fee: null,
+        total: null,
+        koin: null,
+        seribu: null,
+        duaribu: null,
+        limaribu: null,
+        sepuluhribu: null,
+        duapuluhribu: null,
+      },
       deposit: {
         total: null,
         koin: null,
