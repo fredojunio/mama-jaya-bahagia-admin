@@ -18,7 +18,7 @@ import CustomerIndex from "/src/views/admin/customer/index.vue";
 //Finance
 import FinanceIndex from "/src/views/admin/finance/index.vue";
 import FinanceRit from "/src/views/admin/finance/rit.vue";
-import FinancePenjualan from "/src/views/admin/finance/penjualan.vue";
+import FinancePemasukan from "/src/views/admin/finance/pemasukan.vue";
 import FinanceCashback from "/src/views/admin/finance/cashback.vue";
 
 //Kendaraan
@@ -110,11 +110,11 @@ const routes = [
     },
   },
   {
-    path: "/admin/finance/penjualan",
-    name: "FinancePenjualan",
-    component: FinancePenjualan,
+    path: "/admin/finance/pemasukan",
+    name: "FinancePemasukan",
+    component: FinancePemasukan,
     meta: {
-      title: "Finance - Penjualan",
+      title: "Finance - Pemasukan",
     },
   },
   {

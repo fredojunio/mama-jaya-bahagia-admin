@@ -201,7 +201,7 @@
                                   ? notification.title != 'Penjualan Customer'
                                     ? ''
                                     : '/admin/owner/jual_barang'
-                                  : '/admin/finance/penjualan'
+                                  : '/admin/finance/pemasukan'
                                 : '/admin/rit'
                               : '/admin/owner/jual_barang'
                           "
@@ -289,9 +289,9 @@ var navigation = [
     name: "Finance",
     icon: "mdi:cash",
     children: [
+      { name: "Daftar Pemasukan", href: "/admin/finance/pemasukan" },
       { name: "Daftar Pengeluaran", href: "/admin/finance" },
       { name: "Daftar Rit", href: "/admin/finance/rit" },
-      { name: "Daftar Penjualan", href: "/admin/finance/penjualan" },
       { name: "Daftar Cashback", href: "/admin/finance/cashback" },
     ],
   },

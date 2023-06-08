@@ -14,7 +14,7 @@
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">
-        Daftar Penjualan
+        Daftar Pemasukan
       </h1>
       <div class="relative rounded-md shadow-sm w-96">
         <div
@@ -24,7 +24,7 @@
         </div>
         <VueDatePicker
           v-model="date"
-          @update:model-value="getCompletedTransactions"
+          @update:model-value="changeTab(this.currentTab)"
           locale="id"
           :start-time="[
             { hours: 0, minutes: 0, seconds: 0 },
@@ -36,7 +36,79 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mt-8 flex flex-col">
+      <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select a tab</label>
+        <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+        <select
+          v-if="role_id == 1"
+          @change="changeTabMobile($event)"
+          id="tabs"
+          name="tabs"
+          class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
+            {{ tab.name }}
+          </option>
+        </select>
+        <select
+          v-else
+          @change="changeTabMobile($event)"
+          id="tabs"
+          name="tabs"
+          class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          <option
+            v-for="tab in tabs.filter((tab) => tab.name != 'Hold')"
+            :key="tab.name"
+            :selected="tab.current"
+          >
+            {{ tab.name }}
+          </option>
+        </select>
+      </div>
+      <div class="hidden sm:block">
+        <div class="border-b border-gray-200">
+          <nav
+            v-if="role_id == 1"
+            class="-mb-px flex space-x-8"
+            aria-label="Tabs"
+          >
+            <div
+              @click="changeTab(tab.name)"
+              v-for="tab in tabs"
+              :key="tab.name"
+              :class="[
+                tab.current
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+              ]"
+              :aria-current="tab.current ? 'page' : undefined"
+            >
+              {{ tab.name }}
+            </div>
+          </nav>
+          <nav v-else class="-mb-px flex space-x-8" aria-label="Tabs">
+            <div
+              @click="changeTab(tab.name)"
+              v-for="tab in tabs.filter((tab) => tab.name != 'Hold')"
+              :key="tab.name"
+              :class="[
+                tab.current
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+              ]"
+              :aria-current="tab.current ? 'page' : undefined"
+            >
+              {{ tab.name }}
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -187,6 +259,103 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="currentTab == tabs[1].name" class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+                <table class="min-w-full divide-y divide-gray-300">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Tanggal
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Customer
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        TW
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        TB
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        THR
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 bg-white">
+                    <tr v-for="saving in savings" :key="saving.id">
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ formatDate(saving.created_at) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ saving.customer.nickname }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.tw) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.tb) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(saving.thr) }}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
             </div>
           </div>
         </div>
@@ -497,14 +666,20 @@ export default {
     this.getCompletedTransactions();
   },
   methods: {
-    changeTab(index) {
+    changeTab(tabName) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
           tab.current = false;
         }
       });
-      this.tabs[index].current = true;
-      this.currentTab = this.tabs[index].name;
+      this.tabs.find((tab) => tab.name === tabName).current = true;
+      this.currentTab = tabName;
+      if (this.currentTab == "Penjualan") {
+        this.getCompletedTransactions();
+      } else if (this.currentTab == "Tabungan") {
+        this.getSavingsIncomes();
+      } else if (this.currentTab == "Cas") {
+      }
     },
     changeTabMobile(event) {
       this.tabs.forEach((tab) => {
@@ -515,7 +690,14 @@ export default {
           tab.current = false;
         }
       });
+      if (this.currentTab == "Penjualan") {
+        this.getCompletedTransactions();
+      } else if (this.currentTab == "Tabungan") {
+        this.getSavingsIncomes();
+      } else if (this.currentTab == "Cas") {
+      }
     },
+    //STUB - Penjualan
     getCompletedTransactions() {
       this.isLoading = true;
       const instance = axios.create({
@@ -529,7 +711,6 @@ export default {
         })
         .then((data) => {
           this.transactions = data.data.data.results;
-          console.log(this.transactions);
           this.isLoading = false;
         })
         .catch((err) => {
@@ -570,20 +751,50 @@ export default {
           console.log(err);
         });
     },
+    //STUB - Tabungan
+    getSavingsIncomes() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("/admin/saving/get_savings_incomes", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
+        .then((data) => {
+          this.savings = data.data.data.results;
+          console.log(this.savings);
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
       isLoading: false,
-      showSaleApprovalForm: false,
-      showTransactionDetail: false,
+      tabs: [
+        { name: "Penjualan", current: true },
+        { name: "Tabungan", current: false },
+        { name: "Cas", current: false },
+      ],
+      currentTab: "Penjualan",
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
+      //STUB - Penjualan
+      showSaleApprovalForm: false,
+      showTransactionDetail: false,
       transactions: [],
       payment: {
         amount: null,
       },
+      //STUB - Tabungan
+      savings: [],
     };
   },
 };
