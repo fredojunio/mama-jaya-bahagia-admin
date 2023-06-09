@@ -842,6 +842,21 @@
                     <hr />
                     <div class="grid grid-cols-3 gap-x-4 my-2">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Total: Rp.
+                        {{
+                          formatNumber(
+                            casBalance.koin +
+                              casBalance.seribu +
+                              casBalance.duaribu +
+                              casBalance.limaribu +
+                              casBalance.sepuluhribu +
+                              casBalance.duapuluhribu
+                          )
+                        }}
+                      </h3>
+                    </div>
+                    <div class="grid grid-cols-3 gap-x-4 my-2">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
                         Koin: Rp. {{ formatNumber(casBalance.koin) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
@@ -1086,6 +1101,21 @@
                       </p>
                     </div>
                     <hr />
+                    <div class="grid grid-cols-3 gap-x-4 my-2">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Total: Rp.
+                        {{
+                          formatNumber(
+                            casBalance.koin +
+                              casBalance.seribu +
+                              casBalance.duaribu +
+                              casBalance.limaribu +
+                              casBalance.sepuluhribu +
+                              casBalance.duapuluhribu
+                          )
+                        }}
+                      </h3>
+                    </div>
                     <div class="grid grid-cols-3 gap-x-4 my-2">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Koin: Rp. {{ formatNumber(casBalance.koin) }}
