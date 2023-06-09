@@ -14,13 +14,13 @@
         <td></td>
       </tr>
       <tr>
-        <td>TOKO PRAPEN</td>
+        <td>{{trip.branches[0].name}}</td>
         <td></td>
         <td></td>
         <td></td>
       </tr>
       <tr>
-        <td>TENGGILIS</td>
+        <td>{{trip.branches[0].address}}</td>
         <td></td>
         <td>NOPOL: <span class="font-bold">{{trip.plate_number}}</span></td>
         <td></td>

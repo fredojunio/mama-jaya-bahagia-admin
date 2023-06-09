@@ -1538,12 +1538,28 @@
                             for="branch_name"
                             class="block text-sm font-medium text-gray-700"
                           >
-                            Cabang
+                            Nama Cabang
                           </label>
                           <div class="mt-1">
                             <input
                               v-model="transferBranchRit.branch_name"
                               id="branch_name"
+                              type="text"
+                              class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            />
+                          </div>
+                        </div>
+                        <div class="sm:col-span-6">
+                          <label
+                            for="branch_address"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Alamat Cabang
+                          </label>
+                          <div class="mt-1">
+                            <input
+                              v-model="transferBranchRit.branch_address"
+                              id="branch_address"
                               type="text"
                               class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                             />
@@ -1590,7 +1606,7 @@
                             />
                           </div>
                         </div>
-                        <div
+                        <!-- <div
                           class="grid grid-cols-3 gap-x-2 justify-center items-center"
                         >
                           <div>
@@ -1641,7 +1657,7 @@
                               />
                             </div>
                           </div>
-                        </div>
+                        </div> -->
                         <hr class="border-2" />
                         <div
                           class="flex justify-between items-center gap-2 mb-2"
@@ -2839,9 +2855,10 @@ export default {
         is_hold: false,
       },
       transferBranchRit: {
-        plate_number: '',
+        plate_number: "",
         rits: [{ id: null, amount: 0 }],
-        branch_name: '',
+        branch_name: "",
+        branch_address: "",
         vehicle_id: null,
         allowance: null,
         gas: null,
