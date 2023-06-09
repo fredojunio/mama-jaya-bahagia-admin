@@ -1574,6 +1574,22 @@
                             </select>
                           </div>
                         </div>
+                        <div class="sm:col-span-6">
+                          <label
+                            for="plate_number"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Plat Nomor Kendaraan
+                          </label>
+                          <div class="mt-1">
+                            <input
+                              v-model="transferBranchRit.plate_number"
+                              id="plate_number"
+                              type="text"
+                              class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                            />
+                          </div>
+                        </div>
                         <div
                           class="grid grid-cols-3 gap-x-2 justify-center items-center"
                         >
@@ -1718,8 +1734,9 @@
                     <button
                       type="button"
                       :disabled="
-                        transferBranchRit.branch_name == null ||
+                        transferBranchRit.branch_name == '' ||
                         transferBranchRit.vehicle_id == null ||
+                        transferBranchRit.plate_number == '' ||
                         transferBranchRit.rits.some(
                           (rit) => rit.id == null || rit.amount <= 0
                         ) ||
@@ -1832,6 +1849,12 @@
                                     >
                                       Tonase (kg)
                                     </th>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Action
+                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody
@@ -1871,6 +1894,26 @@
                                           kg
                                         </div>
                                       </div>
+                                    </td>
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <router-link
+                                        :to="{
+                                          path: `/admin/rit/surat_jalan/${ritBranch.trip.id}`,
+                                        }"
+                                        target="_blank"
+                                      >
+                                        <div
+                                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                                        >
+                                          <Icon
+                                            icon="uil:print"
+                                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                                          ></Icon>
+                                          <span class="ml-3">Print</span>
+                                        </div>
+                                      </router-link>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -2796,8 +2839,9 @@ export default {
         is_hold: false,
       },
       transferBranchRit: {
+        plate_number: '',
         rits: [{ id: null, amount: 0 }],
-        branch_name: null,
+        branch_name: '',
         vehicle_id: null,
         allowance: null,
         gas: null,

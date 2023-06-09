@@ -11,6 +11,7 @@ import RitIndex from "/src/views/admin/rit/index.vue";
 import RitJualBarang from "/src/views/admin/rit/jual_barang.vue";
 import RitNota from "/src/views/admin/rit/nota.vue";
 import RitNotaDetail from "/src/views/admin/rit/nota_detail.vue";
+import RitSuratJalan from "/src/views/admin/rit/surat_jalan.vue";
 
 //Customer
 import CustomerIndex from "/src/views/admin/customer/index.vue";
@@ -83,6 +84,15 @@ const routes = [
     props: true,
     meta: {
       title: "Nota",
+    },
+  },
+  {
+    path: "/admin/rit/surat_jalan/:id",
+    name: "RitSuratJalan",
+    component: RitSuratJalan,
+    props: true,
+    meta: {
+      title: "Surat Jalan",
     },
   },
   {
