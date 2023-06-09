@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div class="flex-1 relative z-0 flex overflow-hidden">
       <main
@@ -37,7 +49,10 @@
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
             <button
-              @click="showAddCustomerForm = true; resetData()"
+              @click="
+                showAddCustomerForm = true;
+                resetData();
+              "
               class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
             >
               Tambah Customer
@@ -344,6 +359,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat tambah rit
       showAddCustomerForm: false,
       showDirectory: false,
@@ -386,17 +402,17 @@ export default {
       };
     },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/customer")
+        .get("/admin/customer/get_lean_data")
         .then((data) => {
-          this.isLoading = false;
           this.customers = data.data.data.results;
           this.filteredCustomers = this.customers;
-          this.selectedData = this.customers[0];
+          this.selectData(this.customers[0].id);
         })
         .catch((err) => {
           console.log(err);
@@ -445,13 +461,26 @@ export default {
       this.tempData = this.selectedData;
     },
     selectData(id) {
-      this.selectedData = this.customers.find((obj) => {
-        return obj.id === id;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      instance
+        .get("/admin/customer/" + id)
+        .then((data) => {
+          this.selectedData = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     filterData() {
       this.filteredCustomers = this.customers.filter((customer) => {
-        return customer.nickname.toLowerCase().includes(this.searchQuery.toLowerCase());
+        return customer.nickname
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
       });
     },
   },

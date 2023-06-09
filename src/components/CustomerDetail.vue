@@ -117,7 +117,7 @@
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Cashback</dt>
           <dd class="mt-1 text-sm text-gray-900">
-            {{ getUniqueDays(selectedData.transactions) }} Hari
+            {{ selectedData.cashback_days }} Hari
           </dd>
         </div>
         <div class="w-full col-span-2 border-t">
@@ -265,12 +265,12 @@
                       >
                         Tanggal
                       </th>
-                      <th
+                      <!-- <th
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
                         Total TW
-                      </th>
+                      </th> -->
                       <th
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -295,12 +295,12 @@
                       >
                         Tipe
                       </th>
-                      <th
+                      <!-- <th
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
                         TW
-                      </th>
+                      </th> -->
                       <th
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -322,7 +322,7 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                    <tr v-for="saving in selectedData.savings" :key="saving.id">
+                    <tr v-for="saving in filteredSavings" :key="saving.id">
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
@@ -332,7 +332,7 @@
                           </div>
                         </div>
                       </td>
-                      <td
+                      <!-- <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -340,7 +340,7 @@
                             Rp. {{ formatNumber(saving.total_tw) }}
                           </div>
                         </div>
-                      </td>
+                      </td> -->
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
@@ -377,7 +377,7 @@
                           </div>
                         </div>
                       </td>
-                      <td
+                      <!-- <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -385,7 +385,7 @@
                             Rp. {{ formatNumber(saving.tw) }}
                           </div>
                         </div>
-                      </td>
+                      </td> -->
                       <td
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
@@ -848,7 +848,7 @@
                             class="text-md leading-6 font-medium text-gray-900"
                           >
                             Jumlah Transaksi:
-                            {{ getUniqueDays(selectedData.transactions) }} Hari
+                            {{ selectedData.cashback_days }} Hari
                           </h3>
                         </div>
                         <hr class="border-2" />
@@ -1116,6 +1116,7 @@ export default {
   props: ["selectedData"],
   watch: {
     selectedData: function (newVal, oldVal) {
+      this.changeTab(0);
       this.filterTransaction();
     },
   },
@@ -1128,6 +1129,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat cek detail
       showTransactionDetail: false,
       showDepositSavingsForm: false,
@@ -1181,28 +1183,58 @@ export default {
       }
     },
     filterTransaction() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredTransactions = this.selectedData.transactions.filter(
-        (transaction) => {
-          let transactionDate = new Date(transaction.created_at);
-          return transactionDate >= startDate && transactionDate <= untilDate;
-        }
-      );
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          "/admin/customer/" +
+            this.selectedData.id +
+            "/get_customer_transactions",
+          {
+            start_date: this.date[0].toString(),
+            end_date: this.date[1].toString(),
+          }
+        )
+        .then((data) => {
+          this.filteredTransactions = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     openTransactionDetail(id) {
-      this.selectedTransaction = this.selectedData.transactions.find((obj) => {
+      this.selectedTransaction = this.filteredTransactions.find((obj) => {
         return obj.id === id;
       });
       this.showTransactionDetail = true;
     },
     filterSaving() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredSavings = this.selectedData.savings.filter((saving) => {
-        let savingDate = new Date(saving.created_at);
-        return savingDate >= startDate && savingDate <= untilDate;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      instance
+        .post(
+          "/admin/customer/" +
+            this.selectedData.id +
+            "/get_customer_savings",
+          {
+            start_date: this.date[0].toString(),
+            end_date: this.date[1].toString(),
+          }
+        )
+        .then((data) => {
+          this.filteredSavings = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     calculateDifference() {
       this.savings.tb = 0;
@@ -1252,16 +1284,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    getUniqueDays(transactions) {
-      const uniqueDays = transactions.reduce((acc, transaction) => {
-        const date = transaction.created_at.split(" ")[0]; // get the date part only
-        if (!acc[date]) {
-          acc[date] = true; // add the date to the object if it doesn't exist yet
-        }
-        return acc;
-      }, {});
-      return Object.keys(uniqueDays).length; // get the number of unique dates
     },
     approveCashback() {
       const instance = axios.create({
