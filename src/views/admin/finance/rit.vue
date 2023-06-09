@@ -4,8 +4,10 @@
     class="fixed items-center justify-center min-w-full min-h-full z-50"
     :class="isLoading ? 'flex' : 'hidden'"
   >
-    <div class="absolute z-50 min-w-full min-h-screen"></div>
-    <div class="text-6xl animate-spin z-50">
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
       <Icon icon="fa:circle-o-notch" />
     </div>
   </div>

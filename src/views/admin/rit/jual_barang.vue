@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -801,13 +813,6 @@ export default {
             .includes(this.ritQuery.toLowerCase());
         });
       }
-      this.filteredRits = this.filteredRits.filter(
-        (rit) =>
-          rit.arrival_date != null &&
-          rit.sell_price > 0 &&
-          rit.is_hold == 0 &&
-          rit.sold_date == null
-      );
     },
     getAllRits: function () {
       const instance = axios.create({
@@ -815,13 +820,9 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/rit")
+        .get("/admin/rit/get_all_stock")
         .then((data) => {
           this.rits = data.data.data.results;
-          this.filteredRits = this.rits.filter(
-            (rit) =>
-              rit.arrival_date != null && rit.sell_price > 0 && rit.is_hold == 0
-          );
         })
         .catch((err) => {
           console.log(err);
@@ -833,7 +834,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/customer")
+        .get("/admin/customer/get_lean_data")
         .then((data) => {
           this.customers = data.data.data.results;
         })
@@ -870,11 +871,22 @@ export default {
         });
     },
     selectCustomer(id) {
-      this.selectedCustomer = this.customers.find((obj) => {
-        return obj.id === id;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
-      this.newTransaction.ongkir = this.selectedCustomer.ongkir;
-      this.updateTotalPrice();
+      instance
+        .get("/admin/customer/" + id)
+        .then((data) => {
+          this.selectedCustomer = data.data.data.results;
+          this.newTransaction.ongkir = this.selectedCustomer.ongkir;
+          this.updateTotalPrice();
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     createData() {
       this.newTransaction.old_id = this.id;
@@ -946,6 +958,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       showConfirmationPopup: false,
       sacks: 0,
       rits: [],
