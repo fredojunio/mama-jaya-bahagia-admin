@@ -488,14 +488,14 @@
                         {{ formatNumber(selectedData.tonnage) }} kg
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        TW: Rp. {{ formatNumber(selectedData.tw) }}
+                        THR: Rp. {{ formatNumber(selectedData.thr) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         <!-- kosong -->
                       </h3>
-                      <h3 class="text-md leading-6 font-medium text-gray-900">
-                        THR: Rp. {{ formatNumber(selectedData.thr) }}
-                      </h3>
+                      <!-- <h3 class="text-md leading-6 font-medium text-gray-900">
+                        TW: Rp. {{ formatNumber(selectedData.tw) }}
+                      </h3> -->
                     </div>
                     <hr class="border-2" />
                     <hr />
@@ -668,18 +668,18 @@
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            TW: Rp. {{ formatNumber(selectedData.tw) }}
+                            THR: Rp. {{ formatNumber(selectedData.thr) }}
                           </h3>
                           <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
                             <!-- kosong -->
                           </h3>
-                          <h3
+                          <!-- <h3
                             class="text-md leading-6 font-medium text-gray-900"
                           >
-                            THR: Rp. {{ formatNumber(selectedData.thr) }}
-                          </h3>
+                            TW: Rp. {{ formatNumber(selectedData.tw) }}
+                          </h3> -->
                         </div>
                         <hr class="border-2" />
                         <div class="sm:col-span-6">
@@ -698,7 +698,7 @@
                               class="shadow-sm focus:ring-black focus:border-tukimring-black block w-full sm:text-sm border-gray-300 rounded-md"
                             >
                               <option value="tb" selected>TB</option>
-                              <option value="tw">TW</option>
+                              <!-- <option value="tw">TW</option> -->
                               <option value="thr">THR</option>
                             </select>
                           </div>
@@ -988,12 +988,12 @@
                                   >
                                     TB (Rp.)
                                   </th>
-                                  <th
+                                  <!-- <th
                                     scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                   >
                                     TW (Rp.)
-                                  </th>
+                                  </th> -->
                                   <th
                                     scope="col"
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -1044,7 +1044,7 @@
                                       </div>
                                     </div>
                                   </td>
-                                  <td
+                                  <!-- <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                   >
                                     <div class="flex items-center">
@@ -1055,7 +1055,7 @@
                                         }}
                                       </div>
                                     </div>
-                                  </td>
+                                  </td> -->
                                   <td
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                   >

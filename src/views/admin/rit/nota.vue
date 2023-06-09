@@ -147,9 +147,9 @@
                         <div class="font-medium text-gray-900">
                           TB: Rp. {{ formatNumber(transaction.tb) }}
                         </div>
-                        <div class="font-medium text-gray-900">
+                        <!-- <div class="font-medium text-gray-900">
                           TW: Rp. {{ formatNumber(transaction.tw) }}
-                        </div>
+                        </div> -->
                         <div class="font-medium text-gray-900">
                           THR: Rp. {{ formatNumber(transaction.thr) }}
                         </div>

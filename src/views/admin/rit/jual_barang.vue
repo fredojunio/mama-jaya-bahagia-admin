@@ -294,7 +294,7 @@
           </div>
         </div>
         <hr class="border-2" />
-        <div class="grid grid-cols-3 gap-x-2 justify-center items-center">
+        <div class="grid grid-cols-2 gap-x-2 justify-center items-center">
           <div class="col-span-1">
             <label for="thr" class="block text-sm font-medium text-gray-700">
               THR (Rp.)
@@ -323,7 +323,7 @@
               />
             </div>
           </div>
-          <div class="col-span-1">
+          <!-- <div class="col-span-1">
             <label for="tw" class="block text-sm font-medium text-gray-700">
               TW (Rp.)
             </label>
@@ -336,7 +336,7 @@
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="sm:col-span-6">
           <div class="relative flex items-start">

@@ -312,12 +312,12 @@
                     >
                       Customer
                     </th>
-                    <th
+                    <!-- <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       TW
-                    </th>
+                    </th> -->
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -352,7 +352,7 @@
                         </div>
                       </div>
                     </td>
-                    <td
+                    <!-- <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex items-center">
@@ -360,7 +360,7 @@
                           Rp. {{ formatNumber(saving.tw) }}
                         </div>
                       </div>
-                    </td>
+                    </td> -->
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >

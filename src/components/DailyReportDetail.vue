@@ -74,18 +74,18 @@
             Rp. {{ formatNumber(selectedData.tb_expense) }}
           </dd>
         </div>
-        <div class="sm:col-span-1">
+        <!-- <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan TW</dt>
           <dd class="mt-1 text-sm text-gray-900">
-            Rp. {{ formatNumber(selectedData.tb_income) }}
+            Rp. {{ formatNumber(selectedData.tw_income) }}
           </dd>
-        </div>
-        <div class="sm:col-span-1">
+        </div> -->
+        <!-- <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pengeluaran TW</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.tw_expense) }}
           </dd>
-        </div>
+        </div> -->
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan THR</dt>
           <dd class="mt-1 text-sm text-gray-900">
