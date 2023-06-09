@@ -127,7 +127,8 @@
                         <div
                           v-if="
                             rit.customer_tonnage > 0 &&
-                            rit.customer_transaction == null
+                            rit.customer_transaction == null &&
+                            rit.sell_price > 0
                           "
                           @click="openAddCustomerTransaction(rit)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -1268,7 +1269,7 @@ export default {
     SwitchLabel,
   },
   created() {
-    this.getAllTransactions();
+    this.getOwnerTransactions();
     this.getAllCustomers();
     this.getAllVehicles();
     this.getAllRits();
@@ -1294,12 +1295,37 @@ export default {
       });
     },
     //NOTE - Section Jual ke Customer
-    selectCustomer(id) {
-      this.selectedCustomer = this.customers.find((obj) => {
-        return obj.id === id;
+    getOwnerTransactions: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
-      this.newTransaction.ongkir = this.selectedCustomer.ongkir;
-      this.updateTotalPrice();
+      instance
+        .get("/admin/transaction/get_owner_transactions")
+        .then((data) => {
+          this.transactions = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    selectCustomer(id) {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/customer/" + id)
+        .then((data) => {
+          this.selectedCustomer = data.data.data.results;
+          this.newTransaction.ongkir = this.selectedCustomer.ongkir;
+          this.updateTotalPrice();
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     openAddCustomerTransaction(rit) {
       let customerTransaction = this.transactions.find((obj) => {
@@ -1312,6 +1338,7 @@ export default {
       this.selectedTransaction = customerTransaction;
       this.newTransaction.customer_id = customerTransaction.customer.id;
       this.newTransaction.ongkir = customerTransaction.ongkir;
+      this.newTransaction.rits = []
       this.newTransaction.rits.push({
         item: rit,
         tonnage: rit.customer_tonnage,
@@ -1420,9 +1447,8 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/customer")
+        .get("/admin/customer/get_lean_data")
         .then((data) => {
-          this.isLoading = false;
           this.customers = data.data.data.results;
         })
         .catch((err) => {
@@ -1505,7 +1531,7 @@ export default {
         });
     },
     //NOTE - Section Nota
-    getAllTransactions: function () {
+    getNotaTransactions: function () {
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
