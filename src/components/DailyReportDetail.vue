@@ -539,7 +539,7 @@ export default {
   props: ["selectedData"],
   watch: {
     selectedData: function (newVal, oldVal) {
-      this.getAllTransactions();
+      // this.getAllTransactions();
     },
   },
   components: {
