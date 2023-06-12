@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -81,10 +93,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="rit in rits"
-                    :key="rit.id"
-                  >
+                  <tr v-for="rit in rits" :key="rit.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -243,17 +252,12 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="transaction in transactions"
-                    :key="transaction.id"
-                  >
+                  <tr v-for="transaction in transactions" :key="transaction.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
-                        <div
-                          class="font-medium text-gray-900"
-                        >
+                        <div class="font-medium text-gray-900">
                           {{ transaction.customer.nickname }}
                         </div>
                       </div>
@@ -1283,6 +1287,11 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
+      if (this.currentTab == "Rit") {
+        this.getOwnerTransactions();
+      } else if (this.currentTab == "Nota") {
+        this.getNotaTransactions();
+      }
     },
     changeTabMobile(event) {
       this.tabs.forEach((tab) => {
@@ -1296,6 +1305,7 @@ export default {
     },
     //NOTE - Section Jual ke Customer
     getOwnerTransactions: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -1304,6 +1314,7 @@ export default {
         .get("/admin/transaction/get_owner_transactions")
         .then((data) => {
           this.transactions = data.data.data.results;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -1338,7 +1349,7 @@ export default {
       this.selectedTransaction = customerTransaction;
       this.newTransaction.customer_id = customerTransaction.customer.id;
       this.newTransaction.ongkir = customerTransaction.ongkir;
-      this.newTransaction.rits = []
+      this.newTransaction.rits = [];
       this.newTransaction.rits.push({
         item: rit,
         tonnage: rit.customer_tonnage,
@@ -1532,6 +1543,7 @@ export default {
     },
     //NOTE - Section Nota
     getNotaTransactions: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -1540,6 +1552,7 @@ export default {
         .get("/admin/transaction/get_owner_nota")
         .then((data) => {
           this.transactions = data.data.data.results;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -1570,6 +1583,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat masukin penjualan customer yang langsung dianter
       showAddCustomerTransaction: false,
       showConfirmationPopup: false,
