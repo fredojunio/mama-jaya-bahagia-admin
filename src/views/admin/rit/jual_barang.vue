@@ -338,32 +338,39 @@
             </div>
           </div> -->
         </div>
-        <div class="sm:col-span-6">
-          <div class="relative flex items-start">
+        <div class="grid grid-cols-2 gap-x-2 justify-center items-center">
+          <div class="relative flex items-start col-span-2">
             <div class="text-sm">
               <label for="sak" class="font-medium text-gray-700"
                 >Sak - Stok: {{ sacks }}</label
               >
             </div>
-            <div
-              class="ml-2 pl-2 flex items-center h-5 border-l-2 border-black gap-x-2 text-sm"
-            >
-              <input
-                id="sak_fee"
-                aria-describedby="candidates-description"
-                name="sak_fee"
-                v-model="newTransaction.sack_fee"
-                @change="updateTotalPrice"
-                type="checkbox"
-                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-              <span class="font-medium text-gray-700">Berbayar</span>
+          </div>
+          <div class="relative flex items-start">
+            <div class="text-sm">
+              <label for="sak" class="font-medium text-gray-700"
+                >Berbayar</label
+              >
+            </div>
+          </div>
+          <div class="relative flex items-start">
+            <div class="text-sm">
+              <label for="sak" class="font-medium text-gray-700">Gratis</label>
             </div>
           </div>
           <div class="mt-1">
             <input
               id="sak"
               v-model="newTransaction.sack"
+              @keyup="updateTotalPrice"
+              type="number"
+              class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+            />
+          </div>
+          <div class="mt-1">
+            <input
+              id="sak"
+              v-model="newTransaction.sack_free"
               @keyup="updateTotalPrice"
               type="number"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -398,11 +405,7 @@
           <div class="col-span-1">Harga Sak:</div>
           <div class="col-span-2">
             Rp.
-            {{
-              formatNumber(
-                newTransaction.sack_fee ? newTransaction.sack * 1000 : 0
-              )
-            }}
+            {{ formatNumber(newTransaction.sack * 1000) }}
           </div>
           <div class="col-span-1">Tabungan:</div>
           <div class="col-span-2">
@@ -469,9 +472,10 @@
                   (rit) => rit.item.tonnage_left < rit.tonnage * rit.masak
                 ) ||
                 newTransaction.rits.some((rit) => rit.tonnage <= 0) ||
-                newTransaction.sack > sacks ||
-                newTransaction.sack == null ||
-                newTransaction.sack < 0 ||
+                newTransaction.sack + newTransaction.sack_free > sacks ||
+                (newTransaction.sack == null &&
+                  newTransaction.sack_free == null) ||
+                (newTransaction.sack < 0 && newTransaction.sack_free < 0) ||
                 (newTransaction.rits.length == 0 &&
                   newTransaction.sack <= 0 &&
                   newTransaction.tb <= 0 &&
@@ -787,9 +791,7 @@ export default {
       this.newTransaction.rits.forEach((rit) => {
         this.newTransaction.item_prices += rit.total_price;
       });
-      let sackFee = this.newTransaction.sack_fee
-        ? this.newTransaction.sack * 1000
-        : 0;
+      let sackFee = this.newTransaction.sack * 1000;
       this.newTransaction.total_price =
         this.newTransaction.item_prices +
         this.newTransaction.ongkir -
@@ -933,8 +935,7 @@ export default {
           this.newTransaction.tw = oldTransaction.tw;
           this.newTransaction.thr = oldTransaction.thr;
           this.newTransaction.sack = oldTransaction.sack;
-          this.newTransaction.sack_fee =
-            oldTransaction.sack_fee == 0 ? false : true;
+          this.newTransaction.sack_free = oldTransaction.sack_free;
           this.newTransaction.item_prices = oldTransaction.item_price;
           this.newTransaction.discount = oldTransaction.discount;
           this.newTransaction.total_price = oldTransaction.total_price;
@@ -996,7 +997,7 @@ export default {
         tw: null,
         thr: null,
         sack: null,
-        sack_fee: false,
+        sack_free: null,
         item_prices: null,
         discount: null,
         total_price: null,
