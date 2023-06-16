@@ -33,10 +33,23 @@ app.mixin({
         return "-";
       }
     },
+    getCurrentTime() {
+      const now = new Date();
+      this.currentTime = now.toLocaleTimeString();
+    },
+    checkSixPm() {
+      const now = new Date();
+      const hour = now.getHours();
+      if (hour > 18 || (hour === 18 && minute >= 30)) {
+        this.isSixPm = true;
+      }
+    },
   },
   data() {
     return {
       role_id: localStorage["role_id"],
+      currentTime: null,
+      isSixPm: false,
     };
   },
 });

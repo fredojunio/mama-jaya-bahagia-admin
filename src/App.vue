@@ -1,4 +1,3 @@
-
 <template>
   <router-view></router-view>
 </template>
@@ -15,6 +14,18 @@ export default {
     },
   },
   methods: {},
-  created() {},
+  mounted() {
+    this.getCurrentTime();
+    setInterval(() => {
+      this.getCurrentTime();
+      this.checkSixPm();
+      if (localStorage["role_id"] != 1 && this.isSixPm) {
+        this.$router.push("/");
+      }
+    }, 1000);
+  },
+  data() {
+    return {};
+  },
 };
 </script>
