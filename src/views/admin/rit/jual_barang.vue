@@ -379,6 +379,20 @@
         </div>
         <div class="sm:col-span-6">
           <label for="discount" class="block text-sm font-medium text-gray-700">
+            Lain-lain (Rp.)
+          </label>
+          <div class="mt-1">
+            <input
+              id="discount"
+              v-model="newTransaction.other"
+              @keyup="updateTotalPrice"
+              type="number"
+              class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+            />
+          </div>
+        </div>
+        <div class="sm:col-span-6">
+          <label for="discount" class="block text-sm font-medium text-gray-700">
             Discount (Rp.)
           </label>
           <div class="mt-1">
@@ -415,6 +429,10 @@
                 newTransaction.tb + newTransaction.tw + newTransaction.thr
               )
             }}
+          </div>
+          <div class="col-span-1">Lain-lain:</div>
+          <div class="col-span-2">
+            Rp. {{ formatNumber(newTransaction.other) }}
           </div>
           <div class="col-span-1">Discount:</div>
           <div class="col-span-2">
@@ -799,6 +817,7 @@ export default {
         this.newTransaction.tb +
         this.newTransaction.tw +
         this.newTransaction.thr +
+        this.newTransaction.other +
         sackFee;
     },
     removeRit(index) {
@@ -936,6 +955,7 @@ export default {
           this.newTransaction.thr = oldTransaction.thr;
           this.newTransaction.sack = oldTransaction.sack;
           this.newTransaction.sack_free = oldTransaction.sack_free;
+          this.newTransaction.other = oldTransaction.other;
           this.newTransaction.item_prices = oldTransaction.item_price;
           this.newTransaction.discount = oldTransaction.discount;
           this.newTransaction.total_price = oldTransaction.total_price;
@@ -998,6 +1018,7 @@ export default {
         thr: null,
         sack: null,
         sack_free: null,
+        other: null,
         item_prices: null,
         discount: null,
         total_price: null,

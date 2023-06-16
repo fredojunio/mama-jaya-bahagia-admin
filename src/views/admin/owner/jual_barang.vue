@@ -1155,22 +1155,23 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sak: {{ selectedTransaction.sack }} (Rp.
-                        {{ formatNumber(selectedTransaction.sack_price) }})
+                        {{ formatNumber(selectedTransaction.sack_price) }}) (Gratis: {{selectedTransaction.sack_free}})
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         BBM: Rp.
                         {{ formatNumber(selectedTransaction.trip.gas) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Diskon: Rp.
-                        {{ formatNumber(selectedTransaction.discount) }}
+                        Lain-lain: Rp.
+                        {{ formatNumber(selectedTransaction.other) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         E-Toll: Rp.
                         {{ formatNumber(selectedTransaction.trip.toll) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        <!-- kosong -->
+                        Diskon: Rp.
+                        {{ formatNumber(selectedTransaction.discount) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sangu: Rp.
