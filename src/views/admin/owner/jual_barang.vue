@@ -362,6 +362,178 @@
           </div>
         </div>
       </div>
+      <div v-if="currentTab == tabs[2].name" class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div
+            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+          >
+            <div
+              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Customer
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode - Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase - Harga
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tabungan
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Total
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Sistem
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Asli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="transaction in transactions" :key="transaction.id">
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div class="font-medium text-gray-900">
+                          {{ transaction.customer.nickname }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ rit.rit.item.code }} - ({{ rit.rit.arrival_date }})
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage * rit.masak) }} kg - Rp.
+                          {{ formatNumber(rit.total_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col gap-y-2">
+                        <div class="font-medium text-gray-900">
+                          TB: Rp. {{ formatNumber(transaction.tb) }}
+                        </div>
+                        <!-- <div class="font-medium text-gray-900">
+                          TW: Rp. {{ formatNumber(transaction.tw) }}
+                        </div> -->
+                        <div class="font-medium text-gray-900">
+                          THR: Rp. {{ formatNumber(transaction.thr) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(transaction.total_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage_left) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transaction.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.actual_tonnage) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="openRevisionApprovalForm(transaction.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="fa:check"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Approve Revisi</span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- //!SECTION  -->
     <!-- //SECTION - Popup Penjualan (Customer)  -->
@@ -1224,6 +1396,139 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION -->
+    <!-- //SECTION - Form Approve Rit -->
+    <TransitionRoot as="template" :show="showRevisionApprovalForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showRevisionApprovalForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Approve Revisi
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div class="grid grid-cols-2 gap-x-4">
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Customer: {{ selectedTransaction.customer.nickname }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Ongkir: Rp.
+                        {{ formatNumber(selectedTransaction.ongkir) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sak: {{ selectedTransaction.sack }} (Rp.
+                        {{ formatNumber(selectedTransaction.sack_price) }}) (Gratis: {{selectedTransaction.sack_free}})
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        BBM: Rp.
+                        {{ formatNumber(selectedTransaction.trip.gas) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Lain-lain: Rp.
+                        {{ formatNumber(selectedTransaction.other) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        E-Toll: Rp.
+                        {{ formatNumber(selectedTransaction.trip.toll) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Diskon: Rp.
+                        {{ formatNumber(selectedTransaction.discount) }}
+                      </h3>
+                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                        Sangu: Rp.
+                        {{ formatNumber(selectedTransaction.trip.allowance) }}
+                      </h3>
+                    </div>
+                    <hr />
+
+                    <div
+                      class="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
+                    >
+                      <div class="sm:col-span-6">
+                        <label
+                          for="money"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Total
+                        </label>
+                        <div class="mt-1">
+                          Rp.
+                          {{ formatNumber(selectedTransaction.total_price) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showRevisionApprovalForm = false"
+                      class="bg-black py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      @click.once="approveRevision()"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      {{ "Approve" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION -->
   </Admin>
 </template>
 
@@ -1292,6 +1597,8 @@ export default {
         this.getOwnerTransactions();
       } else if (this.currentTab == "Nota") {
         this.getNotaTransactions();
+      } else if (this.currentTab == "Revisi") {
+        this.getRequestedRevisions();
       }
     },
     changeTabMobile(event) {
@@ -1439,20 +1746,6 @@ export default {
           console.log(err);
         });
     },
-    getAllRit() {
-      const instance = axios.create({
-        baseURL: this.url,
-        headers: { Authorization: "Bearer " + localStorage["access_token"] },
-      });
-      instance
-        .get("/admin/rit/get_all_stock")
-        .then((data) => {
-          this.availableRits = data.data.data.results;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     getAllCustomers: function () {
       const instance = axios.create({
         baseURL: this.url,
@@ -1581,6 +1874,43 @@ export default {
           console.log(err);
         });
     },
+    //NOTE - Section Revisi
+    getRequestedRevisions: function () {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/transaction/get_requested_revisions")
+        .then((data) => {
+          this.transactions = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    openRevisionApprovalForm(id) {
+      this.selectedTransaction = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+      this.showRevisionApprovalForm = true;
+    },
+    approveRevision(val) {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get(`admin/transaction/${this.selectedTransaction.id}/approve_revision`)
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
@@ -1594,9 +1924,12 @@ export default {
       showTransferFromBranch: false,
       // ini approval nota
       showNotaApprovalForm: false,
+      // ini approval revisi
+      showRevisionApprovalForm: false,
       tabs: [
         { name: "Rit", current: true },
         { name: "Nota", current: false },
+        { name: "Revisi", current: false },
       ],
       currentTab: "Rit",
       products: [

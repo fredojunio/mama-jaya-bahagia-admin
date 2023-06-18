@@ -911,19 +911,37 @@ export default {
     },
     createData() {
       this.newTransaction.old_id = this.id;
-      const instance = axios.create({
-        baseURL: this.url,
-        headers: { Authorization: "Bearer " + localStorage["access_token"] },
-      });
-      instance
-        .post("admin/transaction", this.newTransaction)
-        .then((data) => {
-          const baseUrl = window.location.origin;
-          window.location.assign(baseUrl + "/admin/rit/jual_barang");
-        })
-        .catch((err) => {
-          console.log(err);
+      if (this.$route.query.isForcedRevision) {
+        const instance = axios.create({
+          baseURL: this.url,
+          headers: { Authorization: "Bearer " + localStorage["access_token"] },
         });
+        instance
+          .post("admin/transaction/" + this.newTransaction.old_id, {
+            _method: "PATCH",
+            new_transaction: this.newTransaction,
+          })
+          .then((data) => {
+            this.$router.go(0);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        const instance = axios.create({
+          baseURL: this.url,
+          headers: { Authorization: "Bearer " + localStorage["access_token"] },
+        });
+        instance
+          .post("admin/transaction", this.newTransaction)
+          .then((data) => {
+            const baseUrl = window.location.origin;
+            window.location.assign(baseUrl + "/admin/rit/jual_barang");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
     getTransaction: function () {
       const instance = axios.create({
