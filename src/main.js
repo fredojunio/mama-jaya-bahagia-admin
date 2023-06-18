@@ -40,7 +40,7 @@ app.mixin({
     checkSixPm() {
       const now = new Date();
       const hour = now.getHours();
-      if (hour > 18 || (hour === 18 && minute >= 30)) {
+      if (hour > 18 || (hour === 18 && minute >= 30) || hour <= 4) {
         this.isSixPm = true;
       }
     },
