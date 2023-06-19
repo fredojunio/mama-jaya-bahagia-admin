@@ -265,7 +265,7 @@
                           <span class="ml-3">Detail</span>
                         </div>
                         <div
-                          v-if="transaction.revision_requested != 1"
+                          v-if="transaction.revision_requested != 1 && isToday(transaction.created_at)"
                           @click="openRevisionForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -276,7 +276,7 @@
                           <span class="ml-3">Request Revisi</span>
                         </div>
                         <router-link
-                          v-if="transaction.revision_allowed == 1"
+                          v-if="transaction.revision_allowed == 1 && isToday(transaction.created_at)"
                           :to="{
                             path: `/admin/rit/jual_barang/${transaction.id}`,
                             query: { isForcedRevision: true },
@@ -1521,6 +1521,13 @@ export default {
         this.getCurrentCasBalance();
         this.getCases();
       }
+    },
+    isToday(dateString) {
+      const date = new Date(dateString);
+      const today = new Date();
+      return (
+        date.toISOString().substr(0, 10) === today.toISOString().substr(0, 10)
+      );
     },
     //STUB - Penjualan
     getCompletedTransactions() {
