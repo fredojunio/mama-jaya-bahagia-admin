@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div class="flex-1 relative z-0 flex overflow-hidden">
       <main
@@ -225,6 +237,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       showSaveDailyReportForm: false,
       showDirectory: false,
       selectedData: null,
@@ -242,6 +255,7 @@ export default {
   },
   methods: {
     getAllReports: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -251,6 +265,7 @@ export default {
         .then((data) => {
           this.reports = data.data.data.results;
           this.filteredReports = this.reports;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -280,16 +295,28 @@ export default {
       instance
         .get("/admin/report/create_daily_report")
         .then((data) => {
-          this.$router.go(0);
+          // this.$router.go(0);
+          console.log(data)
         })
         .catch((err) => {
           console.log(err);
         });
     },
     selectData(id) {
-      this.selectedData = this.reports.find((obj) => {
-        return obj.id === id;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      instance
+        .get("/admin/report/" + id)
+        .then((data) => {
+          this.selectedData = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     filterData() {
       let startDate = new Date(this.date[0]);
