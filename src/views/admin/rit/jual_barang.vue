@@ -47,7 +47,7 @@
             </select>
           </div>
         </div>
-        <div class="sm:col-span-6" v-if="selectedCustomer.type != 'Pabrik'">
+        <div class="sm:col-span-6" v-if="selectedCustomer.type != 'Kiriman'">
           <label
             for="transaction_date"
             class="block text-sm font-medium text-gray-700"
