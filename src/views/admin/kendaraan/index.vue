@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div class="flex-1 relative z-0 flex overflow-hidden">
       <main
@@ -21,7 +33,10 @@
         </nav>
 
         <div>
-          <KendaraanDetail :selectedData="selectedData" />
+          <KendaraanDetail
+            :selectedData="selectedData"
+            @toggle-form="showEdit"
+          />
         </div>
       </main>
       <aside
@@ -249,6 +264,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       showAddVehicleForm: false,
       showDirectory: false,
       tempData: {
@@ -283,6 +299,7 @@ export default {
       };
     },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -292,7 +309,8 @@ export default {
         .then((data) => {
           this.vehicles = data.data.data.results;
           this.filteredVehicles = this.vehicles;
-          this.selectedData = this.vehicles[0];
+          this.selectData(this.vehicles[0].id);
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
@@ -333,16 +351,25 @@ export default {
           console.log(err);
         });
     },
-    showEdit(id) {
-      this.showAddVehicleForm = true;
-      this.tempData = this.vehicles.find((obj) => {
-        return obj.id === id;
-      });
+    showEdit(openForm) {
+      this.showAddVehicleForm = openForm;
+      this.tempData = this.selectedData;
     },
     selectData(id) {
-      this.selectedData = this.vehicles.find((obj) => {
-        return obj.id === id;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      instance
+        .get("/admin/vehicle/" + id)
+        .then((data) => {
+          this.selectedData = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     filterData() {
       this.filteredVehicles = this.vehicles.filter((vehicle) => {

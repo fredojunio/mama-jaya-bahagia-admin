@@ -11,8 +11,16 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ selectedData.name }} (Toll: {{selectedData.toll}})
+                {{ selectedData.name }} (Toll: {{ selectedData.toll }})
               </h1>
+              <div class="flex flex-col gap-2">
+                <button
+                  @click="toggleForm"
+                  class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+                >
+                  Edit
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -20,11 +28,17 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            {{ selectedData.name }} (Toll: {{selectedData.toll}})
+            {{ selectedData.name }} (Toll: {{ selectedData.toll }})
             <span class="text-gray-400 text-sm font-normal">{{
               selectedData.type
             }}</span>
           </h1>
+          <button
+            @click="toggleForm"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+          >
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -62,7 +76,7 @@
               </div>
               <VueDatePicker
                 v-model="date"
-                @update:model-value="filterData"
+                @update:model-value="filterTrip"
                 locale="id"
                 :start-time="[
                   { hours: 0, minutes: 0, seconds: 0 },
@@ -181,6 +195,7 @@
 
 <script setup>
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 </script>
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -195,7 +210,7 @@ export default {
   props: ["selectedData"],
   watch: {
     selectedData: function (newVal, oldVal) {
-      this.filterData();
+      this.filterTrip();
     },
   },
   components: {
@@ -207,6 +222,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
@@ -216,6 +232,9 @@ export default {
     };
   },
   methods: {
+    toggleForm() {
+      this.$emit("toggle-form", true); // true to open the form, false to close it
+    },
     changeTab(index) {
       this.tabs.forEach((tab) => {
         if (tab.current) {
@@ -225,13 +244,24 @@ export default {
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
     },
-    filterData() {
-      let startDate = new Date(this.date[0]);
-      let untilDate = new Date(this.date[1]);
-      this.filteredTrips = this.selectedData.trips.filter((trip) => {
-        let tripDate = new Date(trip.created_at);
-        return tripDate >= startDate && tripDate <= untilDate;
+    filterTrip() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      instance
+        .post("/admin/vehicle/" + this.selectedData.id + "/get_vehicle_trips", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+        })
+        .then((data) => {
+          this.filteredTrips = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
