@@ -1525,6 +1525,14 @@ export default {
     isToday(dateString) {
       const date = new Date(dateString);
       const today = new Date();
+      console.log("tanggal transact")
+      console.log(date)
+      console.log(date.toISOString().substr(0, 10))
+      console.log("hari ini")
+      console.log(today)
+      console.log(today.toISOString().substr(0, 10))
+      console.log("resolt")
+      console.log(date.toISOString().substr(0, 10) === today.toISOString().substr(0, 10))
       return (
         date.toISOString().substr(0, 10) === today.toISOString().substr(0, 10)
       );
