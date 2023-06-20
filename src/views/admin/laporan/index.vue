@@ -295,8 +295,7 @@ export default {
       instance
         .get("/admin/report/create_daily_report")
         .then((data) => {
-          // this.$router.go(0);
-          console.log(data)
+          this.$router.go(0);
         })
         .catch((err) => {
           console.log(err);
