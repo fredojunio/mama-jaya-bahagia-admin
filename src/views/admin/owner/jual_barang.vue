@@ -1703,7 +1703,7 @@ export default {
         this.newTransaction.item_prices += rit.total_price;
       });
       let sackFee = this.newTransaction.sack_fee
-        ? this.newTransaction.sack * 1000
+        ? this.newTransaction.sack * 1500
         : 0;
       this.newTransaction.total_price =
         this.newTransaction.item_prices +

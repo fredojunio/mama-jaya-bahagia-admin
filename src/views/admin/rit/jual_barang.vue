@@ -419,7 +419,7 @@
           <div class="col-span-1">Harga Sak:</div>
           <div class="col-span-2">
             Rp.
-            {{ formatNumber(newTransaction.sack * 1000) }}
+            {{ formatNumber(newTransaction.sack * 1500) }}
           </div>
           <div class="col-span-1">Tabungan:</div>
           <div class="col-span-2">
@@ -809,7 +809,7 @@ export default {
       this.newTransaction.rits.forEach((rit) => {
         this.newTransaction.item_prices += rit.total_price;
       });
-      let sackFee = this.newTransaction.sack * 1000;
+      let sackFee = this.newTransaction.sack * 1500;
       this.newTransaction.total_price =
         this.newTransaction.item_prices +
         this.newTransaction.ongkir -
