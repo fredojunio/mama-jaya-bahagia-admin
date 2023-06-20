@@ -351,7 +351,7 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                      v-for="transaction in selectedData.reports"
+                      v-for="transaction in selectedData.transactions"
                       :key="transaction.id"
                     >
                       <td

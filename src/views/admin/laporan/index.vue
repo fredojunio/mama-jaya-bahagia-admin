@@ -281,7 +281,7 @@ export default {
         .then((data) => {
           this.selectedData = data.data.data.results[0];
           this.selectedData.rits = data.data.data.results[1];
-          this.selectedData.reports = data.data.data.results[2];
+          this.selectedData.transactions = data.data.data.results[2];
         })
         .catch((err) => {
           console.log(err);
