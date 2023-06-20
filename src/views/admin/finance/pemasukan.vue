@@ -267,7 +267,8 @@
                         <div
                           v-if="
                             transaction.revision_requested != 1 &&
-                            isToday(transaction.created_at)
+                            isToday(transaction.created_at) &&
+                            !this.dailyReport
                           "
                           @click="openRevisionForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -281,7 +282,8 @@
                         <router-link
                           v-if="
                             transaction.revision_allowed == 1 &&
-                            isToday(transaction.created_at)
+                            isToday(transaction.created_at) &&
+                            !this.dailyReport
                           "
                           :to="{
                             path: `/admin/rit/jual_barang/${transaction.id}`,
@@ -1492,6 +1494,7 @@ export default {
   },
   created() {
     this.getCompletedTransactions();
+    this.checkDailyReport();
   },
   methods: {
     changeTab(tabName) {
@@ -1533,9 +1536,21 @@ export default {
       const today = new Date();
       const momentDate = moment.utc(dateString).local();
       const formattedDate = momentDate.format("YYYY-MM-DD");
-      return (
-        formattedDate === today.toISOString().substr(0, 10)
-      );
+      return formattedDate === today.toISOString().substr(0, 10);
+    },
+    checkDailyReport() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/report/check_daily_report")
+        .then((data) => {
+          this.dailyReport = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     //STUB - Penjualan
     getCompletedTransactions() {
@@ -1718,6 +1733,7 @@ export default {
       payment: {
         amount: null,
       },
+      dailyReport: null,
       //STUB - Tabungan
       savings: [],
       //STUB - Cas
