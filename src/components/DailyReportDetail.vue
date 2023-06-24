@@ -11,7 +11,12 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                Laporan - {{ formatDate(selectedData.created_at ?? new Date().toLocaleDateString()) }}
+                Laporan -
+                {{
+                  formatDate(
+                    selectedData.created_at ?? new Date().toLocaleDateString()
+                  )
+                }}
               </h1>
             </div>
           </div>
@@ -20,7 +25,12 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            Laporan - {{ formatDate(selectedData.created_at ?? new Date().toLocaleDateString()) }}
+            Laporan -
+            {{
+              formatDate(
+                selectedData.created_at ?? new Date().toLocaleDateString()
+              )
+            }}
           </h1>
         </div>
       </div>
@@ -98,7 +108,14 @@
             Rp. {{ formatNumber(selectedData.thr_expense) }}
           </dd>
         </div>
-        <div class="sm:col-span-1"></div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">
+            Pemasukan Lain-lain
+          </dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.other_income) }}
+          </dd>
+        </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">
             Pengeluaran Operasional
