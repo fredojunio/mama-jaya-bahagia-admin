@@ -267,7 +267,8 @@
                         <div
                           v-if="
                             transaction.revision_requested != 1 &&
-                            isToday(transaction.created_at)
+                            isToday(transaction.created_at) &&
+                            transaction.type != 'Cas'
                           "
                           @click="openRevisionForm(transaction.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -281,7 +282,8 @@
                         <router-link
                           v-if="
                             transaction.revision_allowed == 1 &&
-                            isToday(transaction.created_at)
+                            isToday(transaction.created_at) &&
+                            transaction.type != 'Cas'
                           "
                           :to="{
                             path: `/admin/rit/jual_barang/${transaction.id}`,
@@ -300,6 +302,7 @@
                           </div>
                         </router-link>
                         <router-link
+                          v-if="transaction.type != 'Cas'"
                           :to="{
                             path: `/admin/rit/nota/detail/${transaction.id}`,
                           }"
@@ -1534,7 +1537,9 @@ export default {
       const today = new Date();
       const momentDate = moment.utc(dateString).local();
       const formattedDate = momentDate.format("YYYY-MM-DD");
-      return formattedDate === today.toISOString().substr(0, 10) && !this.dailyReport;
+      return (
+        formattedDate === today.toISOString().substr(0, 10) && !this.dailyReport
+      );
     },
     checkDailyReport() {
       const instance = axios.create({
