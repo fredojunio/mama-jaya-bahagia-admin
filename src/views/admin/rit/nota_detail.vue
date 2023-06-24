@@ -57,6 +57,20 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 2 }}</td>
+        <td>SAK</td>
+        <td>{{ formatNumber(transaction.sack + transaction.sack_free) }}</td>
+        <td>{{ formatNumber(transaction.sack_price) }}</td>
+        <td>{{ formatNumber(transaction.sack_price) }}</td>
+      </tr>
+      <tr>
+        <td>{{ transaction.rits.length + 3 }}</td>
+        <td>LAIN-LAIN</td>
+        <td>1</td>
+        <td>{{ formatNumber(transaction.other) }}</td>
+        <td>{{ formatNumber(transaction.other) }}</td>
+      </tr>
+      <tr>
+        <td>{{ transaction.rits.length + 4 }}</td>
         <td>ONGKOS KIRIM</td>
         <td>1</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
