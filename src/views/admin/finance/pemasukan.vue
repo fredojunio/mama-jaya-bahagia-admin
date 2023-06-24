@@ -180,7 +180,20 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex items-center">
+                      <div
+                        v-if="
+                          transaction.revision_requested != 1 &&
+                          isToday(transaction.created_at) &&
+                          transaction.type != 'Cas'
+                        "
+                        @click="openRevisionForm(transaction.id)"
+                        class="flex items-center"
+                      >
+                        <div class="font-medium text-blue-500 cursor-pointer">
+                          {{ transaction.daily_id }}
+                        </div>
+                      </div>
+                      <div v-else class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ transaction.daily_id }}
                         </div>
@@ -263,21 +276,6 @@
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Detail</span>
-                        </div>
-                        <div
-                          v-if="
-                            transaction.revision_requested != 1 &&
-                            isToday(transaction.created_at) &&
-                            transaction.type != 'Cas'
-                          "
-                          @click="openRevisionForm(transaction.id)"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
-                        >
-                          <Icon
-                            icon="fa:clipboard"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
-                          ></Icon>
-                          <span class="ml-3">Request Revisi</span>
                         </div>
                         <router-link
                           v-if="
@@ -1363,7 +1361,7 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION  -->
-    <!-- //SECTION - Popup Confirmation  -->
+    <!-- //SECTION - Popup Revision Form  -->
     <TransitionRoot as="template" :show="showRevisionPopup">
       <Dialog
         as="div"
@@ -1426,6 +1424,23 @@
                       Pastikan transaksi yang dipilih sudah benar!
                     </p>
                   </div>
+                </div>
+              </div>
+              <hr class="my-2" />
+              <div class="sm:col-span-6">
+                <label
+                  for="note"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Note
+                </label>
+                <div class="mt-1">
+                  <input
+                    id="note"
+                    v-model="revision.note"
+                    type="text"
+                    class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                  />
                 </div>
               </div>
               <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
@@ -1580,6 +1595,7 @@ export default {
       this.selectedData = this.transactions.find((obj) => {
         return obj.id === id;
       });
+      this.revision.note = null;
     },
     requestRevision() {
       const instance = axios.create({
@@ -1587,7 +1603,12 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("admin/transaction/" + this.selectedData.id + "/request_revision")
+        .post(
+          "admin/transaction/" + this.selectedData.id + "/request_revision",
+          {
+            note: this.revision.note,
+          }
+        )
         .then((data) => {
           this.$router.go(0);
         })
@@ -1753,6 +1774,9 @@ export default {
         limaribu: null,
         sepuluhribu: null,
         duapuluhribu: null,
+      },
+      revision: {
+        note: null,
       },
       deposit: {
         total: null,

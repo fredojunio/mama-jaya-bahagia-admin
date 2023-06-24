@@ -1396,7 +1396,7 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION -->
-    <!-- //SECTION - Form Approve Rit -->
+    <!-- //SECTION - Form Approve Revisi -->
     <TransitionRoot as="template" :show="showRevisionApprovalForm">
       <Dialog
         as="div"
@@ -1498,6 +1498,23 @@
                         <div class="mt-1">
                           Rp.
                           {{ formatNumber(selectedTransaction.total_price) }}
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+
+                    <div
+                      class="mt-2 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
+                    >
+                      <div class="sm:col-span-6">
+                        <label
+                          for="money"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Note
+                        </label>
+                        <div class="mt-1">
+                          {{ selectedTransaction.revision_note }}
                         </div>
                       </div>
                     </div>
