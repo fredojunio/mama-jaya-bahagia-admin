@@ -226,7 +226,7 @@
               for="tonnage"
               class="block text-sm font-medium text-gray-700"
             >
-              Tonase (kg)
+              Tonase ({{ rit.tonnage * rit.masak }} kg)
             </label>
             <div class="mt-1">
               <input
