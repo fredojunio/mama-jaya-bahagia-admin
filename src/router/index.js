@@ -27,6 +27,7 @@ import KendaraanIndex from "/src/views/admin/kendaraan/index.vue";
 
 //Laporan
 import LaporanIndex from "/src/views/admin/laporan/index.vue";
+import LaporanBulanan from "/src/views/admin/laporan/bulanan.vue";
 
 //Owner
 import OwnerIndex from "/src/views/admin/owner/index.vue";
@@ -149,6 +150,14 @@ const routes = [
     component: LaporanIndex,
     meta: {
       title: "Laporan - Index",
+    },
+  },
+  {
+    path: "/admin/laporan/bulanan",
+    name: "LaporanBulanan",
+    component: LaporanBulanan,
+    meta: {
+      title: "Laporan - Bulanan",
     },
   },
   {

@@ -303,7 +303,10 @@ var navigation = [
   {
     name: "Laporan",
     icon: "majesticons:file-report",
-    children: [{ name: "Laporan Harian", href: "/admin/laporan" }],
+    children: [
+      { name: "Laporan Harian", href: "/admin/laporan" },
+      { name: "Laporan Bulanan", href: "/admin/laporan/bulanan" },
+    ],
   },
   {
     name: "Owner",
