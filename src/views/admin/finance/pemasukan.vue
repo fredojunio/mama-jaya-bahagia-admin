@@ -236,7 +236,7 @@
                         <div class="font-medium text-gray-900">
                           {{
                             transaction.finance_approved == 0
-                              ? "Belum dibayar"
+                              ? "Kurang Bayar"
                               : "Lunas"
                           }}
                         </div>
@@ -661,10 +661,11 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="showSaleApprovalForm = false"
-                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      :disabled="selectedData.payments.length > 0"
+                      @click="rejectTransaction()"
+                      class="disabled:opacity-50 bg-red-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
-                      Cancel
+                      Reject
                     </button>
                     <button
                       type="button"
@@ -1642,6 +1643,22 @@ export default {
         .post(
           "admin/transaction/" + this.selectedData.id + "/approve_finance",
           { amount: this.payment.amount }
+        )
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    rejectTransaction() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get(
+          "admin/transaction/" + this.selectedData.id + "/reject_finance"
         )
         .then((data) => {
           this.$router.go(0);
