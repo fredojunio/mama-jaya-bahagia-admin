@@ -1327,7 +1327,8 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sak: {{ selectedTransaction.sack }} (Rp.
-                        {{ formatNumber(selectedTransaction.sack_price) }}) (Gratis: {{selectedTransaction.sack_free}})
+                        {{ formatNumber(selectedTransaction.sack_price) }})
+                        (Gratis: {{ selectedTransaction.sack_free }})
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         BBM: Rp.
@@ -1460,11 +1461,15 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sak: {{ selectedTransaction.sack }} (Rp.
-                        {{ formatNumber(selectedTransaction.sack_price) }}) (Gratis: {{selectedTransaction.sack_free}})
+                        {{ formatNumber(selectedTransaction.sack_price) }})
+                        (Gratis: {{ selectedTransaction.sack_free }})
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         BBM: Rp.
-                        {{ formatNumber(selectedTransaction.trip.gas) }}
+                        <span v-if="selectedTransaction.trip">
+                          {{ formatNumber(selectedTransaction.trip.gas) }}
+                        </span>
+                        <span v-else>-</span>
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Lain-lain: Rp.
@@ -1472,7 +1477,10 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         E-Toll: Rp.
-                        {{ formatNumber(selectedTransaction.trip.toll) }}
+                        <span v-if="selectedTransaction.trip">
+                          {{ formatNumber(selectedTransaction.trip.toll) }}
+                        </span>
+                        <span v-else>-</span>
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Diskon: Rp.
@@ -1480,7 +1488,10 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sangu: Rp.
-                        {{ formatNumber(selectedTransaction.trip.allowance) }}
+                        <span v-if="selectedTransaction.trip">
+                          {{ formatNumber(selectedTransaction.trip.allowance) }}
+                        </span>
+                        <span v-else>-</span>
                       </h3>
                     </div>
                     <hr />
@@ -1920,7 +1931,9 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get(`admin/transaction/${this.selectedTransaction.id}/approve_revision`)
+        .get(
+          `admin/transaction/${this.selectedTransaction.id}/approve_revision`
+        )
         .then((data) => {
           this.$router.go(0);
         })
