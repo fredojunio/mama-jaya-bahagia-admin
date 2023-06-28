@@ -109,9 +109,7 @@
           </dd>
         </div>
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">
-            Pemasukan Lain-lain
-          </dt>
+          <dt class="text-sm font-medium text-gray-500">Pemasukan Lain-lain</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.other_income) }}
           </dd>
@@ -375,12 +373,14 @@
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            {{
-                              transaction.type == "Cabang"
-                                ? "Cabang"
-                                : transaction.transaction.customer.nickname
-                            }}
+                          <div
+                            v-if="transaction.transaction.customer"
+                            class="font-medium text-gray-900"
+                          >
+                            {{ transaction.transaction.customer.nickname }}
+                          </div>
+                          <div v-else class="font-medium text-gray-900">
+                            {{ transaction.transaction.type }}
                           </div>
                         </div>
                       </td>
