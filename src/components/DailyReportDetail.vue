@@ -377,7 +377,7 @@
                             v-if="transaction.transaction.customer"
                             class="font-medium text-gray-900"
                           >
-                            {{ transaction.transaction.customer.nickname }}
+                            <!-- {{ transaction.transaction.customer.nickname }} -->
                           </div>
                           <div v-else class="font-medium text-gray-900">
                             {{ transaction.transaction.type }}
