@@ -461,9 +461,9 @@ export default {
     totalProfit(rit) {
       var totalProfit = 0;
       rit.transactions.forEach((element) => {
-        totalProfit += element.total_price;
-        totalProfit -= element.tonnage * rit.buy_price;
-        totalProfit -= element.tonnage * 200;
+        totalProfit += parseInt(element.total_price);
+        totalProfit -= parseInt(element.tonnage) * parseInt(rit.buy_price);
+        totalProfit -= parseInt(element.tonnage) * 200;
       });
       return totalProfit;
     },
