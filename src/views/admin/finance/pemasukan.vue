@@ -620,7 +620,10 @@
                     </div>
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
-                      <h3 class="text-md leading-6 font-medium text-gray-900">
+                      <h3
+                        v-if="selectedData.customer"
+                        class="text-md leading-6 font-medium text-gray-900"
+                      >
                         Customer: {{ selectedData.customer.nickname }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
@@ -1657,9 +1660,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get(
-          "admin/transaction/" + this.selectedData.id + "/reject_finance"
-        )
+        .get("admin/transaction/" + this.selectedData.id + "/reject_finance")
         .then((data) => {
           this.$router.go(0);
         })
