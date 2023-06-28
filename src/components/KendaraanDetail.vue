@@ -11,7 +11,7 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ selectedData.name }} (Toll: {{ selectedData.toll }})
+                {{ selectedData.name }} (Toll: {{ formatNumber(selectedData.toll) }})
               </h1>
               <div class="flex flex-col gap-2">
                 <button
@@ -28,7 +28,7 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            {{ selectedData.name }} (Toll: {{ selectedData.toll }})
+            {{ selectedData.name }} (Toll: {{ formatNumber(selectedData.toll) }})
             <span class="text-gray-400 text-sm font-normal">{{
               selectedData.type
             }}</span>
@@ -168,7 +168,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(trip.toll) }}
+                            Rp. {{ formatNumber(trip.toll - trip.toll_used) }}
                           </div>
                         </div>
                       </td>
