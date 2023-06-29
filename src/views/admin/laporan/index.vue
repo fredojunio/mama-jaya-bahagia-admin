@@ -177,6 +177,45 @@
                         harian!
                       </p>
                     </div>
+                    <div
+                      v-for="(rit, index) in todayReport.rits"
+                      :key="index"
+                      class="grid grid-cols-4 gap-x-2 justify-center items-center"
+                    >
+                      <div class="col-span-2">
+                        <label
+                          for="product_id"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Rit {{ index + 1 }} - {{ rit.rit.arrival_date }}
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="name"
+                            v-model="rit.rit.item.code"
+                            type="text"
+                            disabled
+                            class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-span-2">
+                        <label
+                          for="real_tonnage"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Tonase Fisik (kg)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="real_tonnage"
+                            v-model="rit.real_tonnage"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -191,8 +230,11 @@
                     </button>
                     <button
                       type="button"
+                      :disabled="
+                        todayReport.rits.some((rit) => rit.real_tonnage == null)
+                      "
                       @click.once="createDailyReport()"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
@@ -241,12 +283,14 @@ export default {
       showSaveDailyReportForm: false,
       showDirectory: false,
       selectedData: null,
+      todayReport: null,
       reports: [],
       filteredReports: [],
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
+      rits: [],
     };
   },
   created() {
@@ -282,6 +326,9 @@ export default {
           this.selectedData = data.data.data.results[0];
           this.selectedData.rits = data.data.data.results[1];
           this.selectedData.transactions = data.data.data.results[2];
+          this.todayReport = data.data.data.results[0];
+          this.todayReport.rits = data.data.data.results[1];
+          this.todayReport.transactions = data.data.data.results[2];
         })
         .catch((err) => {
           console.log(err);
@@ -293,7 +340,9 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/report/create_daily_report")
+        .post("/admin/report/create_daily_report", {
+          rits: this.todayReport.rits,
+        })
         .then((data) => {
           this.$router.go(0);
         })

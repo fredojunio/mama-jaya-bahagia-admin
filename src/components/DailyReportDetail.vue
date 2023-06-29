@@ -183,7 +183,19 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Sisa Tonase
+                        Sisa Tonase Sistem
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Sisa Tonase Fisik
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Selisih Penyusutan
                       </th>
                     </tr>
                   </thead>
@@ -208,6 +220,24 @@
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
                             {{ formatNumber(ritReport.tonnage_left) }} kg
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(ritReport.real_tonnage) }} kg
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ formatNumber(ritReport.tonnage_left - ritReport.real_tonnage) }} kg
                           </div>
                         </div>
                       </td>
