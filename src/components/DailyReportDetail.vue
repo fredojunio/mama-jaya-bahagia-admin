@@ -237,7 +237,13 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            {{ formatNumber(ritReport.tonnage_left - ritReport.real_tonnage) }} kg
+                            {{
+                              formatNumber(
+                                parseFloat(ritReport.real_tonnage) -
+                                  parseFloat(ritReport.tonnage_left)
+                              )
+                            }}
+                            kg
                           </div>
                         </div>
                       </td>
