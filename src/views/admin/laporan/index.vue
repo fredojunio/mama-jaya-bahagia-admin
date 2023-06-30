@@ -231,7 +231,12 @@
                     <button
                       type="button"
                       :disabled="
-                        todayReport.rits.some((rit) => rit.real_tonnage == null)
+                        todayReport.rits.some(
+                          (rit) =>
+                            rit.real_tonnage == null ||
+                            rit.real_tonnage > rit.tonnage_left + 20 ||
+                            rit.real_tonnage < rit.tonnage_left - 20
+                        )
                       "
                       @click.once="createDailyReport()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -329,7 +334,6 @@ export default {
           this.todayReport = data.data.data.results[0];
           this.todayReport.rits = data.data.data.results[1];
           this.todayReport.transactions = data.data.data.results[2];
-          console.log(this.todayReport.rits)
         })
         .catch((err) => {
           console.log(err);
