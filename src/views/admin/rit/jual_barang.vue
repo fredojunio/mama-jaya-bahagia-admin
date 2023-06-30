@@ -1041,7 +1041,7 @@ export default {
         discount: null,
         total_price: null,
         old_id: null,
-        date: new Date().toISOString().substr(0, 10),
+        date: new Date(new Date().setHours(7, 0, 0, 0)).toISOString().substr(0, 10),
       },
       money_brought: null,
       calculator: {
