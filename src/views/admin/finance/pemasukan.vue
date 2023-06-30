@@ -27,7 +27,7 @@
           </div>
           <VueDatePicker
             v-model="date"
-            @update:model-value="changeTab(this.currentTab)"
+            @update:model-value="changeTab(currentTab)"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
