@@ -38,7 +38,7 @@
           />
         </div>
         <button
-          @click="showAddExpenseForm = true"
+          @click="showEditExpenseForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
         >
           Tambah Pengeluaran
@@ -130,6 +130,13 @@
                     >
                       Note
                     </th>
+                    <th
+                      v-if="role_id == 1"
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -188,6 +195,23 @@
                         </div>
                       </div>
                     </td>
+                    <td
+                      v-if="role_id == 1"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showEdit(expense.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -232,6 +256,13 @@
                     >
                       Tanggal
                     </th>
+                    <th
+                      v-if="role_id == 1"
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -269,6 +300,23 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ formatDate(expense.time) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      v-if="role_id == 1"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showEdit(expense.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
                         </div>
                       </div>
                     </td>
@@ -310,6 +358,13 @@
                     >
                       Tanggal
                     </th>
+                    <th
+                      v-if="role_id == 1"
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -338,6 +393,23 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ formatDate(expense.time) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      v-if="role_id == 1"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showEdit(expense.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
                         </div>
                       </div>
                     </td>
@@ -379,6 +451,13 @@
                     >
                       Waktu
                     </th>
+                    <th
+                      v-if="role_id == 1"
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -407,6 +486,23 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ expense.time }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      v-if="role_id == 1"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showEdit(expense.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
                         </div>
                       </div>
                     </td>
@@ -454,6 +550,13 @@
                     >
                       Keterangan
                     </th>
+                    <th
+                      v-if="role_id == 1"
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -491,6 +594,23 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ expense.note }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      v-if="role_id == 1"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div
+                          @click="showEdit(expense.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
                         </div>
                       </div>
                     </td>
@@ -637,6 +757,255 @@
       </Dialog>
     </TransitionRoot>
     <!-- //!SECTION  -->
+    <!-- //SECTION - Form Edit Pengeluaran  -->
+    <TransitionRoot as="template" :show="showEditExpenseForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showEditExpenseForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        {{ "Edit Pengeluaran" }}
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+
+                    <div
+                      v-if="selectedExpense.type == 'Kendaraan'"
+                      class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
+                    >
+                      <div class="sm:col-span-6">
+                        <div
+                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="allowance_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang Sangu (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                id="allowance_fee"
+                                v-model="selectedExpense.trip.allowance"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="gas_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang BBM (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                id="gas_fee"
+                                v-model="selectedExpense.trip.gas"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="etoll_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang E-Toll (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                id="etoll_fee"
+                                v-model="selectedExpense.trip.toll"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="note"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Keterangan
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="note"
+                            v-model="selectedExpense.note"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="time"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Waktu
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="time"
+                            v-model="selectedExpense.time"
+                            type="datetime-local"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      v-else
+                      class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
+                    >
+                      <div class="sm:col-span-6">
+                        <label
+                          for="amount"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Jumlah (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="amount"
+                            v-model="selectedExpense.amount"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="note"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Keterangan
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="note"
+                            v-model="selectedExpense.note"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        v-if="
+                          selectedExpense.type == 'Cashback' ||
+                          selectedExpense.type == 'Gaji'
+                        "
+                        class="sm:col-span-6"
+                      >
+                        <label
+                          for="note"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Nama
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="name"
+                            v-model="selectedExpense.name"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="time"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Waktu
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            id="time"
+                            v-model="selectedExpense.time"
+                            type="datetime-local"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showEditExpenseForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      @click.once="updateExpense()"
+                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      {{ "Save" }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+    <!-- //!SECTION  -->
   </Admin>
 </template>
 
@@ -683,6 +1052,7 @@ export default {
       isLoading: false,
       //ini buat tambah rit
       showAddExpenseForm: false,
+      showEditExpenseForm: false,
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
@@ -702,6 +1072,7 @@ export default {
         time: null,
         type: "Operasional",
       },
+      selectedExpense: null,
       expenses: [],
       filteredExpenses: [],
     };
@@ -758,6 +1129,30 @@ export default {
       });
       instance
         .post(`admin/expense`, this.expense)
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    showEdit(id) {
+      this.selectedExpense = this.expenses.find((obj) => {
+        return obj.id === id;
+      });
+      this.showEditExpenseForm = true;
+      console.log(this.selectedExpense);
+    },
+    updateExpense() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/expense/` + this.selectedExpense.id, {
+          _method: "PATCH",
+          expense: this.selectedExpense,
+        })
         .then((data) => {
           this.$router.go(0);
         })
