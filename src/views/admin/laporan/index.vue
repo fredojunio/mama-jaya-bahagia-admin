@@ -329,6 +329,7 @@ export default {
           this.todayReport = data.data.data.results[0];
           this.todayReport.rits = data.data.data.results[1];
           this.todayReport.transactions = data.data.data.results[2];
+          console.log(this.todayReport.rits)
         })
         .catch((err) => {
           console.log(err);
