@@ -250,22 +250,6 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <!-- //NOTE - ini di hide aja karena udah ada di owner -->
-                      <!-- <div
-                        class="flex flex-col items-start"
-                        v-if="role_id == 1"
-                      >
-                        <div
-                          @click="openEditRitPriceForm(rit.id)"
-                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
-                        >
-                          <Icon
-                            icon="uil:edit"
-                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
-                          ></Icon>
-                          <span class="ml-3">Edit</span>
-                        </div>
-                      </div> -->
                       <div class="flex flex-col items-start">
                         <div
                           @click="openRitBranchDetail(rit.id)"
@@ -769,6 +753,21 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
+                      <div
+                        class="flex flex-col items-start"
+                        v-if="role_id == 1"
+                      >
+                        <div
+                          @click="openEditRitPriceForm(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:edit"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Edit</span>
+                        </div>
+                      </div>
                       <div class="flex flex-col items-start">
                         <div
                           @click="openRitBranchDetail(rit.id)"
