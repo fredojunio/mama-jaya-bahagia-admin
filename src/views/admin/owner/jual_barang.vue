@@ -1638,6 +1638,13 @@ export default {
           tab.current = false;
         }
       });
+      if (this.currentTab == "Rit") {
+        this.getOwnerTransactions();
+      } else if (this.currentTab == "Nota") {
+        this.getNotaTransactions();
+      } else if (this.currentTab == "Revisi") {
+        this.getRequestedRevisions();
+      }
     },
     //NOTE - Section Jual ke Customer
     getOwnerTransactions: function () {
