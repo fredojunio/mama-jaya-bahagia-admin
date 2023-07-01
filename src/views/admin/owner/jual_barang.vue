@@ -1319,7 +1319,7 @@
                     <hr />
                     <div class="grid grid-cols-2 gap-x-4">
                       <h3 class="text-md leading-6 font-medium text-gray-900">
-                        Customer: {{ selectedTransaction.customer.nickname }}
+                        Customer: {{ selectedTransaction.customer?.nickname }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Ongkir: Rp.
@@ -1332,7 +1332,7 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         BBM: Rp.
-                        {{ formatNumber(selectedTransaction.trip.gas) }}
+                        {{ formatNumber(selectedTransaction.trip?.gas) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Lain-lain: Rp.
@@ -1340,7 +1340,7 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         E-Toll: Rp.
-                        {{ formatNumber(selectedTransaction.trip.toll) }}
+                        {{ formatNumber(selectedTransaction.trip?.toll) }}
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Diskon: Rp.
@@ -1348,7 +1348,7 @@
                       </h3>
                       <h3 class="text-md leading-6 font-medium text-gray-900">
                         Sangu: Rp.
-                        {{ formatNumber(selectedTransaction.trip.allowance) }}
+                        {{ formatNumber(selectedTransaction.trip?.allowance) }}
                       </h3>
                     </div>
                     <hr />
