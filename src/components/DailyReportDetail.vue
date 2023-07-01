@@ -189,12 +189,6 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Total Penjualan Harian
-                      </th>
-                      <th
-                        scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
                         Sisa Tonase Fisik
                       </th>
                       <th
@@ -226,15 +220,6 @@
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
                             {{ formatNumber(ritReport.tonnage_left) }} kg
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                      >
-                        <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(ritReport.tonnage_sold_price) }}
                           </div>
                         </div>
                       </td>
@@ -315,6 +300,12 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
+                        Total Penjualan Harian
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Total Penjualan Barang
                       </th>
                     </tr>
@@ -340,6 +331,15 @@
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
                             {{ formatNumber(ritReport.tonnage_sold) }} kg
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(ritReport.tonnage_sold_price) }}
                           </div>
                         </div>
                       </td>
