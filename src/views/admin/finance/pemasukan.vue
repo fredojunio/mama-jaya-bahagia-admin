@@ -257,7 +257,7 @@
                       <div class="flex flex-col items-start gap-y-1">
                         <div
                           v-if="transaction.finance_approved == 0"
-                          @click="showApprovalForm(transaction.id)"
+                          @click="showApprovalForm(transaction.id, false)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
@@ -265,6 +265,19 @@
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Approve</span>
+                        </div>
+                        <div
+                          v-if="
+                            transaction.finance_approved == 0 && role_id == 1
+                          "
+                          @click="showApprovalForm(transaction.id, true)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="fa:check"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">Approve (Transfer)</span>
                         </div>
                         <div
                           v-if="transaction.payments.length > 0"
@@ -1620,11 +1633,12 @@ export default {
           console.log(err);
         });
     },
-    showApprovalForm(id) {
+    showApprovalForm(id, transfer) {
       this.showSaleApprovalForm = true;
       this.selectedData = this.transactions.find((obj) => {
         return obj.id === id;
       });
+      this.approvalTransfer = transfer;
     },
     openTransactionDetail(id) {
       this.showTransactionDetail = true;
@@ -1645,7 +1659,7 @@ export default {
       instance
         .post(
           "admin/transaction/" + this.selectedData.id + "/approve_finance",
-          { amount: this.payment.amount }
+          { amount: this.payment.amount, transfer: this.approvalTransfer }
         )
         .then((data) => {
           this.$router.go(0);
@@ -1775,6 +1789,7 @@ export default {
       payment: {
         amount: null,
       },
+      approvalTransfer: false,
       dailyReport: null,
       //STUB - Tabungan
       savings: [],
