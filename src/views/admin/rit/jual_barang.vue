@@ -954,10 +954,10 @@ export default {
           let oldTransaction = data.data.data.results;
           this.newTransaction.customer_id = oldTransaction.customer.id;
           this.newTransaction.ongkir = oldTransaction.ongkir;
-          this.newTransaction.vehicle_id = oldTransaction.trip.vehicle_id;
-          this.newTransaction.allowance = oldTransaction.trip.allowance;
-          this.newTransaction.gas = oldTransaction.trip.gas;
-          this.newTransaction.toll = oldTransaction.trip.toll;
+          this.newTransaction.vehicle_id = oldTransaction.trip?.vehicle_id;
+          this.newTransaction.allowance = oldTransaction.trip?.allowance;
+          this.newTransaction.gas = oldTransaction.trip?.gas;
+          this.newTransaction.toll = oldTransaction.trip?.toll;
           this.newTransaction.rits = oldTransaction.rits.map((item) => {
             return {
               item: item.rit,
@@ -1041,7 +1041,9 @@ export default {
         discount: null,
         total_price: null,
         old_id: null,
-        date: new Date(new Date().setHours(7, 0, 0, 0)).toISOString().substr(0, 10),
+        date: new Date(new Date().setHours(7, 0, 0, 0))
+          .toISOString()
+          .substr(0, 10),
       },
       money_brought: null,
       calculator: {
