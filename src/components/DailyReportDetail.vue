@@ -236,7 +236,21 @@
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
-                          <div class="font-medium text-gray-900">
+                          <div
+                            v-if="ritReport.report_id"
+                            class="font-medium text-gray-900"
+                          >
+                            {{
+                              formatNumber(
+                                parseFloat(
+                                  parseFloat(ritReport.real_tonnage) -
+                                    parseFloat(ritReport.tonnage_left)
+                                ).toFixed(2)
+                              )
+                            }}
+                            kg
+                          </div>
+                          <div v-else class="font-medium text-gray-900">
                             {{
                               formatNumber(
                                 parseFloat(ritReport.real_tonnage) -
