@@ -289,6 +289,18 @@
                           <span class="ml-3">Detail</span>
                         </div>
                       </div>
+                      <div v-if="role_id == 1" class="flex flex-col items-start">
+                        <div
+                          @click="openRitHistory(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:history"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">History</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -805,6 +817,18 @@
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
                           <span class="ml-3">Detail</span>
+                        </div>
+                      </div>
+                      <div v-if="role_id == 1" class="flex flex-col items-start">
+                        <div
+                          @click="openRitHistory(rit.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                        >
+                          <Icon
+                            icon="uil:history"
+                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                          ></Icon>
+                          <span class="ml-3">History</span>
                         </div>
                       </div>
                     </td>
@@ -2198,11 +2222,11 @@
     </TransitionRoot>
     <!-- //!SECTION -->
     <!-- //SECTION Detail -->
-    <TransitionRoot as="template" :show="showRitDetail">
+    <TransitionRoot as="template" :show="showRitHistory">
       <Dialog
         as="div"
         class="fixed z-10 inset-0 overflow-y-auto"
-        @close="showRitDetail = false"
+        @close="showRitHistory = false"
       >
         <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
@@ -2244,33 +2268,9 @@
                   <div>
                     <div>
                       <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Riwayat Penjualan
+                        Riwayat Rit
                       </h3>
                     </div>
-                    <hr />
-                    <form class="mt-6 flex space-x-4" action="#">
-                      <div class="flex-1 min-w-0">
-                        <label for="search" class="sr-only">Search</label>
-                        <div class="relative rounded-md shadow-sm">
-                          <div
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                          >
-                            <Icon
-                              icon="uil:search"
-                              class="h-5 w-5 text-gray-400"
-                            />
-                          </div>
-                          <input
-                            v-model="searchRitDetailQuery"
-                            type="search"
-                            name="search"
-                            id="search"
-                            class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Search"
-                          />
-                        </div>
-                      </div>
-                    </form>
                     <div
                       class="max-w-7xl grid grid-cols-1 mx-auto mb-8 gap-x-4"
                     >
@@ -2293,7 +2293,7 @@
                                       scope="col"
                                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                     >
-                                      Customer
+                                      Info
                                     </th>
                                     <th
                                       scope="col"
@@ -2301,48 +2301,21 @@
                                     >
                                       Tanggal
                                     </th>
-                                    <th
-                                      scope="col"
-                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                    >
-                                      Tonase (kg)
-                                    </th>
-                                    <th
-                                      scope="col"
-                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                    >
-                                      Total Penjualan
-                                    </th>
-                                    <th
-                                      scope="col"
-                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                    >
-                                      Sisa Tonase
-                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody
                                   class="divide-y divide-gray-200 bg-white"
                                 >
                                   <tr
-                                    v-for="ritTransaction in selectedData.transactions.filter(
-                                      (transaction) =>
-                                        transaction.transaction
-                                          .owner_approved == 1 &&
-                                        (searchRitDetailQuery
-                                          ? transaction.customer_name
-                                              .toLowerCase()
-                                              .includes(searchRitDetailQuery)
-                                          : true)
-                                    )"
-                                    :key="ritTransaction.id"
+                                    v-for="ritHistory in selectedData.histories"
+                                    :key="ritHistory.id"
                                   >
                                     <td
                                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                                     >
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
-                                          {{ ritTransaction.customer_name }}
+                                          {{ ritHistory.info }}
                                         </div>
                                       </div>
                                     </td>
@@ -2352,53 +2325,8 @@
                                       <div class="flex items-center">
                                         <div class="font-medium text-gray-900">
                                           {{
-                                            formatDate(
-                                              ritTransaction.created_at
-                                            )
+                                            formatDate(ritHistory.created_at)
                                           }}
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td
-                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                    >
-                                      <div class="flex items-center">
-                                        <div class="font-medium text-gray-900">
-                                          {{
-                                            formatNumber(
-                                              ritTransaction.tonnage *
-                                                ritTransaction.masak
-                                            )
-                                          }}
-                                          kg
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td
-                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                    >
-                                      <div class="flex items-center">
-                                        <div class="font-medium text-gray-900">
-                                          Rp.
-                                          {{
-                                            formatNumber(
-                                              ritTransaction.total_price
-                                            )
-                                          }}
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td
-                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
-                                    >
-                                      <div class="flex items-center">
-                                        <div class="font-medium text-gray-900">
-                                          {{
-                                            formatNumber(
-                                              ritTransaction.tonnage_left
-                                            )
-                                          }}
-                                          kg
                                         </div>
                                       </div>
                                     </td>
@@ -2417,7 +2345,7 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="showRitDetail = false"
+                      @click="showRitHistory = false"
                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Close
@@ -2771,6 +2699,12 @@ export default {
         return obj.id === id;
       });
     },
+    openRitHistory(id) {
+      this.showRitHistory = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
     totalTonnageSoldToday(rit) {
       const today = new Date().toISOString().substring(0, 10);
       const todayTransactions = rit.transactions.filter((transaction) => {
@@ -2807,6 +2741,8 @@ export default {
       showReturnRitForm: false,
       //ini buat cek detail
       showRitDetail: false,
+      //ini buat cek history
+      showRitHistory: false,
       //ini buat cek pengiriman ke cabang
       showRitBranchDetail: false,
       searchRitDetailQuery: null,
