@@ -177,22 +177,6 @@
                         harian!
                       </p>
                     </div>
-                    <div class="col-span-2">
-                      <label
-                        for="product_id"
-                        class="block text-sm font-medium text-gray-700"
-                      >
-                        Tanggal Laporan
-                      </label>
-                      <div class="mt-1">
-                        <input
-                          id="date"
-                          v-model="reportDate"
-                          type="date"
-                          class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
-                        />
-                      </div>
-                    </div>
                     <div
                       v-for="(rit, index) in todayReport.rits"
                       :key="index"
@@ -257,7 +241,7 @@
                             rit.real_tonnage < rit.tonnage_left - 20
                         )
                       "
-                      @click="createDailyReport()"
+                      @click.once="createDailyReport()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
@@ -310,7 +294,6 @@ export default {
       todayReport: null,
       reports: [],
       filteredReports: [],
-      reportDate: new Date().toISOString().substring(0, 10),
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
@@ -333,11 +316,7 @@ export default {
         .get("/admin/report")
         .then((data) => {
           this.reports = data.data.data.results;
-          this.filteredReports = this.reports.sort((a, b) => {
-            const dateA = new Date(a.created_at);
-            const dateB = new Date(b.created_at);
-            return dateA - dateB;
-          });
+          this.filteredReports = this.reports;
           this.isLoading = false;
         })
         .catch((err) => {
@@ -371,10 +350,8 @@ export default {
       instance
         .post("/admin/report/create_daily_report", {
           rits: this.todayReport.rits,
-          report_date: this.reportDate,
         })
         .then((data) => {
-          // console.log(data)
           this.$router.go(0);
         })
         .catch((err) => {
@@ -403,11 +380,6 @@ export default {
       this.filteredReports = this.reports.filter((report) => {
         let reportDate = new Date(report.created_at);
         return reportDate >= startDate && reportDate <= untilDate;
-      });
-      this.filteredReports = this.filteredReports.sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return dateA - dateB;
       });
     },
   },
