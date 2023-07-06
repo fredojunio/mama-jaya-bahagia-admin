@@ -177,6 +177,22 @@
                         harian!
                       </p>
                     </div>
+                    <div>
+                      <label
+                        for="real_income"
+                        class="block text-sm font-medium text-gray-700"
+                      >
+                        Total Penerimaan Uang Fisik
+                      </label>
+                      <div class="mt-1">
+                        <input
+                          id="real_income"
+                          v-model="real_income"
+                          type="text"
+                          class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    </div>
                     <div
                       v-for="(rit, index) in todayReport.rits"
                       :key="index"
@@ -239,7 +255,9 @@
                             rit.real_tonnage == null ||
                             rit.real_tonnage > rit.tonnage_left + 20 ||
                             rit.real_tonnage < rit.tonnage_left - 20
-                        )
+                        ) ||
+                        real_income < 0 ||
+                        real_income == null
                       "
                       @click.once="createDailyReport()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -292,6 +310,7 @@ export default {
       showDirectory: false,
       selectedData: null,
       todayReport: null,
+      real_income: null,
       reports: [],
       filteredReports: [],
       date: [
@@ -317,6 +336,11 @@ export default {
         .then((data) => {
           this.reports = data.data.data.results;
           this.filteredReports = this.reports;
+          this.filteredReports = this.filteredReports.sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return dateA - dateB;
+          });
           this.isLoading = false;
         })
         .catch((err) => {
@@ -350,6 +374,7 @@ export default {
       instance
         .post("/admin/report/create_daily_report", {
           rits: this.todayReport.rits,
+          real_income: this.real_income,
         })
         .then((data) => {
           this.$router.go(0);
@@ -380,6 +405,11 @@ export default {
       this.filteredReports = this.reports.filter((report) => {
         let reportDate = new Date(report.created_at);
         return reportDate >= startDate && reportDate <= untilDate;
+      });
+      this.filteredReports = this.filteredReports.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        return dateA - dateB;
       });
     },
   },

@@ -38,13 +38,22 @@
     <hr />
     <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-        <div class="sm:col-span-2">
+        <div class="sm:col-span-1">
           <!-- //NOTE - ini itu total pemasukan - total pengeluaran - transaksi yang belum bayar -->
           <dt class="text-xl font-medium text-gray-500">
             Total Penerimaan Uang
           </dt>
           <dd class="mt-1 text-xl text-gray-900">
             Rp. {{ formatNumber(selectedData.money) }}
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <!-- //NOTE - ini itu total pemasukan - total pengeluaran - transaksi yang belum bayar -->
+          <dt class="text-xl font-medium text-gray-500">
+            Total Penerimaan Uang Fisik
+          </dt>
+          <dd class="mt-1 text-xl text-gray-900">
+            Rp. {{ formatNumber(selectedData.real_income) }}
           </dd>
         </div>
         <div class="sm:col-span-1">
