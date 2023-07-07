@@ -2513,27 +2513,9 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("/admin/customer")
+        .get("/admin/customer/only_get_owner")
         .then((data) => {
-          this.customers = data.data.data.results.map((item) => {
-            return {
-              id: item.id,
-              nik: item.nik,
-              name: item.name,
-              nickname: item.nickname,
-              address: item.address,
-              ongkir: item.ongkir,
-              birthdate: item.birthdate,
-              type: item.type,
-              tb: item.tb,
-              tw: item.tw,
-              thr: item.thr,
-              tonnage: item.tonnage,
-              cashback_approved: item.cashback_approved,
-              savings: item.savings,
-              transactions: item.transactions,
-            };
-          });
+          this.customers = data.data.data.results;
         })
         .catch((err) => {
           console.log(err);
