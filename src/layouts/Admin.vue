@@ -314,6 +314,7 @@ var navigation = [
     children: [
       { name: "Daftar Rit", href: "/admin/owner" },
       { name: "Jual Barang", href: "/admin/owner/jual_barang" },
+      { name: "Pemasukan", href: "/admin/owner/pemasukan" },
       { name: "Gaji", href: "/admin/owner/gaji" },
       { name: "Laba Rugi", href: "/admin/owner/laba_rugi" },
     ],

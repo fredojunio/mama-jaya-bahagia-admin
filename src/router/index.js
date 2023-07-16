@@ -32,6 +32,7 @@ import LaporanBulanan from "/src/views/admin/laporan/bulanan.vue";
 //Owner
 import OwnerIndex from "/src/views/admin/owner/index.vue";
 import OwnerGaji from "/src/views/admin/owner/gaji.vue";
+import OwnerPemasukan from "/src/views/admin/owner/pemasukan.vue";
 import OwnerJualBarang from "/src/views/admin/owner/jual_barang.vue";
 import OwnerLabaRugi from "/src/views/admin/owner/laba_rugi.vue";
 
@@ -190,6 +191,14 @@ const routes = [
     component: OwnerLabaRugi,
     meta: {
       title: "Owner - Laba Rugi",
+    },
+  },
+  {
+    path: "/admin/owner/pemasukan",
+    name: "OwnerPemasukan",
+    component: OwnerPemasukan,
+    meta: {
+      title: "Owner - Pemasukan",
     },
   },
 ];
