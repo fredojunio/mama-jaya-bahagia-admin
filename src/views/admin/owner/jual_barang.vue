@@ -134,6 +134,21 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
+                          v-if="rit.branches.length > 0"
+                          class="flex flex-col items-start"
+                        >
+                          <div
+                            @click="openRitBranchDetail(rit.id)"
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                          >
+                            <Icon
+                              icon="uil:home"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                            ></Icon>
+                            <span class="ml-3">Cabang</span>
+                          </div>
+                        </div>
+                        <div
                           v-if="
                             rit.customer_tonnage > 0 &&
                             rit.customer_transaction == null &&
@@ -536,6 +551,187 @@
       </div>
     </div>
     <!-- //!SECTION  -->
+    <!-- //SECTION Cabang -->
+    <TransitionRoot as="template" :show="showRitBranchDetail">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showRitBranchDetail = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full sm:p-6"
+            >
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Riwayat Pengiriman ke Cabang
+                      </h3>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="mt-8 flex flex-col">
+                        <div
+                          class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8"
+                        >
+                          <div
+                            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+                          >
+                            <div
+                              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+                            >
+                              <table
+                                class="min-w-full divide-y divide-gray-300"
+                              >
+                                <thead class="bg-gray-50">
+                                  <tr>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Tanggal Pengiriman
+                                    </th>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Kode - Tanggal Datang
+                                    </th>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Tonase (kg)
+                                    </th>
+                                    <th
+                                      scope="col"
+                                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                                    >
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody
+                                  class="divide-y divide-gray-200 bg-white"
+                                >
+                                  <tr
+                                    v-for="ritBranch in selectedData.branches"
+                                    :key="ritBranch.id"
+                                  >
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <div class="flex items-center">
+                                        <div class="font-medium text-gray-900">
+                                          {{ formatDate(ritBranch.created_at) }}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <div class="flex items-center">
+                                        <div class="font-medium text-gray-900">
+                                          {{ selectedData.item.code }} -
+                                          {{ selectedData.arrival_date }}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <div class="flex items-center">
+                                        <div class="font-medium text-gray-900">
+                                          {{
+                                            formatNumber(ritBranch.sent_tonnage)
+                                          }}
+                                          kg
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td
+                                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                                    >
+                                      <router-link
+                                        :to="{
+                                          path: `/admin/rit/surat_jalan/${ritBranch.trip.id}`,
+                                        }"
+                                        target="_blank"
+                                      >
+                                        <div
+                                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                                        >
+                                          <Icon
+                                            icon="uil:print"
+                                            class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                                          ></Icon>
+                                          <span class="ml-3">Print</span>
+                                        </div>
+                                      </router-link>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showRitBranchDetail = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
     <!-- //SECTION - Popup Penjualan (Customer)  -->
     <TransitionRoot as="template" :show="showAddCustomerTransaction">
       <Dialog
@@ -1681,6 +1877,12 @@ export default {
           console.log(err);
         });
     },
+    openRitBranchDetail(id) {
+      this.showRitBranchDetail = true;
+      this.selectedData = this.rits.find((obj) => {
+        return obj.id === id;
+      });
+    },
     openAddCustomerTransaction(rit) {
       let customerTransaction = this.transactions.find((obj) => {
         return (
@@ -1955,6 +2157,8 @@ export default {
       //ini buat masukin penjualan customer yang langsung dianter
       showAddCustomerTransaction: false,
       showConfirmationPopup: false,
+      //ini buat cek pengiriman ke cabang
+      showRitBranchDetail: false,
       //ini buat masukin penjualan cabang
       showAddBranchTransaction: false,
       //ini buat ngembalikin ke cabang
