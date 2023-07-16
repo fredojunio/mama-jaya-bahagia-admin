@@ -213,10 +213,7 @@
                             id="tonnage_left"
                             v-model="pricedRit.tonnage"
                             type="number"
-                            :disabled="
-                              selectedData.tonnage_left >= 50 ||
-                              selectedData.tonnage_left == 0
-                            "
+                            :disabled="selectedData.arrival_date == null"
                             class="disabled:opacity-50 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
                           />
                         </div>
