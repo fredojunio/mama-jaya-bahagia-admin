@@ -126,6 +126,26 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <form class="mt-6 flex space-x-4" action="#">
+        <div class="flex-1 min-w-0">
+          <label for="search" class="sr-only">Search</label>
+          <div class="relative rounded-md shadow-sm">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <Icon icon="uil:search" class="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              v-model="searchTransactionQuery"
+              type="search"
+              name="search"
+              id="search"
+              class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+              placeholder="Search"
+            />
+          </div>
+        </div>
+      </form>
       <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
@@ -176,7 +196,22 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="transaction in transactions" :key="transaction.id">
+                  <tr
+                    v-for="transaction in transactions.filter(
+                      (transaction) =>
+                        (searchTransactionQuery
+                          ? transaction.customer?.nickname
+                              .toLowerCase()
+                              .includes(searchTransactionQuery.toLowerCase())
+                          : true) ||
+                        (searchTransactionQuery
+                          ? transaction.type
+                              .toLowerCase()
+                              .includes(searchTransactionQuery.toLowerCase())
+                          : true)
+                    )"
+                    :key="transaction.id"
+                  >
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -1782,6 +1817,7 @@ export default {
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       //STUB - Penjualan
+      searchTransactionQuery: null,
       showRevisionPopup: false,
       showSaleApprovalForm: false,
       showTransactionDetail: false,
