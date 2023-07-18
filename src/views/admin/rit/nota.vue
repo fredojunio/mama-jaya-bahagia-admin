@@ -208,6 +208,7 @@
                         <router-link
                           :to="{
                             path: `/admin/rit/jual_barang/${transaction.id}`,
+                            query: { isForcedRevision: true },
                           }"
                           target="_blank"
                         >
