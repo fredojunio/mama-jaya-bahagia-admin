@@ -53,7 +53,7 @@
             Total Penerimaan Uang Fisik
           </dt>
           <dd class="mt-1 text-xl text-gray-900">
-            Rp. {{ formatNumber(selectedData.real_income) }}
+            Rp. {{ formatNumber(selectedData.real_income - selectedData.money) }}
           </dd>
         </div>
         <div class="sm:col-span-1">
