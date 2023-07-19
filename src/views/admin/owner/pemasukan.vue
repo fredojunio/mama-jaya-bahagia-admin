@@ -27,7 +27,7 @@
           </div>
           <VueDatePicker
             v-model="date"
-            @update:model-value="changeTab(currentTab)"
+            @update:model-value="getCompletedOwnerTransactions()"
             locale="id"
             :start-time="[
               { hours: 0, minutes: 0, seconds: 0 },
@@ -60,7 +60,7 @@
           </div>
         </div>
       </form>
-      <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
+      <div class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -338,20 +338,13 @@
 
                 <div class="pt-5">
                   <div class="flex justify-end">
-                    <!-- <button
+                    <button
                       type="button"
                       :disabled="selectedData.payments.length > 0"
                       @click="rejectTransaction()"
                       class="disabled:opacity-50 bg-red-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Reject
-                    </button> -->
-                    <button
-                      type="button"
-                      @click="showSaleApprovalForm = false"
-                      class="bg-black py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      Cancel
                     </button>
                     <button
                       type="button"
@@ -559,25 +552,6 @@ export default {
     this.checkDailyReport();
   },
   methods: {
-    changeTab(tabName) {
-      this.tabs.forEach((tab) => {
-        if (tab.current) {
-          tab.current = false;
-        }
-      });
-      this.tabs.find((tab) => tab.name === tabName).current = true;
-      this.currentTab = tabName;
-    },
-    changeTabMobile(event) {
-      this.tabs.forEach((tab) => {
-        if (tab.name == event.target.value) {
-          tab.current = true;
-          this.currentTab = tab.name;
-        } else {
-          tab.current = false;
-        }
-      });
-    },
     isToday(dateString) {
       const today = new Date();
       const momentDate = moment.utc(dateString).local();
@@ -661,7 +635,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("admin/transaction/" + this.selectedData.id + "/reject_finance")
+        .get("admin/transaction/" + this.selectedData.id + "/reject_owner")
         .then((data) => {
           this.$router.go(0);
         })
@@ -673,12 +647,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      tabs: [
-        { name: "Penjualan", current: true },
-        { name: "Tabungan", current: false },
-        { name: "Cas", current: false },
-      ],
-      currentTab: "Penjualan",
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),

@@ -154,14 +154,14 @@
                             rit.customer_transaction == null &&
                             rit.sell_price > 0
                           "
-                          @click="openAddCustomerTransaction(rit)"
+                          @click="openAddOwnerTransaction(rit)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
                           <Icon
                             icon="uil:edit"
                             class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
                           ></Icon>
-                          <span class="ml-3">Penjualan (Customer)</span>
+                          <span class="ml-3">Penjualan (Owner)</span>
                         </div>
                         <div
                           v-if="
@@ -732,12 +732,12 @@
         </div>
       </Dialog>
     </TransitionRoot>
-    <!-- //SECTION - Popup Penjualan (Customer)  -->
-    <TransitionRoot as="template" :show="showAddCustomerTransaction">
+    <!-- //SECTION - Popup Penjualan (Owner)  -->
+    <TransitionRoot as="template" :show="showAddOwnerTransaction">
       <Dialog
         as="div"
         class="fixed z-10 inset-0 overflow-y-auto"
-        @close="showAddCustomerTransaction = false"
+        @close="showAddOwnerTransaction = false"
       >
         <div
           class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
@@ -779,7 +779,7 @@
                   <div>
                     <div>
                       <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        {{ "Penjualan (Customer)" }}
+                        {{ "Penjualan (Owner)" }}
                       </h3>
                       <p class="mt-1 text-sm text-gray-500">
                         Pastikan data sudah benar.
@@ -1014,7 +1014,7 @@
                   <div class="flex justify-end">
                     <button
                       type="button"
-                      @click="showAddCustomerTransaction = false"
+                      @click="showAddOwnerTransaction = false"
                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       Cancel
@@ -1103,7 +1103,7 @@
                 <button
                   type="button"
                   class="disabled:opacity-50 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black sm:ml-3 sm:w-auto sm:text-sm"
-                  @click.once="submitCustomerTransaction()"
+                  @click.once="submitOwnerTransaction()"
                 >
                   Submit
                 </button>
@@ -1883,17 +1883,17 @@ export default {
         return obj.id === id;
       });
     },
-    openAddCustomerTransaction(rit) {
-      let customerTransaction = this.transactions.find((obj) => {
+    openAddOwnerTransaction(rit) {
+      let ownerTransaction = this.transactions.find((obj) => {
         return (
           obj.customer.id == rit.customer.id &&
           obj.total_price == null &&
           obj.trip.id == rit.trip.id
         );
       });
-      this.selectedTransaction = customerTransaction;
-      this.newTransaction.customer_id = customerTransaction.customer.id;
-      this.newTransaction.ongkir = customerTransaction.ongkir;
+      this.selectedTransaction = ownerTransaction;
+      this.newTransaction.customer_id = ownerTransaction.customer.id;
+      this.newTransaction.ongkir = ownerTransaction.ongkir;
       this.newTransaction.rits = [];
       this.newTransaction.rits.push({
         item: rit,
@@ -1907,7 +1907,7 @@ export default {
       setTimeout(() => {
         this.selectCustomer(this.newTransaction.customer_id);
       }, 500);
-      this.showAddCustomerTransaction = true;
+      this.showAddOwnerTransaction = true;
     },
     addNewRit() {
       var newRit = {
@@ -2011,14 +2011,14 @@ export default {
           console.log(err);
         });
     },
-    submitCustomerTransaction() {
+    submitOwnerTransaction() {
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post(
-          `admin/transaction/${this.selectedTransaction.id}/customer`,
+          `admin/transaction/${this.selectedTransaction.id}/approve_owner`,
           this.newTransaction
         )
         .then((data) => {
@@ -2155,7 +2155,7 @@ export default {
     return {
       isLoading: false,
       //ini buat masukin penjualan customer yang langsung dianter
-      showAddCustomerTransaction: false,
+      showAddOwnerTransaction: false,
       showConfirmationPopup: false,
       //ini buat cek pengiriman ke cabang
       showRitBranchDetail: false,
