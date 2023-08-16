@@ -1286,7 +1286,7 @@
                     </button>
                     <button
                       :disabled="
-                        arrivedRit.tonnage <= 0 ||
+                        arrivedRit.tonnage < 0 ||
                         arrivedRit.tonnage > selectedData.main_tonnage + 20 ||
                         arrivedRit.sack < 0 ||
                         arrivedRit.toll_used < 0 ||
