@@ -53,7 +53,6 @@ app.mixin({
     };
   },
 });
-app.config.globalProperties.url = "https://api.mamajayabahagia.com/api/";
-app.config.globalProperties.devUrl = "http://mama-jaya-bahagia-api.test/api/";
-app.config.globalProperties.prodUrl = "https://api.mamajayabahagia.com/api/";
+console.log(import.meta.env.VITE_API_URL);
+app.config.globalProperties.url = import.meta.env.VITE_API_URL;
 app.mount("#app");
