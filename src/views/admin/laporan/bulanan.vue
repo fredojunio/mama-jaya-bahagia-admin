@@ -124,11 +124,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp.
-                          {{
-                            formatNumber(
-                              getCumulativeSum(report, "money", index)
-                            )
-                          }}
+                          {{ formatNumber(getCumulativeSum("money", index)) }}
                         </div>
                       </div>
                     </td>
@@ -220,9 +216,7 @@
                         <div class="font-medium text-gray-900">
                           Rp.
                           {{
-                            formatNumber(
-                              getCumulativeSum(report, "item_income", index)
-                            )
+                            formatNumber(getCumulativeSum("item_income", index))
                           }}
                         </div>
                       </div>
@@ -233,11 +227,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp.
-                          {{
-                            formatNumber(
-                              getCumulativeSum(report, "tonnage", index)
-                            )
-                          }}
+                          {{ formatNumber(getCumulativeSum("tonnage", index)) }}
                         </div>
                       </div>
                     </td>
@@ -312,8 +302,8 @@
                           Rp.
                           {{
                             formatNumber(
-                              getCumulativeSum(report, "tb_income", index) +
-                                getCumulativeSum(report, "thr_income", index)
+                              getCumulativeSum("tb_income", index) +
+                                getCumulativeSum("thr_income", index)
                             )
                           }}
                         </div>
@@ -387,7 +377,7 @@
                           Rp.
                           {{
                             formatNumber(
-                              getCumulativeSum(report, "other_income", index)
+                              getCumulativeSum("other_income", index)
                             )
                           }}
                         </div>
@@ -459,11 +449,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp.
-                          {{
-                            formatNumber(
-                              getCumulativeSum(report, "expense", index)
-                            )
-                          }}
+                          {{ formatNumber(getCumulativeSum("expense", index)) }}
                         </div>
                       </div>
                     </td>
@@ -538,8 +524,8 @@
                           Rp.
                           {{
                             formatNumber(
-                              getCumulativeSum(report, "tb_expense", index) +
-                                getCumulativeSum(report, "thr_expense", index)
+                              getCumulativeSum("tb_expense", index) +
+                                getCumulativeSum("thr_expense", index)
                             )
                           }}
                         </div>
@@ -662,10 +648,10 @@ export default {
     handleMonthChange(newMonth) {
       this.getReports();
     },
-    getCumulativeSum(report, property, index) {
+    getCumulativeSum(property, index) {
       let sum = 0;
       for (let i = 0; i <= index; i++) {
-        sum += report[property];
+        sum += this.reports[i][property];
       }
       return sum;
     },
