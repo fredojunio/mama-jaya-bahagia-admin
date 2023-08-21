@@ -356,7 +356,16 @@ export default {
       instance
         .get("/admin/get_notification")
         .then((data) => {
-          this.notifications = data.data.data.results;
+          if (this.role_id == 1) {
+            this.notifications = data.data.data.results;
+          } else {
+            this.notifications = data.data.data.results.filter((item) => {
+              return (
+                item.title == "Barang Dalam Perjalanan" ||
+                item.title == "Input Pemasukan"
+              );
+            });
+          }
         })
         .catch((err) => {
           console.log(err);
