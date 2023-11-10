@@ -922,7 +922,8 @@ export default {
             new_transaction: this.newTransaction,
           })
           .then((data) => {
-            this.$router.go(0);
+            const baseUrl = window.location.origin;
+            window.location.assign(baseUrl + "/admin/rit/jual_barang");
           })
           .catch((err) => {
             console.log(err);
