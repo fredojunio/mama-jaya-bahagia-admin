@@ -2929,6 +2929,7 @@ export default {
     },
     totalTonnageSoldToday(rit) {
       const today = new Date().toISOString().substring(0, 10);
+      console.log(rit.transactions);
       const todayTransactions = rit.transactions.filter((transaction) => {
         return transaction.created_at.substring(0, 10) === today;
       });
