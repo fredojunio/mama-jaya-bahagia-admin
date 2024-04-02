@@ -40,7 +40,7 @@
       <tr v-for="(rit, index) in transaction.rits" :key="rit.id">
         <td>{{ index + 1 }}</td>
         <td>{{ rit.rit.item.code }}</td>
-        <td>{{ formatNumber(rit.tonnage) }}</td>
+        <td>{{ formatNumber(rit.tonnage * rit.masak) }}</td>
         <td>{{ formatNumber(rit.item_price) }}</td>
         <td>{{ formatNumber(rit.total_price) }}</td>
       </tr>
@@ -151,12 +151,15 @@ export default {
         "Jumat",
         "Sabtu",
       ];
-      const today = new Date();
-      return days[today.getDay()];
+      const getDate = new Date(this.transaction.created_at);
+      return days[getDate.getDay()];
     },
     currentDate() {
       const options = { day: "numeric", month: "numeric", year: "numeric" };
-      return new Date().toLocaleDateString("id-ID", options);
+      return new Date(this.transaction.created_at).toLocaleDateString(
+        "id-ID",
+        options
+      );
     },
   },
   methods: {

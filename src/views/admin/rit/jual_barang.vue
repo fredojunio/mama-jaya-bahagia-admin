@@ -922,7 +922,15 @@ export default {
             new_transaction: this.newTransaction,
           })
           .then((data) => {
+            console.log("test " + JSON.stringify(data));
+            // todo
             const baseUrl = window.location.origin;
+            window.open(
+              baseUrl +
+                "/admin/rit/nota/mini_nota/" +
+                data.data.data.results.id,
+              "_blank"
+            );
             window.location.assign(baseUrl + "/admin/rit/jual_barang");
           })
           .catch((err) => {
@@ -936,7 +944,14 @@ export default {
         instance
           .post("admin/transaction", this.newTransaction)
           .then((data) => {
+            console.log("test " + JSON.stringify(data));
             const baseUrl = window.location.origin;
+            window.open(
+              baseUrl +
+                "/admin/rit/nota/mini_nota/" +
+                data.data.data.results.id,
+              "_blank"
+            );
             window.location.assign(baseUrl + "/admin/rit/jual_barang");
           })
           .catch((err) => {
