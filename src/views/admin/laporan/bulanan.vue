@@ -226,8 +226,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp.
-                          {{ formatNumber(getCumulativeSum("tonnage", index)) }}
+                          {{ getCumulativeSum("tonnage", index) }} kg
                         </div>
                       </div>
                     </td>

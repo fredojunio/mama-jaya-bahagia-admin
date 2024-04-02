@@ -151,12 +151,15 @@ export default {
         "Jumat",
         "Sabtu",
       ];
-      const today = new Date();
-      return days[today.getDay()];
+      const getDate = new Date(this.transaction.created_at);
+      return days[getDate.getDay()];
     },
     currentDate() {
       const options = { day: "numeric", month: "numeric", year: "numeric" };
-      return new Date().toLocaleDateString("id-ID", options);
+      return new Date(this.transaction.created_at).toLocaleDateString(
+        "id-ID",
+        options
+      );
     },
   },
   methods: {
