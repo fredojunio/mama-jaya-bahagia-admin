@@ -2,25 +2,27 @@
   <div class="flex items-center justify-center">
     <table class="text-xs w-1/5">
       <tr>
-        <td class="text-lg text-center" colspan="4">SURAT TIMBANG</td>
+        <td class="text-lg text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
       <tr>
-        <td colspan="2" class="text-center">TOKO KEDELAI MAMA JAYA BAHAGIA</td>
+        <td colspan="3" class="text-center">TOKO KEDELAI MAMA JAYA BAHAGIA</td>
       </tr>
       <tr>
         <td colspan="1">TANGGAL:</td>
-        <td colspan="1">{{ currentDate }}</td>
+        <td colspan="2">{{ currentDate }}</td>
       </tr>
       <tr>
         <td colspan="1">NAMA:</td>
-        <td colspan="1">{{ transaction.customer.name }}</td>
+        <td colspan="2">{{ transaction.customer.name }}</td>
+      </tr>
+      <tr>
+        <td>Nama</td>
+        <td>Banyak</td>
+        <td>Masak</td>
       </tr>
       <tr v-for="rit in transaction.rits" :key="rit.id">
         <td>{{ rit.rit.item.code }}</td>
         <td>{{ formatNumber(rit.tonnage) }}</td>
-      </tr>
-      <tr v-for="rit in transaction.rits" :key="rit.id">
-        <td>Masak</td>
         <td>{{ formatNumber(rit.masak) }}</td>
       </tr>
     </table>
