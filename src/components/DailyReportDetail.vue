@@ -53,7 +53,23 @@
             Total Penerimaan Uang Fisik
           </dt>
           <dd class="mt-1 text-xl text-gray-900">
-            Rp. {{ formatNumber(selectedData.real_income - selectedData.money) }}
+            Rp.
+            {{ formatNumber(selectedData.real_income) }}
+            <span
+              :class="
+                selectedData.real_income - selectedData.money < 0
+                  ? 'text-red-500'
+                  : 'text-green-500'
+              "
+              class="text-sm"
+              v-if="
+                formatNumber(selectedData.real_income - selectedData.money) !=
+                '-'
+              "
+            >
+              (Selisih Rp.
+              {{ formatNumber(selectedData.real_income - selectedData.money) }})
+            </span>
           </dd>
         </div>
         <div class="sm:col-span-1">
