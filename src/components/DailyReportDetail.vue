@@ -88,7 +88,7 @@
           <dt class="text-sm font-medium text-gray-500">Penjualan</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.item_income) }} -
-            {{ formatNumber(selectedData.tonnage) }} kg
+            {{ formatNumber(totalTonnageSold()) }} kg
           </dd>
         </div>
         <div class="sm:col-span-1">
@@ -679,6 +679,13 @@ export default {
       });
       this.tabs[index].current = true;
       this.currentTab = this.tabs[index].name;
+    },
+    totalTonnageSold() {
+      var total = 0;
+      this.selectedData.rits.forEach((rit) => {
+        total += rit.tonnage_sold;
+      });
+      return total;
     },
   },
 };
