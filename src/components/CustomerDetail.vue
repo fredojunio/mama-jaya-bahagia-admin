@@ -421,6 +421,113 @@
           </div>
         </div>
         <!-- //!SECTION  -->
+        <!-- //SECTION - Tab Daftar Transaksi  -->
+        <div v-if="tabs[2].current" class="col-span-2">
+          <form class="flex space-x-4" action="#">
+            <div class="relative rounded-md shadow-sm">
+              <input
+                @keydown.enter.prevent="filterTransactionByMonth()"
+                id="month"
+                v-model="month"
+                type="month"
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4"
+              />
+            </div>
+          </form>
+          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div
+              class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+            >
+              <div
+                class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+              >
+                <table class="min-w-full divide-y divide-gray-300">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Tanggal
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Barang
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Tonase (kg)
+                      </th>
+                      <th
+                        scope="col"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Total Harga
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 bg-white">
+                    <tr
+                      v-for="transactionMonth in filteredTransactionsMonth.filter(
+                        (transactionMonth) =>
+                          transactionMonth.settled_date != null
+                      )"
+                      :key="transactionMonth.id"
+                    >
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            {{ formatDate(transactionMonth.created_at) }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex flex-col">
+                          <div
+                            class="font-medium text-gray-900"
+                            v-for="rit in transactionMonth.rits"
+                            :key="rit.id"
+                          >
+                            {{ rit.rit.item.code }}
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div
+                          class="font-medium text-gray-900"
+                          v-for="rit in transactionMonth.rits"
+                          :key="rit.id"
+                        >
+                          {{ formatNumber(rit.tonnage * rit.masak) }}
+                        </div>
+                      </td>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      >
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-900">
+                            Rp. {{ formatNumber(transactionMonth.total_price) }}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- //!SECTION  -->
       </dl>
     </div>
     <!-- //SECTION Form Deposit Tabungan -->
@@ -1119,6 +1226,9 @@ export default {
       this.changeTab(0);
       this.filterTransaction();
     },
+    month(newMonth) {
+      this.handleMonthChange(newMonth);
+    },
   },
   components: {
     VueDatePicker,
@@ -1142,8 +1252,10 @@ export default {
       tabs: [
         { name: "Daftar Transaksi", current: true },
         { name: "Riwayat Tabungan", current: false },
+        { name: "Periode Bulanan", current: false },
       ],
       filteredTransactions: [],
+      filteredTransactionsMonth: [],
       selectedTransaction: null,
       filteredSavings: [],
       savings: {
@@ -1162,7 +1274,15 @@ export default {
       cashback: {
         amount: 0,
       },
+      month: "",
     };
+  },
+  created() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    this.month = `${year}-${month}`;
+    this.filterTransactionByMonth();
   },
   methods: {
     toggleForm() {
@@ -1180,10 +1300,13 @@ export default {
         this.filterTransaction();
       } else if (this.currentTab == "Riwayat Tabungan") {
         this.filterSaving();
+      } else if ((this.currentTab = "Periode Bulanan")) {
+        this.filterTransactionByMonth();
       }
     },
     filterTransaction() {
       this.isLoading = true;
+
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -1206,6 +1329,40 @@ export default {
           console.log(err);
         });
     },
+    filterTransactionByMonth() {
+      this.isLoading = true;
+
+      const [year, month] = this.month.split("-").map(Number);
+      const startDate = new Date(year, month - 1, 1); // Month is zero-based in Date constructor
+      const endDate = new Date(year, month, 0); // Get the last day of the month
+
+      // Format dates as 'YYYY-MM-DD'
+      // const formattedStartDate = startDate.toISOString().split("T")[0];
+      // const formattedEndDate = endDate.toISOString().split("T")[0];
+
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          "/admin/customer/" +
+            this.selectedData.id +
+            "/get_customer_transactions",
+          {
+            start_date: startDate.toString(),
+            end_date: endDate.toString(),
+          }
+        )
+        .then((data) => {
+          console.log("uye" + data.data.data.results);
+          this.filteredTransactionsMonth = data.data.data.results;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     openTransactionDetail(id) {
       this.selectedTransaction = this.filteredTransactions.find((obj) => {
         return obj.id === id;
@@ -1220,9 +1377,7 @@ export default {
       });
       instance
         .post(
-          "/admin/customer/" +
-            this.selectedData.id +
-            "/get_customer_savings",
+          "/admin/customer/" + this.selectedData.id + "/get_customer_savings",
           {
             start_date: this.date[0].toString(),
             end_date: this.date[1].toString(),
@@ -1301,6 +1456,9 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    handleMonthChange(newMonth) {
+      this.filterTransactionByMonth();
     },
   },
 };
