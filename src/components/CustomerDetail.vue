@@ -425,6 +425,7 @@
         <div v-if="tabs[2].current" class="col-span-2">
           <form class="flex space-x-4" action="#">
             <div class="relative rounded-md shadow-sm">
+              <p class="font-bold text-sm mb-1">Periode Bulan</p>
               <input
                 @keydown.enter.prevent="filterTransactionByMonth()"
                 id="month"
@@ -432,6 +433,23 @@
                 type="month"
                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4"
               />
+            </div>
+            <div v-if="filteredTransactionsMonth.length != 0">
+              <p class="font-bold text-sm mb-1">Produk</p>
+              <select
+                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4 pr-8"
+                v-model="selectedProduk"
+                @change="handleSelectionProduk"
+              >
+                <option value="">Semua</option>
+                <option
+                  v-for="(item, index) in produks"
+                  :key="index"
+                  :value="item"
+                >
+                  {{ item }}
+                </option>
+              </select>
             </div>
           </form>
           <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -472,7 +490,7 @@
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                      v-for="transactionMonth in filteredTransactionsMonth.filter(
+                      v-for="transactionMonth in filteredMonth.filter(
                         (transactionMonth) =>
                           transactionMonth.settled_date != null
                       )"
@@ -1256,6 +1274,7 @@ export default {
       ],
       filteredTransactions: [],
       filteredTransactionsMonth: [],
+      filteredMonth: [],
       selectedTransaction: null,
       filteredSavings: [],
       savings: {
@@ -1275,6 +1294,8 @@ export default {
         amount: 0,
       },
       month: "",
+      selectedProduk: "",
+      produks: [],
     };
   },
   created() {
@@ -1355,8 +1376,20 @@ export default {
           }
         )
         .then((data) => {
-          console.log("uye" + data.data.data.results);
           this.filteredTransactionsMonth = data.data.data.results;
+          this.filteredMonth = this.filteredTransactionsMonth;
+          this.selectedProduk = "";
+
+          // add list produk
+          this.produks = [];
+          this.filteredTransactionsMonth.forEach((transactionMonth) => {
+            transactionMonth.rits.forEach((rit) => {
+              if (!this.produks.includes(rit.rit.item.code)) {
+                this.produks.push(rit.rit.item.code);
+              }
+            });
+          });
+
           this.isLoading = false;
         })
         .catch((err) => {
@@ -1459,6 +1492,18 @@ export default {
     },
     handleMonthChange(newMonth) {
       this.filterTransactionByMonth();
+    },
+    handleSelectionProduk() {
+      if (this.selectedProduk != "") {
+        this.filteredMonth = this.filteredTransactionsMonth.filter(
+          (filterTransaction) =>
+            filterTransaction.rits.some(
+              (e) => e.rit.item.code === this.selectedProduk
+            )
+        );
+      } else {
+        this.filteredMonth = this.filteredTransactionsMonth;
+      }
     },
   },
 };
