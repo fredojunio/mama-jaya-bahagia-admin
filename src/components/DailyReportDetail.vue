@@ -43,7 +43,7 @@
           <dt class="text-xl font-medium text-gray-500">
             Total Penerimaan Uang
           </dt>
-          <dd class="mt-1 text-xl text-gray-9002">
+          <dd class="mt-1 text-xl text-gray-900">
             Rp. {{ formatNumber(selectedData.money) }}
           </dd>
         </div>
