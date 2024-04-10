@@ -114,7 +114,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(report.money) }}
+                          Rp. {{ formatNumber(report.real_income) }}
                         </div>
                       </div>
                     </td>
@@ -124,7 +124,9 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp.
-                          {{ formatNumber(getCumulativeSum("money", index)) }}
+                          {{
+                            formatNumber(getCumulativeSum("real_income", index))
+                          }}
                         </div>
                       </div>
                     </td>
@@ -205,7 +207,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(report.tonnage) }}
+                          {{ totalTonnageSold(report) }} kg
                         </div>
                       </div>
                     </td>
@@ -653,6 +655,14 @@ export default {
         sum += this.reports[i][property];
       }
       return sum;
+    },
+    totalTonnageSold(transaction) {
+      console.log("test " + JSON.stringify(this.transaction));
+      var total = 0;
+      transaction.rits.forEach((rit) => {
+        total += rit.tonnage_sold;
+      });
+      return total;
     },
   },
 };
