@@ -826,12 +826,15 @@ export default {
     },
     filterRit() {
       if (this.ritQuery == "") {
-        this.filteredRits = this.rits;
+        this.filteredRits = this.rits.filter((rit) => {
+          return rit.tonnage_left > 0;
+        });
       } else {
         this.filteredRits = this.rits.filter((rit) => {
-          return rit.item.code
-            .toLowerCase()
-            .includes(this.ritQuery.toLowerCase());
+          return (
+            rit.item.code.toLowerCase().includes(this.ritQuery.toLowerCase()) &&
+            rit.tonnage_left > 0
+          );
         });
       }
     },
