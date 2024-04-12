@@ -109,14 +109,18 @@
         <td></td>
         <td></td>
         <td>BAYAR</td>
-        <td>-</td>
+        <td>
+          {{ formatNumber(getTotalPayments()) }}
+        </td>
       </tr>
       <tr>
         <td></td>
         <td></td>
         <td></td>
         <td>KURANG</td>
-        <td>{{ formatNumber(transaction.total_price) }}</td>
+        <td>
+          {{ formatNumber(transaction.total_price - getTotalPayments()) }}
+        </td>
       </tr>
     </table>
   </div>
@@ -182,6 +186,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    getTotalPayments() {
+      return this.transaction.payments.reduce((total, pay) => {
+        return total + pay.amount;
+      }, 0);
     },
   },
   data() {

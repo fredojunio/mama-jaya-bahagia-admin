@@ -514,7 +514,14 @@
                             v-for="rit in transactionMonth.rits"
                             :key="rit.id"
                           >
-                            {{ rit.rit.item.code }}
+                            <div
+                              v-if="
+                                rit.rit.item.code == selectedProduk ||
+                                selectedProduk == ''
+                              "
+                            >
+                              {{ rit.rit.item.code }}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -526,7 +533,14 @@
                           v-for="rit in transactionMonth.rits"
                           :key="rit.id"
                         >
-                          {{ formatNumber(rit.tonnage * rit.masak) }}
+                          <div
+                            v-if="
+                              rit.rit.item.code == selectedProduk ||
+                              selectedProduk == ''
+                            "
+                          >
+                            {{ formatNumber(rit.tonnage * rit.masak) }}
+                          </div>
                         </div>
                       </td>
                       <td
@@ -534,7 +548,20 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            Rp. {{ formatNumber(transactionMonth.total_price) }}
+                            <div
+                              class="font-medium text-gray-900"
+                              v-for="(rit, index) in transactionMonth.rits"
+                              :key="index"
+                            >
+                              <div v-if="rit.rit.item.code == selectedProduk">
+                                Rp.
+                                {{ formatNumber(rit.total_price) }}
+                              </div>
+                              <div v-if="selectedProduk == '' && index == 0">
+                                Rp.
+                                {{ formatNumber(transactionMonth.total_price) }}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -882,8 +909,9 @@
                     </button>
                     <button
                       type="button"
+                      :disabled="savings.difference < 0"
                       @click.once="withdrawSavings()"
-                      class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                     >
                       {{ "Save" }}
                     </button>
