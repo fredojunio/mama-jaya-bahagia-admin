@@ -415,7 +415,7 @@ export default {
           this.selectData(this.customers[0].id);
         })
         .catch((err) => {
-          console.log(err);
+          this.isLoading = false;
         });
     },
     createData() {
@@ -473,7 +473,7 @@ export default {
           this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err);
+          this.isLoading = false;
         });
     },
     filterData() {
