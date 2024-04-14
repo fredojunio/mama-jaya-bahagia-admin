@@ -460,6 +460,7 @@
                       :key="transaction.id"
                     >
                       <td
+                        v-if="shouldShowDate(transaction.settled_date)"
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -475,6 +476,7 @@
                         </div>
                       </td>
                       <td
+                        v-if="shouldShowDate(transaction.settled_date)"
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -484,6 +486,7 @@
                         </div>
                       </td>
                       <td
+                        v-if="shouldShowDate(transaction.settled_date)"
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -493,6 +496,7 @@
                         </div>
                       </td>
                       <td
+                        v-if="shouldShowDate(transaction.settled_date)"
                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                       >
                         <div class="flex items-center">
@@ -686,6 +690,16 @@ export default {
         total += rit.tonnage_sold;
       });
       return total;
+    },
+    shouldShowDate(inputDate) {
+      if (inputDate !== null) {
+        const currentDate = new Date();
+        const endDate = new Date(inputDate);
+        endDate.setDate(endDate.getDate() + 7);
+        return currentDate <= endDate;
+      } else {
+        return true;
+      }
     },
   },
 };
