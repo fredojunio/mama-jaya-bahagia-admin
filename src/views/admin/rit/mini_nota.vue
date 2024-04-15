@@ -2,14 +2,16 @@
   <div class="flex items-center justify-center">
     <table class="text-4xl w-1/2">
       <tr>
-        <td class="text-center" colspan="3">SURAT TIMBANG</td>
+        <td class="text-2xl text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
       <tr>
-        <td colspan="3" class="text-center">TOKO KEDELAI MAMA JAYA BAHAGIA</td>
+        <td colspan="3" class="text-2xl text-center">
+          TOKO KEDELAI MAMA JAYA BAHAGIA
+        </td>
       </tr>
       <tr>
-        <td colspan="1">TANGGAL:</td>
-        <td colspan="2">{{ currentDate }}</td>
+        <td colspan="1" class="text-2xl">TANGGAL:</td>
+        <td colspan="2" class="text-2xl">{{ currentDate }}</td>
       </tr>
       <tr>
         <td colspan="1">NAMA:</td>
