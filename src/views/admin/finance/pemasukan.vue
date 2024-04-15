@@ -1711,6 +1711,8 @@ export default {
       instance
         .get("admin/transaction/" + this.selectedData.id + "/reject_finance")
         .then((data) => {
+          // console.log("tess");
+          // console.log(JSON.stringify(data, null, 2));
           this.$router.go(0);
         })
         .catch((err) => {
