@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center">
-    <table class="text-xl w-1/2">
+    <table class="text-2xl w-1/2">
       <tr>
         <td class="text-2xl text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
