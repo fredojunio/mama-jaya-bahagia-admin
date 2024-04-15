@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center justify-center">
-    <table class="text-lg w-1/4">
+    <table class="text-xl w-1/2">
       <tr>
-        <td class="text-xl text-center" colspan="3">SURAT TIMBANG</td>
+        <td class="text-2xl text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
       <tr>
         <td colspan="3" class="text-center">TOKO KEDELAI MAMA JAYA BAHAGIA</td>
