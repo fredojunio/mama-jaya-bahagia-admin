@@ -15,7 +15,7 @@
       </tr>
       <tr>
         <td colspan="1">NAMA:</td>
-        <td colspan="2">{{ transaction.customer.name }}</td>
+        <td colspan="2">{{ transaction.customer.nickname }}</td>
       </tr>
       <tr>
         <td>Nama</td>
