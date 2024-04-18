@@ -1,17 +1,17 @@
 <template>
-  <div class="w-screen h-screen relative overflow-hidden">
-    <table class="text-3xl absolute top-12 -rotate-90">
+  <div class="w-screen h-screen relative overflow-hidden p-0 m-0">
+    <table class="text-2xl absolute top-8 -rotate-90 p-0 m-0">
       <tr>
-        <td class="text-base text-center" colspan="3">SURAT TIMBANG</td>
+        <td class="text-sm text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
       <tr>
-        <td colspan="3" class="text-base text-center">
+        <td colspan="3" class="text-sm text-center">
           TOKO KEDELAI MAMA JAYA BAHAGIA
         </td>
       </tr>
       <tr>
-        <td colspan="1" class="text-xl">TANGGAL:</td>
-        <td colspan="2" class="text-xl">{{ currentDate }}</td>
+        <td colspan="1" class="text-lg">TANGGAL:</td>
+        <td colspan="2" class="text-lg">{{ currentDate }}</td>
       </tr>
       <tr>
         <td colspan="1">NAMA:</td>
@@ -39,6 +39,19 @@
       </button>
     </div> -->
 </template>
+
+<style scoped>
+/* Apply styles for print */
+@media print {
+  .container {
+    margin: 0 !important;
+  }
+}
+
+@page {
+  margin: 0 !important;
+}
+</style>
 
 <script setup>
 import axios from "axios";
