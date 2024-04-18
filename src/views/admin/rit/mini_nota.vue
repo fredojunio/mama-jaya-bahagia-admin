@@ -1,17 +1,17 @@
 <template>
-  <div class="flex items-center justify-center">
-    <table class="text-4xl w-1/2">
+  <div class="w-screen h-screen relative overflow-hidden">
+    <table class="text-3xl absolute top-12 -rotate-90">
       <tr>
-        <td class="text-2xl text-center" colspan="3">SURAT TIMBANG</td>
+        <td class="text-base text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
       <tr>
-        <td colspan="3" class="text-2xl text-center">
+        <td colspan="3" class="text-base text-center">
           TOKO KEDELAI MAMA JAYA BAHAGIA
         </td>
       </tr>
       <tr>
-        <td colspan="1" class="text-2xl">TANGGAL:</td>
-        <td colspan="2" class="text-2xl">{{ currentDate }}</td>
+        <td colspan="1" class="text-xl">TANGGAL:</td>
+        <td colspan="2" class="text-xl">{{ currentDate }}</td>
       </tr>
       <tr>
         <td colspan="1">NAMA:</td>
