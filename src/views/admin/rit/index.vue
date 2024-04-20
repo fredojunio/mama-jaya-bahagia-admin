@@ -183,7 +183,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ rit.item.code }} -
-                          {{ formatDate(rit.arrival_date) }}
+                          {{ formatDate(rit.delivery_date) }}
                         </div>
                       </div>
                     </td>
@@ -523,7 +523,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ rit.item.code }} - {{ rit.arrival_date }}
+                          {{ rit.item.code }} - {{ rit.delivery_date }}
                         </div>
                       </div>
                     </td>
@@ -701,7 +701,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ rit.item.code }} -
-                          {{ formatDate(rit.arrival_date) }}
+                          {{ formatDate(rit.delivery_date) }}
                         </div>
                       </div>
                     </td>

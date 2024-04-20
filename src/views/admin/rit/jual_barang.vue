@@ -533,7 +533,7 @@
                   :key="rit.id"
                   :value="rit"
                 >
-                  {{ rit.item.code }} - ({{ formatDate(rit.arrival_date) }})
+                  {{ rit.item.code }} - ({{ formatDate(rit.delivery_date) }})
                 </option>
               </select>
             </div>
