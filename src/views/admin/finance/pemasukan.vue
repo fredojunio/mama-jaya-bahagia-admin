@@ -1692,10 +1692,10 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .post(
-          "admin/transaction/" + this.selectedData.id + "/approve_finance",
-          { amount: this.payment.amount, transfer: this.approvalTransfer }
-        )
+        .post(`admin/transaction/${this.selectedData.id}/approve_finance`, {
+          amount: this.payment.amount,
+          transfer: this.approvalTransfer,
+        })
         .then((data) => {
           this.$router.go(0);
         })
@@ -1709,10 +1709,8 @@ export default {
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
-        .get("admin/transaction/" + this.selectedData.id + "/reject_finance")
+        .get(`admin/transaction/${this.selectedData.id}/reject_finance`)
         .then((data) => {
-          // console.log("tess");
-          // console.log(JSON.stringify(data, null, 2));
           this.$router.go(0);
         })
         .catch((err) => {
