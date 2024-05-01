@@ -409,7 +409,7 @@
                       >
                         <div class="flex items-center">
                           <div class="font-medium text-gray-900">
-                            {{ formatNumber(saving.tonnage * saving.masak) }} kg
+                            {{ formatNumber(saving.tonnage) }} kg
                           </div>
                         </div>
                       </td>
