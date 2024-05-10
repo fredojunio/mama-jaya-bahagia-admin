@@ -1601,23 +1601,18 @@ export default {
       }
     },
     isToday(dateString) {
-      // Convert inputDateString to a Date object
       var inputDate = new Date(dateString);
 
-      // Get current date
       var currentDate = new Date();
 
-      // Extract year, month, and day from the current date
       var currentYear = currentDate.getFullYear();
       var currentMonth = currentDate.getMonth();
       var currentDay = currentDate.getDate();
 
-      // Extract year, month, and day from the input date
       var inputYear = inputDate.getFullYear();
       var inputMonth = inputDate.getMonth();
       var inputDay = inputDate.getDate();
 
-      // Check if year, month, and day match
       return (
         currentYear === inputYear &&
         currentMonth === inputMonth &&
