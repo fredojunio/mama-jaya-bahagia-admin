@@ -1,6 +1,9 @@
 <template>
-  <div class="w-screen h-screen relative overflow-hidden p-0 m-0">
-    <table class="text-2xl absolute top-8 -rotate-90 p-0 m-0">
+  <div
+    class="flex items-center justify-center relative overflow-hidden p-0 m-0"
+    style="width: 80mm"
+  >
+    <table class="text-2xl p-0 m-0 w-full">
       <tr>
         <td class="text-sm text-center" colspan="3">SURAT TIMBANG</td>
       </tr>
