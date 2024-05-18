@@ -555,11 +555,20 @@
                             >
                               <div v-if="rit.rit.item.code == selectedProduk">
                                 Rp.
-                                {{ formatNumber(rit.total_price) }}
+                                {{
+                                  formatNumber(
+                                    rit.total_price - rit.tonnage * 200
+                                  )
+                                }}
                               </div>
                               <div v-if="selectedProduk == '' && index == 0">
                                 Rp.
-                                {{ formatNumber(transactionMonth.total_price) }}
+                                {{
+                                  formatNumber(
+                                    transactionMonth.total_price -
+                                      transactionMonth.customer.tonnage * 200
+                                  )
+                                }}
                               </div>
                             </div>
                           </div>
