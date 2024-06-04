@@ -478,7 +478,7 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Tonase (kg)
+                        Tonase ({{ sumTonnage }} kg)
                       </th>
                       <th
                         scope="col"
@@ -1333,6 +1333,7 @@ export default {
       month: "",
       selectedProduk: "",
       produks: [],
+      sumTonnage: 0,
     };
   },
   created() {
@@ -1340,7 +1341,7 @@ export default {
     const year = currentDate.getFullYear();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     this.month = `${year}-${month}`;
-    this.filterTransactionByMonth();
+    // this.filterTransactionByMonth();
   },
   methods: {
     toggleForm() {
@@ -1414,16 +1415,20 @@ export default {
         )
         .then((data) => {
           this.filteredTransactionsMonth = data.data.data.results;
-          this.filteredMonth = this.filteredTransactionsMonth;
+          this.filteredMonth = this.filteredTransactionsMonth.filter(
+            (transactionMonth) => transactionMonth.settled_date != null
+          );
           this.selectedProduk = "";
 
           // add list produk
           this.produks = [];
-          this.filteredTransactionsMonth.forEach((transactionMonth) => {
+          this.sumTonnage = 0;
+          this.filteredMonth.forEach((transactionMonth) => {
             transactionMonth.rits.forEach((rit) => {
               if (!this.produks.includes(rit.rit.item.code)) {
                 this.produks.push(rit.rit.item.code);
               }
+              this.sumTonnage += rit.tonnage * rit.masak;
             });
           });
 
@@ -1532,14 +1537,33 @@ export default {
     },
     handleSelectionProduk() {
       if (this.selectedProduk != "") {
-        this.filteredMonth = this.filteredTransactionsMonth.filter(
-          (filterTransaction) =>
+        this.filteredMonth = this.filteredTransactionsMonth
+          .filter((filterTransaction) =>
             filterTransaction.rits.some(
               (e) => e.rit.item.code === this.selectedProduk
             )
-        );
+          )
+          .filter((transactionMonth) => transactionMonth.settled_date != null);
+
+        this.sumTonnage = 0;
+        this.filteredMonth.forEach((transactionMonth) => {
+          transactionMonth.rits.forEach((rit) => {
+            if (rit.rit.item.code == this.selectedProduk) {
+              this.sumTonnage += rit.tonnage * rit.masak;
+            }
+          });
+        });
       } else {
-        this.filteredMonth = this.filteredTransactionsMonth;
+        this.filteredMonth = this.filteredTransactionsMonth.filter(
+          (transactionMonth) => transactionMonth.settled_date != null
+        );
+
+        this.sumTonnage = 0;
+        this.filteredMonth.forEach((transactionMonth) => {
+          transactionMonth.rits.forEach((rit) => {
+            this.sumTonnage += rit.tonnage * rit.masak;
+          });
+        });
       }
     },
   },
