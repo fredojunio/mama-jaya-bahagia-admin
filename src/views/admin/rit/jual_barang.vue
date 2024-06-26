@@ -401,6 +401,7 @@
               v-model="newTransaction.discount"
               @keyup="updateTotalPrice"
               type="number"
+              :disabled="role_id != 1"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
           </div>
