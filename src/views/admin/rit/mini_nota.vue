@@ -17,6 +17,12 @@
         <td colspan="2" class="text-lg">{{ currentDate }}</td>
       </tr>
       <tr>
+        <td colspan="1" class="text-lg">JAM:</td>
+        <td colspan="2" class="text-lg">
+          {{ formatTime(transaction.updated_at) }}
+        </td>
+      </tr>
+      <tr>
         <td colspan="1">NAMA:</td>
         <td colspan="2">{{ transaction.customer.nickname }}</td>
       </tr>
