@@ -484,7 +484,7 @@
                         scope="col"
                         class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Total Harga
+                        Total Harga (Rp. {{ formatNumber(sumTotal) }})
                       </th>
                     </tr>
                   </thead>
@@ -1335,6 +1335,7 @@ export default {
       selectedProduk: "",
       produks: [],
       sumTonnage: 0,
+      sumTotal: 0,
     };
   },
   created() {
@@ -1424,6 +1425,7 @@ export default {
           // add list produk
           this.produks = [];
           this.sumTonnage = 0;
+          this.sumTotal = 0;
           this.filteredMonth.forEach((transactionMonth) => {
             transactionMonth.rits.forEach((rit) => {
               if (!this.produks.includes(rit.rit.item.code)) {
@@ -1431,6 +1433,9 @@ export default {
               }
               this.sumTonnage += rit.tonnage * rit.masak;
             });
+            this.sumTotal +=
+              transactionMonth.total_price -
+              transactionMonth.customer.tonnage * 200;
           });
 
           this.isLoading = false;
@@ -1547,10 +1552,12 @@ export default {
           .filter((transactionMonth) => transactionMonth.settled_date != null);
 
         this.sumTonnage = 0;
+        this.sumTotal = 0;
         this.filteredMonth.forEach((transactionMonth) => {
           transactionMonth.rits.forEach((rit) => {
             if (rit.rit.item.code == this.selectedProduk) {
               this.sumTonnage += rit.tonnage * rit.masak;
+              this.sumTotal += rit.total_price - rit.tonnage * 200;
             }
           });
         });
@@ -1560,10 +1567,14 @@ export default {
         );
 
         this.sumTonnage = 0;
+        this.sumTotal = 0;
         this.filteredMonth.forEach((transactionMonth) => {
           transactionMonth.rits.forEach((rit) => {
             this.sumTonnage += rit.tonnage * rit.masak;
           });
+          this.sumTotal +=
+            transactionMonth.total_price -
+            transactionMonth.customer.tonnage * 200;
         });
       }
     },
