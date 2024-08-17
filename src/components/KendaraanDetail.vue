@@ -2,7 +2,7 @@
   <div>
     <!-- Profile header -->
     <div>
-      <div class="mx-auto px-4 sm:px-6 mb-2">
+      <div class="m-auto px-4 sm:px-6 mb-2">
         <div class="sm:flex sm:items-end sm:space-x-5">
           <div
             class="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1"
@@ -11,7 +11,8 @@
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
               <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ selectedData.name }} (Toll: {{ formatNumber(selectedData.toll) }})
+                {{ selectedData.name }} (Toll:
+                {{ formatNumber(selectedData.toll) }})
               </h1>
               <div class="flex flex-col gap-2">
                 <button
@@ -28,7 +29,8 @@
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
-            {{ selectedData.name }} (Toll: {{ formatNumber(selectedData.toll) }})
+            {{ selectedData.name }} (Toll:
+            {{ formatNumber(selectedData.toll) }})
             <span class="text-gray-400 text-sm font-normal">{{
               selectedData.type
             }}</span>
