@@ -2,7 +2,7 @@
   <div>
     <!-- Profile header -->
     <div>
-      <div class="m-auto px-4 sm:px-6 mb-2">
+      <div class="mx-auto px-4 sm:px-6 mb-2">
         <div class="sm:flex sm:items-end sm:space-x-5">
           <div
             class="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1"
