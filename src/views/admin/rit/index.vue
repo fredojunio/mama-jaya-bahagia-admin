@@ -173,8 +173,8 @@
                         rit.arrival_date != null &&
                         rit.sell_price > 0 &&
                         rit.is_hold != 1 &&
-                        rit.sold_date == null &&
-                        rit.customer_tonnage == null
+                        rit.sold_date == null
+                      // rit.customer_tonnage == null
                     )"
                     :key="rit.id"
                   >
