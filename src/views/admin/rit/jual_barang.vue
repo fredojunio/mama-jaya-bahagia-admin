@@ -173,7 +173,7 @@
                     autocomplete="off"
                     class="w-full rounded-md border border-gray-300 bg-white py-2 px-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                     @change="ritQuery = $event.target.value"
-                    @keyup="filterRit"
+                    @input="filterRit"
                     :display-value="
                       (rit) =>
                         rit.item
@@ -232,7 +232,7 @@
               <input
                 id="tonnage"
                 v-model="rit.tonnage"
-                @keyup="updateRit(index, rit)"
+                @input="updateRit(index, rit)"
                 type="number"
                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
@@ -246,7 +246,7 @@
               <input
                 id="masak"
                 v-model="rit.masak"
-                @keyup="updateRit(index, rit)"
+                @input="updateRit(index, rit)"
                 type="number"
                 class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
@@ -261,7 +261,7 @@
                 id="price"
                 v-model="rit.price"
                 type="number"
-                @keyup="updateRitKiriman(index, rit)"
+                @input="updateRitKiriman(index, rit)"
                 :disabled="selectedCustomer.type != 'Kiriman'"
                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
               />
@@ -303,7 +303,7 @@
               <input
                 id="thr"
                 v-model="newTransaction.thr"
-                @keyup="updateTotalPrice"
+                @input="updateTotalPrice"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
@@ -317,7 +317,7 @@
               <input
                 id="tb"
                 v-model="newTransaction.tb"
-                @keyup="updateTotalPrice"
+                @input="updateTotalPrice"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
@@ -331,7 +331,7 @@
               <input
                 id="tw"
                 v-model="newTransaction.tw"
-                @keyup="updateTotalPrice"
+                @input="updateTotalPrice"
                 type="number"
                 class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
               />
@@ -362,7 +362,7 @@
             <input
               id="sak"
               v-model="newTransaction.sack"
-              @keyup="updateTotalPrice"
+              @input="updateTotalPrice"
               type="number"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
@@ -371,7 +371,7 @@
             <input
               id="sak"
               v-model="newTransaction.sack_free"
-              @keyup="updateTotalPrice"
+              @input="updateTotalPrice"
               type="number"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
@@ -385,7 +385,7 @@
             <input
               id="discount"
               v-model="newTransaction.other"
-              @keyup="updateTotalPrice"
+              @input="updateTotalPrice"
               type="number"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
             />
@@ -399,7 +399,7 @@
             <input
               id="discount"
               v-model="newTransaction.discount"
-              @keyup="updateTotalPrice"
+              @input="updateTotalPrice"
               type="number"
               :disabled="role_id != 1"
               class="shadow-sm disabled:bg-gray-100 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
@@ -914,6 +914,7 @@ export default {
         });
     },
     createData() {
+      this.updateTotalPrice();
       this.newTransaction.old_id = this.id;
       if (this.$route.query.isForcedRevision) {
         const instance = axios.create({
