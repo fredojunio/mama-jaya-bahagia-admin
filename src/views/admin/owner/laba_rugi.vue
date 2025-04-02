@@ -603,15 +603,21 @@ export default {
     },
     totalTonnage(rit) {
       var totalTonnage = 0;
-      rit.transactions.forEach((element) => {
-        totalTonnage += element.tonnage;
+      // rit.transactions.forEach((element) => {
+      //   totalTonnage += element.tonnage;
+      // });
+      rit.reports.forEach((element) => {
+        totalTonnage += element.tonnage_sold;
       });
       return totalTonnage;
     },
     totalRevenue(rit) {
       var totalRevenue = 0;
-      rit.transactions.forEach((element) => {
-        totalRevenue += element.total_price;
+      // rit.transactions.forEach((element) => {
+      //   totalRevenue += element.total_price;
+      // });
+      rit.reports.forEach((element) => {
+        totalRevenue += element.tonnage_sold_price;
       });
       return totalRevenue;
     },
