@@ -105,7 +105,7 @@
         <td>{{ formatNumber(transaction.discount) }}</td>
       </tr>
       <tr>
-        <td></td>
+        <td class="font-bold">Nomor Resmi Gudang/Toko Hubungi</td>
         <td></td>
         <td></td>
         <td>BAYAR</td>
@@ -114,7 +114,7 @@
         </td>
       </tr>
       <tr>
-        <td></td>
+        <td class="font-bold">+62 896-8883-7888</td>
         <td></td>
         <td></td>
         <td>KURANG</td>
