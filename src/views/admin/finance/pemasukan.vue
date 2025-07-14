@@ -347,6 +347,25 @@
                             <span class="ml-3">Revisi</span>
                           </div>
                         </router-link>
+                        <div
+                          v-if="
+                            transaction.revision_allowed == 1 &&
+                            isToday(transaction.created_at) &&
+                            transaction.type != 'Cas'
+                          "
+                          class="flex flex-col items-start"
+                        >
+                          <div
+                            @click="openReturnTransactionForm(transaction.id)"
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                          >
+                            <Icon
+                              icon="uil:truck"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                            ></Icon>
+                            <span class="ml-3">Retur</span>
+                          </div>
+                        </div>
                         <router-link
                           v-if="transaction.type != 'Cas'"
                           :to="{
@@ -1517,6 +1536,228 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <!-- //!SECTION -->
+    <!-- //SECTION Retur -->
+    <TransitionRoot as="template" :show="showReturnTransactionForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showReturnTransactionForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <!-- //NOTE - ini kalo belum di retur -->
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Retur Barang {{ selectedData.daily_id }}
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="flex flex-col col-span-1 h-full gap-y-2">
+                        <div class="sm:col-span-6">
+                          <label
+                            for="vehicle"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Kendaraan
+                          </label>
+                          <div class="mt-1">
+                            <select
+                              v-model="returnTransaction.vehicle_id"
+                              id="vehicle"
+                              name="vehicle"
+                              class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            >
+                              <option
+                                v-for="vehicle in vehicles"
+                                :key="vehicle.id"
+                                :value="vehicle.id"
+                              >
+                                {{ vehicle.name }} - ({{ vehicle.trip_count }}
+                                Trip)
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="allowance_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang Sangu (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.allowance"
+                                id="allowance_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="gas_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang BBM (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.gas"
+                                id="gas_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="etoll_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang E-Toll (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.toll"
+                                id="etoll_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-1 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="itemRit"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Item
+                            </label>
+                            <div class="mt-1">
+                              <select
+                                v-model="returnTransaction.rit_id"
+                                id="itemRit"
+                                name="vehicle"
+                                class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              >
+                                <option
+                                  v-for="itemRit in selectedData.rits"
+                                  :key="itemRit.id"
+                                  :value="itemRit.id"
+                                >
+                                  {{ itemRit.rit.item.code }} -
+                                  {{ formatDate(itemRit.rit.arrival_date) }} -
+                                  ({{
+                                    formatNumber(
+                                      itemRit.tonnage * itemRit.masak
+                                    )
+                                  }}
+                                  kg)
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="mt-1">
+                            <label
+                              for="tonnage"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Tonase (kg)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.tonnage"
+                                id="tonnage"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showReturnTransactionForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      :disabled="
+                        returnTransaction.vehicle_id == null ||
+                        // returnTransaction.tonnage > selectedData.tonnage_left ||
+                        returnTransaction.tonnage <= 0
+                      "
+                      type="button"
+                      @click.once="returningTransaction(selectedData.id)"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </Admin>
 </template>
 
@@ -1563,6 +1804,7 @@ export default {
   created() {
     this.getCompletedTransactions();
     this.checkDailyReport();
+    this.getAllVehicles();
   },
   methods: {
     changeTab(tabName) {
@@ -1820,6 +2062,43 @@ export default {
           console.log(err);
         });
     },
+    openReturnTransactionForm(id) {
+      this.showReturnTransactionForm = true;
+      this.selectedData = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    returningTransaction() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          `admin/transaction/${this.selectedData.id}/return`,
+          this.returnTransaction
+        )
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllVehicles: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/vehicle")
+        .then((data) => {
+          this.vehicles = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
@@ -1839,7 +2118,9 @@ export default {
       showRevisionPopup: false,
       showSaleApprovalForm: false,
       showTransactionDetail: false,
+      showReturnTransactionForm: false,
       transactions: [],
+      vehicles: [],
       payment: {
         amount: null,
       },
@@ -1873,6 +2154,14 @@ export default {
         limaribu: null,
         sepuluhribu: null,
         duapuluhribu: null,
+      },
+      returnTransaction: {
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+        tonnage: null,
+        rit_id: null,
       },
     };
   },
