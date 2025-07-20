@@ -272,6 +272,8 @@
                           {{
                             transaction.finance_approved == 0
                               ? "Kurang Bayar"
+                              : transaction.finance_approved == 2
+                              ? "Retur"
                               : "Lunas"
                           }}
                         </div>
@@ -282,7 +284,11 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ formatDate(transaction.created_at) }}
+                          {{
+                            transaction.finance_approved == 2
+                              ? formatDate(transaction.updated_at)
+                              : formatDate(transaction.created_at)
+                          }}
                         </div>
                       </div>
                     </td>
