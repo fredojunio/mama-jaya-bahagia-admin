@@ -218,7 +218,7 @@
                       <div
                         v-if="
                           transaction.revision_requested != 1 &&
-                          isToday(transaction.created_at) &&
+                          isWithin3Days(transaction.created_at) &&
                           transaction.type != 'Cas'
                         "
                         @click="openRevisionForm(transaction.id)"
@@ -1873,6 +1873,22 @@ export default {
       // return (
       //   formattedDate === today.toISOString().substr(0, 10) && !this.dailyReport
       // );
+    },
+    isWithin3Days(dateString) {
+      // Parse the input date
+      var inputDate = new Date(dateString);
+
+      // Get current date
+      var currentDate = new Date();
+
+      // Calculate the difference in milliseconds
+      var timeDifference = inputDate.getTime() - currentDate.getTime();
+
+      // Convert milliseconds to days (1000 ms * 60 s * 60 min * 24 hrs)
+      var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24));
+
+      // Check if the difference is 3 days or less
+      return daysDifference <= 3;
     },
     checkDailyReport() {
       const instance = axios.create({
