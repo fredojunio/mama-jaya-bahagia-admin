@@ -1830,6 +1830,7 @@ export default {
       this.tabs.find((tab) => tab.name === tabName).current = true;
       this.currentTab = tabName;
       if (this.currentTab == "Penjualan") {
+        this.transactions = [];
         this.currentPage = 1;
         this.hasMore = true;
         this.error = null;
