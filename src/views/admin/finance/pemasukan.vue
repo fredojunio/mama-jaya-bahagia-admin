@@ -1921,6 +1921,7 @@ export default {
       if (this.loading || !this.hasMore) return;
 
       this.error = null;
+      this.loading = true;
 
       this.isLoading = true;
       const instance = axios.create({
@@ -1937,6 +1938,7 @@ export default {
         .then((data) => {
           this.transactions = [...this.transactions, ...data.data.data.results];
           this.isLoading = false;
+          this.loading = false;
           this.hasMore = data.data.data.pagination.has_more;
           this.currentPage = data.data.data.pagination.current_page + 1;
         })
