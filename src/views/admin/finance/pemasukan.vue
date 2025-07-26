@@ -396,6 +396,9 @@
               </table>
             </div>
           </div>
+
+          <!-- Scroll trigger element -->
+          <div ref="scrollTrigger" class="scroll-trigger"></div>
         </div>
       </div>
       <div v-if="currentTab == tabs[1].name" class="mt-8 flex flex-col">
@@ -1811,6 +1814,11 @@ export default {
     this.getCompletedTransactions();
     this.checkDailyReport();
     this.getAllVehicles();
+
+    this.$nextTick(() => {
+      this.setupIntersectionObserver();
+      this.setupScrollListener(); // Fallback method
+    });
   },
   methods: {
     changeTab(tabName) {
@@ -1822,6 +1830,10 @@ export default {
       this.tabs.find((tab) => tab.name === tabName).current = true;
       this.currentTab = tabName;
       if (this.currentTab == "Penjualan") {
+        this.currentPage = 1;
+        this.hasMore = true;
+        this.error = null;
+
         this.getCompletedTransactions();
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
@@ -1906,6 +1918,10 @@ export default {
     },
     //STUB - Penjualan
     getCompletedTransactions() {
+      if (this.loading || !this.hasMore) return;
+
+      this.error = null;
+
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
@@ -1915,14 +1931,65 @@ export default {
         .post("/admin/transaction/get_completed_transactions", {
           start_date: this.date[0].toString(),
           end_date: this.date[1].toString(),
+          page: this.currentPage,
+          per_page: this.perPage,
         })
         .then((data) => {
-          this.transactions = data.data.data.results;
+          this.transactions = [...this.transactions, ...data.data.data.results];
           this.isLoading = false;
+          this.hasMore = data.data.data.pagination.has_more;
+          this.currentPage = data.data.data.pagination.current_page + 1;
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    // Fallback scroll method
+    setupScrollListener() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+
+    handleScroll() {
+      // Throttle scroll events
+      if (this.scrollTimeout) return;
+
+      this.scrollTimeout = setTimeout(() => {
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
+
+        // Load more when user is 200px from bottom
+        if (scrollTop + clientHeight >= scrollHeight - 200) {
+          if (!this.loading && this.hasMore) {
+            this.getCompletedTransactions();
+          }
+        }
+
+        this.scrollTimeout = null;
+      }, 100);
+    },
+    setupIntersectionObserver() {
+      const options = {
+        root: null,
+        rootMargin: "200px", // Increased margin
+        threshold: 0.1,
+      };
+
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.loading && this.hasMore) {
+            this.getCompletedTransactions();
+          }
+        });
+      }, options);
+
+      // Use nextTick to ensure the element is rendered
+      this.$nextTick(() => {
+        if (this.$refs.scrollTrigger) {
+          this.observer.observe(this.$refs.scrollTrigger);
+        } else {
+          // console.error("Scroll trigger element not found"); // Debug log
+        }
+      });
     },
     openRevisionForm(id) {
       this.showRevisionPopup = true;
@@ -2185,6 +2252,12 @@ export default {
         tonnage: null,
         rit_id: null,
       },
+
+      currentPage: 1,
+      loading: false,
+      hasMore: true,
+      perPage: 20,
+      error: null,
     };
   },
 };
