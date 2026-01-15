@@ -46,13 +46,24 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 1 }}</td>
-        <td>TABUNGAN</td>
+        <td>THR</td>
         <td>1</td>
         <td>
-          {{ formatNumber(transaction.tw + transaction.tb + transaction.thr) }}
+          {{ formatNumber(transaction.thr) }}
         </td>
         <td>
-          {{ formatNumber(transaction.tw + transaction.tb + transaction.thr) }}
+          {{ formatNumber(transaction.thr) }}
+        </td>
+      </tr>
+      <tr>
+        <td>{{ transaction.rits.length + 1 }}</td>
+        <td>TB</td>
+        <td>1</td>
+        <td>
+          {{ formatNumber(transaction.tb) }}
+        </td>
+        <td>
+          {{ formatNumber(transaction.tb) }}
         </td>
       </tr>
       <tr>
@@ -71,7 +82,7 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 4 }}</td>
-        <td>ONGKOS KIRIM</td>
+        <td>ANGKUTAN</td>
         <td>1</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
