@@ -36,6 +36,11 @@
         <td>{{ formatNumber(rit.tonnage) }}</td>
         <td>{{ formatNumber(rit.masak) }}</td>
       </tr>
+			<tr v-if="transaction.sack > 0">
+				<td>Sak</td>
+				<td>{{ transaction.sack }}</td>
+				<td>{{ transaction.sack_price }}</td>
+		  </tr>
     </table>
   </div>
   <!-- <div class="flex items-center justify-center mt-12">
