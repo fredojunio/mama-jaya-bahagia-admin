@@ -39,7 +39,7 @@
 			<tr v-if="transaction.sack > 0">
 				<td>Sak</td>
 				<td>{{ transaction.sack }}</td>
-				<td>{{ transaction.sack_price }}</td>
+				<td></td>
 		  </tr>
     </table>
   </div>
