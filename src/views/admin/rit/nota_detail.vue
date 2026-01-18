@@ -108,7 +108,7 @@
         <td>TOTAL</td>
         <td>{{ formatNumber(transaction.total_price) }}</td>
       </tr>
-      <tr>
+			<tr v-if="transaction.discount > 0">
         <td></td>
         <td></td>
         <td></td>
