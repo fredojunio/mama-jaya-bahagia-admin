@@ -197,19 +197,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="transaction in transactions.filter(
-                      (transaction) =>
-                        (searchTransactionQuery
-                          ? transaction.customer?.nickname
-                              .toLowerCase()
-                              .includes(searchTransactionQuery.toLowerCase())
-                          : true) ||
-                        (searchTransactionQuery
-                          ? transaction.type
-                              .toLowerCase()
-                              .includes(searchTransactionQuery.toLowerCase())
-                          : true)
-                    )"
+                    v-for="transaction in transactions"
                     :key="transaction.id"
                   >
                     <td
@@ -1820,6 +1808,28 @@ export default {
       this.setupScrollListener(); // Fallback method
     });
   },
+  watch: {
+    searchTransactionQuery(newValue) {
+      // Clear existing timeout
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+
+      // If search query is empty, reset to normal transactions
+      if (!newValue || newValue.trim() === '') {
+        this.transactions = [];
+        this.currentPage = 1;
+        this.hasMore = true;
+        this.getCompletedTransactions();
+        return;
+      }
+
+      // Set new timeout for debounced search
+      this.searchTimeout = setTimeout(() => {
+        this.searchTransactions(newValue);
+      }, 500); // 500ms delay
+    },
+  },
   methods: {
     changeTab(tabName) {
       this.tabs.forEach((tab) => {
@@ -1945,6 +1955,35 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+        });
+    },
+    searchTransactions(query) {
+      this.error = null;
+      this.loading = true;
+      this.isLoading = true;
+
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("/admin/transaction/get_completed_transaction_search", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+          search_query: query,
+        })
+        .then((data) => {
+          this.transactions = data.data.data.results;
+          this.isLoading = false;
+          this.loading = false;
+          // Disable pagination for search results
+          this.hasMore = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+          this.loading = false;
+          this.error = "Failed to search transactions";
         });
     },
     // Fallback scroll method
@@ -2261,6 +2300,7 @@ export default {
       hasMore: true,
       perPage: 20,
       error: null,
+      searchTimeout: null,
     };
   },
 };
