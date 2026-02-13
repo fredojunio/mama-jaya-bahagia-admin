@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Profile header -->
-    <div>
+    <div class="hide-on-print">
       <div class="mx-auto px-4 sm:px-6 mb-2">
         <div class="sm:flex sm:items-end sm:space-x-5">
           <div
@@ -10,7 +10,7 @@
             <div
               class="flex sm:hidden 2xl:flex min-w-0 flex-1 justify-between items-center"
             >
-              <h1 class="text-2xl font-bold text-gray-900 truncate">
+              <h1 class="text-2xl font-bold text-gray-900 truncate hide-on-print">
                 {{ selectedData.nickname }} ({{ selectedData.phone }})
               </h1>
               <div class="flex flex-col gap-2">
@@ -84,43 +84,43 @@
         </div>
       </div>
     </div>
-    <hr />
+    <hr class="hide-on-print" />
 
-    <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+    <div class="border-t border-gray-200 px-4 py-5 sm:px-6 print-no-border">
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">Alamat</dt>
           <dd class="mt-1 text-sm text-gray-900">
             {{ selectedData.address }}
           </dd>
         </div>
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">NIK</dt>
           <dd class="mt-1 text-sm text-gray-900">{{ selectedData.nik }}</dd>
         </div>
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">Ongkir</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.ongkir) }}
           </dd>
         </div>
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">Tanggal Lahir</dt>
           <dd class="mt-1 text-sm text-gray-900">
             {{ selectedData.birthdate }}
           </dd>
         </div>
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">Tipe</dt>
           <dd class="mt-1 text-sm text-gray-900">{{ selectedData.type }}</dd>
         </div>
-        <div class="sm:col-span-1">
+        <div class="sm:col-span-1 hide-on-print">
           <dt class="text-sm font-medium text-gray-500">Cashback</dt>
           <dd class="mt-1 text-sm text-gray-900">
             {{ selectedData.cashback_days }} Hari
           </dd>
         </div>
-        <div class="w-full col-span-2 border-t">
+        <div class="w-full col-span-2 border-t hide-on-print">
           <div class="border-b border-gray-200">
             <div class="mx-auto">
               <nav class="-mb-px flex space-x-8" aria-label="Tabs">
@@ -248,8 +248,44 @@
                 :enable-time-picker="false"
               />
             </div>
+            <button
+              type="button"
+              @click="printSavings"
+              class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto self-end"
+            >
+              <Icon icon="uil:print" class="mr-2 h-5 w-5" />
+              Print
+            </button>
           </form>
-          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+
+          <!-- Print Header (Visible only during print) -->
+          <div class="hidden print:block mb-6 pb-4">
+            <h2 class="text-2xl font-bold text-center mb-2">RIWAYAT TABUNGAN</h2>
+            <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+              <div>
+                <p>
+                  <span class="font-bold">Nama:</span> {{ selectedData.name }} ({{
+                    selectedData.nickname
+                  }})
+                </p>
+                <p>
+                  <span class="font-bold">No. HP:</span> {{ selectedData.phone }}
+                </p>
+              </div>
+              <div class="text-right">
+                <p>
+                  <span class="font-bold">Periode:</span>
+                  {{ formatDate(date[0]) }} - {{ formatDate(date[1]) }}
+                </p>
+                <p>
+                  <span class="font-bold">Dicetak pada:</span>
+                  {{ new Date().toLocaleString("id-ID") }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 print:m-0 print:overflow-visible">
             <div
               class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
             >
@@ -1578,8 +1614,66 @@ export default {
         });
       }
     },
+    printSavings() {
+      window.print();
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+@media print {
+  /* Hide non-essential UI elements including global ones */
+  nav,
+  aside,
+  header,
+  button,
+  form,
+  hr,
+  .hide-on-print {
+    display: none !important;
+  }
+
+  .print-no-border {
+    border: none !important;
+  }
+
+  /* Reset layout for print content container */
+  .col-span-2 {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure table takes full width and is visible with borders */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    display: table !important;
+    border: 1px solid #000 !important;
+  }
+
+  th,
+  td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  /* Adjust margins for paper */
+  @page {
+    margin: 1cm;
+  }
+
+  /* Ensure text colors are printed */
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+</style>
+
