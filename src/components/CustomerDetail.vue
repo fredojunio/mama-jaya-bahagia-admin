@@ -1647,18 +1647,7 @@ export default {
   }
 
   /* Ensure table takes full width and is visible with borders */
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    display: table !important;
-    border: 1px solid #000 !important;
-  }
-
-  th,
-  td {
-    border: 1px solid #000 !important;
-    padding: 8px !important;
-  }
+  
 
   thead {
     display: table-header-group !important;
