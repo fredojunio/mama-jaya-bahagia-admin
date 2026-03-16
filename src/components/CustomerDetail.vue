@@ -1615,7 +1615,14 @@ export default {
       }
     },
     printSavings() {
-      window.print();
+      const queryParams = new URLSearchParams({
+        name: this.selectedData.name || "",
+        nickname: this.selectedData.nickname || "",
+        phone: this.selectedData.phone || "",
+        start: this.date[0].toString(),
+        end: this.date[1].toString()
+      });
+      window.open(`/admin/customer/${this.selectedData.id}/print-savings?${queryParams.toString()}`, '_blank');
     },
   },
 };
