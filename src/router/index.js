@@ -36,6 +36,9 @@ import OwnerPemasukan from "/src/views/admin/owner/pemasukan.vue";
 import OwnerJualBarang from "/src/views/admin/owner/jual_barang.vue";
 import OwnerLabaRugi from "/src/views/admin/owner/laba_rugi.vue";
 
+//Penjualan
+import BukuPenjualan from "/src/views/admin/penjualan/buku_penjualan.vue";
+
 //Routes
 const routes = [
   {
@@ -208,6 +211,14 @@ const routes = [
     component: OwnerPemasukan,
     meta: {
       title: "Owner - Pemasukan",
+    },
+  },
+  {
+    path: "/admin/penjualan/buku_penjualan",
+    name: "BukuPenjualan",
+    component: BukuPenjualan,
+    meta: {
+      title: "Buku Penjualan",
     },
   },
 ];

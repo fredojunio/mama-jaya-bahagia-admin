@@ -296,6 +296,11 @@ var navigation = [
     ],
   },
   {
+    name: "Penjualan",
+    icon: "mdi:cart",
+    children: [{ name: "Buku Penjualan", href: "/admin/penjualan/buku_penjualan" }],
+  },
+  {
     name: "Kendaraan",
     icon: "mdi:car",
     children: [{ name: "Daftar Kendaraan", href: "/admin/kendaraan" }],
