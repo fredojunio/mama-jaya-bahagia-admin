@@ -197,19 +197,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
-                    v-for="transaction in transactions.filter(
-                      (transaction) =>
-                        (searchTransactionQuery
-                          ? transaction.customer?.nickname
-                              .toLowerCase()
-                              .includes(searchTransactionQuery.toLowerCase())
-                          : true) ||
-                        (searchTransactionQuery
-                          ? transaction.type
-                              .toLowerCase()
-                              .includes(searchTransactionQuery.toLowerCase())
-                          : true)
-                    )"
+                    v-for="transaction in transactions"
                     :key="transaction.id"
                   >
                     <td
@@ -218,7 +206,7 @@
                       <div
                         v-if="
                           transaction.revision_requested != 1 &&
-                          isToday(transaction.created_at) &&
+                          isWithin3Days(transaction.created_at) &&
                           transaction.type != 'Cas'
                         "
                         @click="openRevisionForm(transaction.id)"
@@ -272,6 +260,8 @@
                           {{
                             transaction.finance_approved == 0
                               ? "Kurang Bayar"
+                              : transaction.finance_approved == 2
+                              ? "Retur"
                               : "Lunas"
                           }}
                         </div>
@@ -282,7 +272,11 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          {{ formatDate(transaction.created_at) }}
+                          {{
+                            transaction.finance_approved == 2
+                              ? formatDate(transaction.updated_at)
+                              : formatDate(transaction.created_at)
+                          }}
                         </div>
                       </div>
                     </td>
@@ -347,6 +341,25 @@
                             <span class="ml-3">Revisi</span>
                           </div>
                         </router-link>
+                        <div
+                          v-if="
+                            transaction.revision_allowed == 1 &&
+                            isToday(transaction.created_at) &&
+                            transaction.type != 'Cas'
+                          "
+                          class="flex flex-col items-start"
+                        >
+                          <div
+                            @click="openReturnTransactionForm(transaction.id)"
+                            class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
+                          >
+                            <Icon
+                              icon="uil:truck"
+                              class="w-5 h-5 text-gray-400 group-hover/edit:text-black"
+                            ></Icon>
+                            <span class="ml-3">Retur</span>
+                          </div>
+                        </div>
                         <router-link
                           v-if="transaction.type != 'Cas'"
                           :to="{
@@ -371,6 +384,9 @@
               </table>
             </div>
           </div>
+
+          <!-- Scroll trigger element -->
+          <div ref="scrollTrigger" class="scroll-trigger"></div>
         </div>
       </div>
       <div v-if="currentTab == tabs[1].name" class="mt-8 flex flex-col">
@@ -1517,6 +1533,228 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    <!-- //!SECTION -->
+    <!-- //SECTION Retur -->
+    <TransitionRoot as="template" :show="showReturnTransactionForm">
+      <Dialog
+        as="div"
+        class="fixed z-10 inset-0 overflow-y-auto"
+        @close="showReturnTransactionForm = false"
+      >
+        <div
+          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <!-- This element is to trick the browser into centering the modal contents. -->
+          <span
+            class="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <div
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+            >
+              <!-- //NOTE - ini kalo belum di retur -->
+              <form class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Retur Barang {{ selectedData.daily_id }}
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Pastikan data sudah benar.
+                      </p>
+                    </div>
+                    <hr />
+                    <div
+                      class="max-w-7xl mt-2 grid grid-cols-1 mx-auto mb-8 gap-x-4"
+                    >
+                      <div class="flex flex-col col-span-1 h-full gap-y-2">
+                        <div class="sm:col-span-6">
+                          <label
+                            for="vehicle"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            Kendaraan
+                          </label>
+                          <div class="mt-1">
+                            <select
+                              v-model="returnTransaction.vehicle_id"
+                              id="vehicle"
+                              name="vehicle"
+                              class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            >
+                              <option
+                                v-for="vehicle in vehicles"
+                                :key="vehicle.id"
+                                :value="vehicle.id"
+                              >
+                                {{ vehicle.name }} - ({{ vehicle.trip_count }}
+                                Trip)
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-3 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="allowance_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang Sangu (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.allowance"
+                                id="allowance_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="gas_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang BBM (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.gas"
+                                id="gas_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label
+                              for="etoll_fee"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Uang E-Toll (Rp.)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.toll"
+                                id="etoll_fee"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="grid grid-cols-1 gap-x-2 justify-center items-center"
+                        >
+                          <div>
+                            <label
+                              for="itemRit"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Item
+                            </label>
+                            <div class="mt-1">
+                              <select
+                                v-model="returnTransaction.rit_id"
+                                id="itemRit"
+                                name="vehicle"
+                                class="shadow-sm focus:ring-black focus:borderring-black block w-full sm:text-sm border-gray-300 rounded-md"
+                              >
+                                <option
+                                  v-for="itemRit in selectedData.rits"
+                                  :key="itemRit.id"
+                                  :value="itemRit.id"
+                                >
+                                  {{ itemRit.rit.item.code }} -
+                                  {{ formatDate(itemRit.rit.arrival_date) }} -
+                                  ({{
+                                    formatNumber(
+                                      itemRit.tonnage * itemRit.masak
+                                    )
+                                  }}
+                                  kg)
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="mt-1">
+                            <label
+                              for="tonnage"
+                              class="block text-sm font-medium text-gray-700"
+                            >
+                              Tonase (kg)
+                            </label>
+                            <div class="mt-1">
+                              <input
+                                v-model="returnTransaction.tonnage"
+                                id="tonnage"
+                                type="number"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      @click="showReturnTransactionForm = false"
+                      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      :disabled="
+                        returnTransaction.vehicle_id == null ||
+                        // returnTransaction.tonnage > selectedData.tonnage_left ||
+                        returnTransaction.tonnage <= 0
+                      "
+                      type="button"
+                      @click.once="returningTransaction(selectedData.id)"
+                      class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </Admin>
 </template>
 
@@ -1563,6 +1801,34 @@ export default {
   created() {
     this.getCompletedTransactions();
     this.checkDailyReport();
+    this.getAllVehicles();
+
+    this.$nextTick(() => {
+      this.setupIntersectionObserver();
+      this.setupScrollListener(); // Fallback method
+    });
+  },
+  watch: {
+    searchTransactionQuery(newValue) {
+      // Clear existing timeout
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+
+      // If search query is empty, reset to normal transactions
+      if (!newValue || newValue.trim() === '') {
+        this.transactions = [];
+        this.currentPage = 1;
+        this.hasMore = true;
+        this.getCompletedTransactions();
+        return;
+      }
+
+      // Set new timeout for debounced search
+      this.searchTimeout = setTimeout(() => {
+        this.searchTransactions(newValue);
+      }, 500); // 500ms delay
+    },
   },
   methods: {
     changeTab(tabName) {
@@ -1574,6 +1840,11 @@ export default {
       this.tabs.find((tab) => tab.name === tabName).current = true;
       this.currentTab = tabName;
       if (this.currentTab == "Penjualan") {
+        this.transactions = [];
+        this.currentPage = 1;
+        this.hasMore = true;
+        this.error = null;
+
         this.getCompletedTransactions();
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
@@ -1626,6 +1897,22 @@ export default {
       //   formattedDate === today.toISOString().substr(0, 10) && !this.dailyReport
       // );
     },
+    isWithin3Days(dateString) {
+      // Parse the input date
+      var inputDate = new Date(dateString);
+
+      // Get current date
+      var currentDate = new Date();
+
+      // Calculate the difference in milliseconds
+      var timeDifference = inputDate.getTime() - currentDate.getTime();
+
+      // Convert milliseconds to days (1000 ms * 60 s * 60 min * 24 hrs)
+      var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24));
+
+      // Check if the difference is 3 days or less
+      return daysDifference <= 3;
+    },
     checkDailyReport() {
       const instance = axios.create({
         baseURL: this.url,
@@ -1642,6 +1929,11 @@ export default {
     },
     //STUB - Penjualan
     getCompletedTransactions() {
+      if (this.loading || !this.hasMore) return;
+
+      this.error = null;
+      this.loading = true;
+
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
@@ -1651,14 +1943,95 @@ export default {
         .post("/admin/transaction/get_completed_transactions", {
           start_date: this.date[0].toString(),
           end_date: this.date[1].toString(),
+          page: this.currentPage,
+          per_page: this.perPage,
         })
         .then((data) => {
-          this.transactions = data.data.data.results;
+          this.transactions = [...this.transactions, ...data.data.data.results];
           this.isLoading = false;
+          this.loading = false;
+          this.hasMore = data.data.data.pagination.has_more;
+          this.currentPage = data.data.data.pagination.current_page + 1;
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    searchTransactions(query) {
+      this.error = null;
+      this.loading = true;
+      this.isLoading = true;
+
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post("/admin/transaction/get_completed_transaction_search", {
+          start_date: this.date[0].toString(),
+          end_date: this.date[1].toString(),
+          search_query: query,
+        })
+        .then((data) => {
+          this.transactions = data.data.data.results;
+          this.isLoading = false;
+          this.loading = false;
+          // Disable pagination for search results
+          this.hasMore = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+          this.loading = false;
+          this.error = "Failed to search transactions";
+        });
+    },
+    // Fallback scroll method
+    setupScrollListener() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+
+    handleScroll() {
+      // Throttle scroll events
+      if (this.scrollTimeout) return;
+
+      this.scrollTimeout = setTimeout(() => {
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
+
+        // Load more when user is 200px from bottom
+        if (scrollTop + clientHeight >= scrollHeight - 200) {
+          if (!this.loading && this.hasMore) {
+            this.getCompletedTransactions();
+          }
+        }
+
+        this.scrollTimeout = null;
+      }, 100);
+    },
+    setupIntersectionObserver() {
+      const options = {
+        root: null,
+        rootMargin: "200px", // Increased margin
+        threshold: 0.1,
+      };
+
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.loading && this.hasMore) {
+            this.getCompletedTransactions();
+          }
+        });
+      }, options);
+
+      // Use nextTick to ensure the element is rendered
+      this.$nextTick(() => {
+        if (this.$refs.scrollTrigger) {
+          this.observer.observe(this.$refs.scrollTrigger);
+        } else {
+          // console.error("Scroll trigger element not found"); // Debug log
+        }
+      });
     },
     openRevisionForm(id) {
       this.showRevisionPopup = true;
@@ -1820,6 +2193,43 @@ export default {
           console.log(err);
         });
     },
+    openReturnTransactionForm(id) {
+      this.showReturnTransactionForm = true;
+      this.selectedData = this.transactions.find((obj) => {
+        return obj.id === id;
+      });
+    },
+    returningTransaction() {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(
+          `admin/transaction/${this.selectedData.id}/return`,
+          this.returnTransaction
+        )
+        .then((data) => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllVehicles: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/vehicle")
+        .then((data) => {
+          this.vehicles = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   data() {
     return {
@@ -1839,7 +2249,9 @@ export default {
       showRevisionPopup: false,
       showSaleApprovalForm: false,
       showTransactionDetail: false,
+      showReturnTransactionForm: false,
       transactions: [],
+      vehicles: [],
       payment: {
         amount: null,
       },
@@ -1874,6 +2286,21 @@ export default {
         sepuluhribu: null,
         duapuluhribu: null,
       },
+      returnTransaction: {
+        vehicle_id: null,
+        allowance: null,
+        gas: null,
+        toll: null,
+        tonnage: null,
+        rit_id: null,
+      },
+
+      currentPage: 1,
+      loading: false,
+      hasMore: true,
+      perPage: 20,
+      error: null,
+      searchTimeout: null,
     };
   },
 };

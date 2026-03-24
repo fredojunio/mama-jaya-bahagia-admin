@@ -246,8 +246,8 @@
                         todayReport.rits.some(
                           (rit) =>
                             rit.real_tonnage == null ||
-                            rit.real_tonnage > rit.tonnage_left + 200 ||
-                            rit.real_tonnage < rit.tonnage_left - 20
+                            rit.real_tonnage > rit.tonnage_left + 15 ||
+                            rit.real_tonnage < rit.tonnage_left - 15
                         ) ||
                         real_income < 0 ||
                         real_income == null

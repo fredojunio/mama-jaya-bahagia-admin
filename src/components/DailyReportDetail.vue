@@ -97,6 +97,12 @@
             Rp. {{ formatNumber(selectedData.salary_expense) }}
           </dd>
         </div>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Penjualan Kedelai</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            Rp. {{ formatNumber(selectedData.kedelai_income) }}
+          </dd>
+        </div>
         <div class="sm:col-span-1">
           <dt class="text-sm font-medium text-gray-500">Pemasukan TB</dt>
           <dd class="mt-1 text-sm text-gray-900">

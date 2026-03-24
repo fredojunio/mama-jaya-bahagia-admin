@@ -46,13 +46,24 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 1 }}</td>
-        <td>TABUNGAN</td>
+        <td>THR</td>
         <td>1</td>
         <td>
-          {{ formatNumber(transaction.tw + transaction.tb + transaction.thr) }}
+          {{ formatNumber(transaction.thr) }}
         </td>
         <td>
-          {{ formatNumber(transaction.tw + transaction.tb + transaction.thr) }}
+          {{ formatNumber(transaction.thr) }}
+        </td>
+      </tr>
+      <tr>
+        <td>{{ transaction.rits.length + 1 }}</td>
+        <td>TB</td>
+        <td>1</td>
+        <td>
+          {{ formatNumber(transaction.tb) }}
+        </td>
+        <td>
+          {{ formatNumber(transaction.tb) }}
         </td>
       </tr>
       <tr>
@@ -71,7 +82,7 @@
       </tr>
       <tr>
         <td>{{ transaction.rits.length + 4 }}</td>
-        <td>ONGKOS KIRIM</td>
+        <td>ANGKUTAN</td>
         <td>1</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
         <td>{{ formatNumber(transaction.ongkir) }}</td>
@@ -97,7 +108,7 @@
         <td>TOTAL</td>
         <td>{{ formatNumber(transaction.total_price) }}</td>
       </tr>
-      <tr>
+			<tr v-if="transaction.discount > 0">
         <td></td>
         <td></td>
         <td></td>
@@ -105,7 +116,7 @@
         <td>{{ formatNumber(transaction.discount) }}</td>
       </tr>
       <tr>
-        <td></td>
+        <td class="font-bold">Nomor Resmi Gudang/Toko Hubungi</td>
         <td></td>
         <td></td>
         <td>BAYAR</td>
@@ -114,7 +125,7 @@
         </td>
       </tr>
       <tr>
-        <td></td>
+        <td class="font-bold">+62 896-8883-7888</td>
         <td></td>
         <td></td>
         <td>KURANG</td>

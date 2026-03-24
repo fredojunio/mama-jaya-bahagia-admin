@@ -15,6 +15,7 @@ import RitSuratJalan from "/src/views/admin/rit/surat_jalan.vue";
 
 //Customer
 import CustomerIndex from "/src/views/admin/customer/index.vue";
+import CustomerPrintSavings from "/src/views/admin/customer/PrintSavings.vue";
 
 //Finance
 import FinanceIndex from "/src/views/admin/finance/index.vue";
@@ -115,6 +116,15 @@ const routes = [
     component: CustomerIndex,
     meta: {
       title: "Customer - Index",
+    },
+  },
+  {
+    path: "/admin/customer/:id/print-savings",
+    name: "CustomerPrintSavings",
+    component: CustomerPrintSavings,
+    props: true,
+    meta: {
+      title: "Print Savings",
     },
   },
   {

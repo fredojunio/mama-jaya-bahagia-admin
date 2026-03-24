@@ -622,13 +622,16 @@ export default {
       return totalRevenue;
     },
     totalProfit(rit) {
-      var totalProfit = 0;
-      rit.transactions.forEach((element) => {
-        totalProfit += parseInt(element.total_price);
-        totalProfit -= parseInt(element.tonnage) * parseInt(rit.buy_price);
-        // totalProfit -= parseInt(element.tonnage) * 200;
-      });
-      return totalProfit;
+      // var totalProfit = 0;
+      // rit.transactions.forEach((element) => {
+      //   totalProfit += parseInt(element.total_price);
+      //   totalProfit -= parseInt(element.tonnage) * parseInt(rit.buy_price);
+      // totalProfit -= parseInt(element.tonnage) * 200;
+      // });
+
+      return this.totalRevenue(rit) - rit.arrived_tonnage * rit.buy_price;
+
+      // return totalProfit;
     },
     openRitDetail(rit) {
       this.selectedRit = rit;
