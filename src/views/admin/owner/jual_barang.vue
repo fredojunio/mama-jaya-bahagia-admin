@@ -897,7 +897,6 @@
                             </label>
                             <div class="mt-1">
                               <input
-                                disabled
                                 id="tonnage"
                                 v-model="rit.tonnage"
                                 @keyup="updateRit(index, rit)"
@@ -918,7 +917,6 @@
                                 id="price"
                                 v-model="rit.price"
                                 type="number"
-                                disabled
                                 class="disabled:bg-gray-100 shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md"
                               />
                             </div>
