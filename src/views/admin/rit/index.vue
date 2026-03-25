@@ -1272,6 +1272,22 @@
                           />
                         </div>
                       </div>
+                      <div class="sm:col-span-6">
+                        <label
+                          for="bbm_fee"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          BBM Yang Digunakan (km)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            v-model="arrivedRit.bbm_used"
+                            id="bbm_fee"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1291,6 +1307,7 @@
                         arrivedRit.tonnage > selectedData.main_tonnage + 20 ||
                         arrivedRit.sack < 0 ||
                         arrivedRit.toll_used < 0 ||
+                        arrivedRit.bbm_used < 0 ||
                         selectedData.main_tonnage - 20 > arrivedRit.tonnage
                       "
                       type="button"
