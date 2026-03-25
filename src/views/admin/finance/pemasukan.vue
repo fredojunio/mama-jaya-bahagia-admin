@@ -185,6 +185,12 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Transfer/Tunai
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Tanggal
                     </th>
                     <th
@@ -264,6 +270,30 @@
                               ? "Retur"
                               : "Lunas"
                           }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          <template v-if="getPaymentSummary(transaction).type === 'mixed'">
+                            <div class="flex flex-col text-[11px] leading-tight min-w-[120px]">
+                              <div class="flex justify-between gap-2">
+                                <span>Transfer</span>
+                                <span>{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span>
+                              </div>
+                              <div class="border-t border-gray-300 my-1"></div>
+                              <div class="flex justify-between gap-2 font-bold">
+                                <span>Tunai</span>
+                                <span>{{ formatNumber(getPaymentSummary(transaction).cash) }}</span>
+                              </div>
+                            </div>
+                          </template>
+                          <template v-else>
+                            {{ getPaymentSummary(transaction).label }}
+                          </template>
                         </div>
                       </div>
                     </td>
@@ -2215,6 +2245,37 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    getPaymentSummary(transaction) {
+      if (!transaction.payments || transaction.payments.length === 0) {
+        return { type: 'none', label: '-' };
+      }
+
+      let cashSum = 0;
+      let transferSum = 0;
+
+      transaction.payments.forEach(payment => {
+        // Checking for both 'Cash' and 'Cash ' (with space) or other variants
+        const type = payment.type?.toLowerCase().trim();
+        if (type === 'transfer') {
+          transferSum += payment.amount;
+        } else {
+          // Assume anything else is Cash/Tunai
+          cashSum += payment.amount;
+        }
+      });
+
+      if (cashSum > 0 && transferSum > 0) {
+        return {
+          type: 'mixed',
+          cash: cashSum,
+          transfer: transferSum
+        };
+      } else if (transferSum > 0) {
+        return { type: 'single', label: 'Transfer' };
+      } else {
+        return { type: 'single', label: 'Tunai' };
+      }
     },
     getAllVehicles: function () {
       const instance = axios.create({
