@@ -88,11 +88,31 @@
         <td>{{ formatNumber(transaction.ongkir) }}</td>
       </tr>
       <tr>
-        <td></td>
-        <td></td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
+        <td>{{
+              transaction.finance_approved == 0
+                ? transaction.rits.length + 5
+                : ""
+            }}</td>
+        <td>{{
+              transaction.finance_approved == 0
+                ? "NOMINAL BELUM BAYAR"
+                : ""
+            }}</td>
+        <td>{{
+              transaction.finance_approved == 0
+                ? "1"
+                : "-"
+            }}</td>
+        <td>{{
+              transaction.finance_approved == 0
+                ?formatNumber(transaction.total_price - getTotalPayments())
+                : "-"
+            }}</td>
+        <td>{{
+              transaction.finance_approved == 0
+                ?formatNumber(transaction.total_price - getTotalPayments())
+                : "-"
+            }}</td>
       </tr>
       <tr>
         <td></td>
