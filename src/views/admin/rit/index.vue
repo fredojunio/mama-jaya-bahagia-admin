@@ -3027,6 +3027,7 @@ export default {
         tonnage: null,
         sack: null,
         toll_used: null,
+        bbm_used: null
       },
       pricedRit: {
         tonnage: null,
