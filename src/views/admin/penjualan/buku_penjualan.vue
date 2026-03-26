@@ -59,13 +59,13 @@
       </div>
     </div>
 
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div v-if="transactions.length === 0 && !isLoading" class="text-center py-20 text-gray-500 bg-white rounded-lg shadow">
         Tidak ada transaksi pada tanggal {{ formattedDateDisplay }}.
       </div>
       <div v-else>
         <!-- Ledger Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-4 items-start min-h-[600px]">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4 items-start min-h-[600px]">
           <div v-for="(column, colIndex) in paginatedTransactions" :key="colIndex" class="flex flex-col gap-4">
             <div 
               v-for="(transaction, transIndex) in column" 
@@ -79,7 +79,7 @@
                   </span>
                   <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
                 </div>
-                <span class="text-gray-500">{{ formatTime(transaction.created_at) }}</span>
+                <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
               </div>
 
               <div class="space-y-1">
@@ -87,7 +87,7 @@
                 <div v-for="rit in transaction.rits" :key="rit.id" class="flex justify-between gap-2">
                   <div class="flex-1">
                     <span class="font-semibold">{{ formatNumber(rit.tonnage) }} x {{ formatNumber(rit.masak) }}</span>
-                    <span class="text-[11px] text-gray-500 ml-1 italic">{{ rit.rit.item.code }}</span>
+                    <span class="text-[11px] ml-1 italic font-bold text-black">{{ rit.rit.item.code }}</span>
                   </div>
                   <div class="font-bold">
                     {{ formatNumber(rit.total_price) }}
@@ -174,7 +174,7 @@ export default {
       searchTransactionQuery: "",
       searchTimeout: null,
       page_ledger: 1,
-      itemsPerPage: 40,
+      itemsPerPage: 50,
       rowsPerColumn: 10,
     };
   },
@@ -217,7 +217,7 @@ export default {
       }));
 
       const cols = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 5; i++) {
         cols.push(enriched.slice(i * this.rowsPerColumn, (i + 1) * this.rowsPerColumn));
       }
       return cols;
@@ -309,8 +309,8 @@ export default {
   }
   .grid {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 1rem !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 0.5rem !important;
   }
 }
 </style>
