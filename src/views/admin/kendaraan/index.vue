@@ -210,6 +210,23 @@
                             </select>
                           </div>
                         </div>
+                        <div class="sm:col-span-6" v-if="role_id == 1">
+                          <label
+                            for="bbm"
+                            class="block text-sm font-medium text-gray-700"
+                          >
+                            BBM (km)
+                          </label>
+                          <div class="mt-1">
+                            <input
+                              type="text"
+                              v-model="tempData.bbm"
+                              id="bbm"
+                              name="bbm"
+                              class="shadow-sm focus:ring-black border focus:border-black block w-full sm:text-sm border-gray-300 rounded-md"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -271,6 +288,7 @@ export default {
         id: null,
         name: null,
         type: null,
+        bbm: null,
         trip_count: null,
         trips: [],
       },
@@ -296,6 +314,7 @@ export default {
         id: null,
         name: null,
         type: null,
+        bbm:null,
       };
     },
     getAllData: function () {
@@ -325,6 +344,7 @@ export default {
         .post("admin/vehicle", {
           name: this.tempData.name,
           type: this.tempData.type,
+          bbm: this.tempData.bbm
         })
         .then((data) => {
           this.$router.go(0);
@@ -343,6 +363,7 @@ export default {
           _method: "PATCH",
           name: this.tempData.name,
           type: this.tempData.type,
+          bbm: this.tempData.bbm
         })
         .then((data) => {
           this.$router.go(0);
