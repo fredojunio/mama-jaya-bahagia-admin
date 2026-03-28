@@ -59,7 +59,31 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Tonase Awal
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Harga Beli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Nominal Beli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Akhir Bulan
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Nominal Akhir Bulan
                     </th>
                     <th
                       scope="col"
@@ -71,7 +95,13 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tonase Awal
+                      Tunai
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Transfer
                     </th>
                     <th
                       scope="col"
@@ -108,9 +138,51 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
+                      <div class="flex flex-col gap-y-2">
+                        <div class="font-medium text-gray-900">
+                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp. {{ formatNumber(rit.buy_price) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(rit.buy_price * rit.arrived_tonnage) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ formatNumber(calculateTonaseAkhirBulan(rit)) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(Math.round(calculateNominalAkhirBulan(rit))) }}
                         </div>
                       </div>
                     </td>
@@ -126,15 +198,18 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex flex-col gap-y-2">
+                      <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Customer: {{ formatNumber(rit.customer_tonnage) }} kg
+                          Rp. {{ formatNumber(totalTunai(rit)) }}
                         </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Cabang: {{ formatNumber(rit.branch_tonnage) }} kg
-                        </div>
-                        <div class="font-medium text-gray-900">
-                          Pusat: {{ formatNumber(rit.arrived_tonnage) }} kg
+                          Rp. {{ formatNumber(totalTransfer(rit)) }}
                         </div>
                       </div>
                     </td>
@@ -632,6 +707,77 @@ export default {
       return this.totalRevenue(rit) - rit.arrived_tonnage * rit.buy_price;
 
       // return totalProfit;
+    },
+    totalTunai(rit) {
+      var total = 0;
+      rit.transactions?.forEach((transaction) => {
+        transaction.transaction.payments?.forEach((payment) => {
+          if (payment.type?.toLowerCase().trim() === "cash") {
+            total += parseInt(payment.amount);
+          }
+        });
+      });
+      return total;
+    },
+    totalTransfer(rit) {
+      var total = 0;
+      rit.transactions?.forEach((transaction) => {
+        transaction.transaction.payments?.forEach((payment) => {
+          if (payment.type?.toLowerCase().trim() === "transfer") {
+            total += parseInt(payment.amount);
+          }
+        });
+      });
+      return total;
+    },
+    calculateNominalAkhirBulan(rit) {
+      if (!this.date || !this.date[0] || !rit.reports) return 0;
+      
+      const startDate = new Date(this.date[0]);
+      
+      // Find the latest report that is strictly before the selected start date
+      const prevReports = rit.reports.filter(report => {
+        return new Date(report.created_at) < startDate;
+      });
+      
+      if (prevReports.length > 0) {
+        // Sort by date descending and take the most recent one
+        prevReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        return rit.buy_price * prevReports[0].tonnage_left;
+      }
+      
+      // Fallback: If no report exists before the selected date, 
+      // check if the rit arrived during the selected period or before searching.
+      // If it arrived and there's no prior monthly snapshot, we use the arrival tonnage.
+      const arrivalDate = new Date(rit.delivery_date);
+      if (arrivalDate <= new Date(this.date[1])) {
+         return rit.buy_price * rit.arrived_tonnage;
+      }
+      
+      return 0;
+    },
+    calculateTonaseAkhirBulan(rit) {
+      if (!this.date || !this.date[0] || !rit.reports) return 0;
+      
+      const startDate = new Date(this.date[0]);
+      
+      const prevReports = rit.reports.filter(report => {
+        return new Date(report.created_at) < startDate;
+      });
+      
+      let tonnage = 0;
+      if (prevReports.length > 0) {
+        prevReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        tonnage = prevReports[0].tonnage_left;
+      } else {
+        const arrivalDate = new Date(rit.delivery_date);
+        if (arrivalDate <= new Date(this.date[1])) {
+           tonnage = rit.arrived_tonnage;
+        }
+      }
+      
+      // Round to 2 decimals to avoid floating point issues
+      return Math.round((parseFloat(tonnage) + Number.EPSILON) * 100) / 100;
     },
     openRitDetail(rit) {
       this.selectedRit = rit;

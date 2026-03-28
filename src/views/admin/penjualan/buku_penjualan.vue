@@ -240,7 +240,7 @@ export default {
 
       while (hasMore) {
         try {
-          const response = await instance.post("/admin/transaction/get_completed_transactions", {
+          const response = await instance.post("/admin/transaction/get_completed_transactions_buku", {
             start_date: this.date[0].toString(),
             end_date: this.date[1].toString(),
             page: currentPage,
@@ -275,7 +275,7 @@ export default {
       });
 
       instance
-        .post("/admin/transaction/get_completed_transaction_search", {
+        .post("/admin/transaction/get_completed_transaction_search_buku", {
           start_date: this.date[0].toString(),
           end_date: this.date[1].toString(),
           search_query: query,
