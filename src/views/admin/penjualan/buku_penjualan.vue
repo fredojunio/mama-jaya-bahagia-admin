@@ -12,7 +12,7 @@
     </div>
   </div>
   <Admin>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 no-print">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 class="text-2xl font-semibold text-gray-900">Buku Penjualan</h1>
         <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pb-20 print:pb-0 print:px-0">
       <div v-if="transactions.length === 0 && !isLoading" class="text-center py-20 text-gray-500 bg-white rounded-lg shadow">
         Tidak ada transaksi pada tanggal {{ formattedDateDisplay }}.
       </div>
@@ -79,7 +79,7 @@
                   </span>
                   <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
                 </div>
-                <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
+                <span class="font-bold text-black">{{ formatTime(transaction.created_at) }}</span>
               </div>
 
               <div class="space-y-1">
@@ -118,6 +118,27 @@
                 <div class="flex justify-between items-center border-t-2 border-black mt-2 pt-1 font-black text-sm">
                   <span>TOTAL</span>
                   <span class="underline decoration-double">{{ formatNumber(transaction.total_price) }}</span>
+                </div>
+
+                <!-- Payment Info -->
+                <div class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold">
+                  <div class="flex flex-col">
+                    <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar</span>
+                    <span v-else-if="transaction.finance_approved == 2" class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Retur</span>
+                    <span v-else class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
+                  </div>
+
+                  <div class="text-right ml-auto">
+                    <template v-if="getPaymentSummary(transaction).type === 'mixed'">
+                      <div class="flex flex-col leading-tight">
+                        <span class="text-gray-500">Trf: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span></span>
+                        <span class="text-gray-500">Tni: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).cash) }}</span></span>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <span class="text-gray-500"><span class="text-black uppercase">{{ getPaymentSummary(transaction).label }}</span></span>
+                    </template>
+                  </div>
                 </div>
               </div>
             </div>
@@ -174,8 +195,8 @@ export default {
       searchTransactionQuery: "",
       searchTimeout: null,
       page_ledger: 1,
-      itemsPerPage: 50,
-      rowsPerColumn: 10,
+      itemsPerPage: 30,
+      rowsPerColumn: 6,
     };
   },
   watch: {
@@ -294,7 +315,38 @@ export default {
     },
     printPage() {
       window.print();
-    }
+    },
+    getPaymentSummary(transaction) {
+      if (!transaction.payments || transaction.payments.length === 0) {
+        return { type: 'none', label: '-' };
+      }
+
+      let cashSum = 0;
+      let transferSum = 0;
+
+      transaction.payments.forEach(payment => {
+        // Checking for both 'Cash' and 'Cash ' (with space) or other variants
+        const type = payment.type?.toLowerCase().trim();
+        if (type === 'transfer') {
+          transferSum += payment.amount;
+        } else {
+          // Assume anything else is Cash/Tunai
+          cashSum += payment.amount;
+        }
+      });
+
+      if (cashSum > 0 && transferSum > 0) {
+        return {
+          type: 'mixed',
+          cash: cashSum,
+          transfer: transferSum
+        };
+      } else if (transferSum > 0) {
+        return { type: 'single', label: 'Transfer' };
+      } else {
+        return { type: 'single', label: 'Tunai' };
+      }
+    },
   },
 };
 </script>
@@ -302,15 +354,49 @@ export default {
 <style scoped>
 @media print {
   .no-print {
-    display: none;
+    display: none !important;
   }
   body {
     background: white;
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0.5cm;
+  }
+  .max-w-\[1800px\] {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   .grid {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
-    gap: 0.5rem !important;
+    gap: 0.2rem !important;
+    align-items: start !important;
+  }
+  .bg-white {
+    background-color: white !important;
+    border-width: 1px !important;
+    border-color: #000 !important;
+    padding: 0.4rem !important;
+  }
+  .text-\[13px\] {
+    font-size: 11px !important;
+  }
+  .text-sm {
+    font-size: 11px !important;
+  }
+  .text-\[11px\] {
+    font-size: 9px !important;
+  }
+  .mt-2 {
+    margin-top: 0.25rem !important;
+  }
+  .mb-1 {
+    margin-bottom: 0.1rem !important;
   }
 }
 </style>
