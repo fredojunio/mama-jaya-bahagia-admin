@@ -79,7 +79,7 @@
                   </span>
                   <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
                 </div>
-                <span class="font-bold text-black">{{ formatTime(transaction.created_at) }}</span>
+                <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
               </div>
 
               <div class="space-y-1">
