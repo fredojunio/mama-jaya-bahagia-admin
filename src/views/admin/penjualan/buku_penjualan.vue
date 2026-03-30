@@ -104,8 +104,12 @@
                   <span>{{ formatNumber(transaction.thr) }}</span>
                 </div>
                 <div v-if="transaction.sack > 0" class="flex justify-between text-gray-600">
-                  <span>SAK ({{ transaction.sack }} x {{ formatNumber(transaction.sack_price) }})</span>
-                  <span>{{ formatNumber(transaction.sack * transaction.sack_price) }}</span>
+                  <span>SAK</span>
+                  <span>{{ formatNumber(transaction.sack_price) }}</span>
+                </div>
+                <div v-if="transaction.other > 0" class="flex justify-between text-gray-600">
+                  <span>LAIN-LAIN</span>
+                  <span>{{ formatNumber(transaction.other) }}</span>
                 </div>
                 
                 <!-- Discount -->
@@ -123,9 +127,14 @@
                 <!-- Payment Info -->
                 <div class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold">
                   <div class="flex flex-col">
-                    <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar</span>
+                    <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar ({{ formatNumber(transaction.total_price - getTotalPayments(transaction)) }})</span>
                     <span v-else-if="transaction.finance_approved == 2" class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Retur</span>
-                    <span v-else class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
+                    <template v-else>
+                      <div v-if="getPelunasanInfo(transaction)" class="text-[10px] text-green-600 mb-1 italic leading-tight">
+                        + pelunasan {{ getPelunasanInfo(transaction).date }} {{ formatNumber(getPelunasanInfo(transaction).amount) }}
+                      </div>
+                      <span class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
+                    </template>
                   </div>
 
                   <div class="text-right ml-auto">
@@ -346,6 +355,33 @@ export default {
       } else {
         return { type: 'single', label: 'Tunai' };
       }
+    },
+    getTotalPayments(transaction) {
+      return (transaction.payments || []).reduce((total, pay) => {
+        return total + pay.amount;
+      }, 0);
+    },
+    getPelunasanInfo(transaction) {
+      if (transaction.finance_approved !== 1 || !transaction.payments || transaction.payments.length === 0) {
+        return null;
+      }
+      
+      const lastPayment = transaction.payments[transaction.payments.length - 1];
+      const transDate = new Date(transaction.created_at);
+      const payDate = new Date(lastPayment.created_at);
+      
+      // Compare dates (day, month, year)
+      if (
+        transDate.getDate() !== payDate.getDate() ||
+        transDate.getMonth() !== payDate.getMonth() ||
+        transDate.getFullYear() !== payDate.getFullYear()
+      ) {
+        return {
+          date: `${payDate.getDate()}/${payDate.getMonth() + 1}`,
+          amount: lastPayment.amount
+        };
+      }
+      return null;
     },
   },
 };
