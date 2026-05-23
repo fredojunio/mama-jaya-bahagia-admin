@@ -76,7 +76,7 @@
                     v-slot="{ open }"
                   >
                     <DisclosureButton
-                      v-if="role_id == 1 || item.name != 'Owner'"
+                      v-if="role_id == 1 || role_id == 4 || item.name != 'Owner'"
                       :class="[
                         item.current
                           ? 'bg-gray-100 text-gray-900'
@@ -361,7 +361,7 @@ export default {
       instance
         .get("/admin/get_notification")
         .then((data) => {
-          if (this.role_id == 1) {
+          if (this.role_id == 1 || this.role_id == 4) {
             this.notifications = data.data.data.results;
           } else {
             this.notifications = data.data.data.results.filter((item) => {

@@ -36,7 +36,7 @@
         <label for="tabs" class="sr-only">Select a tab</label>
         <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
         <select
-          v-if="role_id == 1"
+          v-if="role_id == 1 || role_id == 4"
           @change="changeTabMobile($event)"
           id="tabs"
           name="tabs"
@@ -65,7 +65,7 @@
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
           <nav
-            v-if="role_id == 1"
+            v-if="role_id == 1 || role_id == 4"
             class="-mb-px flex space-x-8"
             aria-label="Tabs"
           >
@@ -291,7 +291,7 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1"
+                        v-if="role_id == 1 || role_id == 4"
                         class="flex flex-col items-start"
                       >
                         <div
@@ -824,7 +824,7 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1"
+                        v-if="role_id == 1 || role_id == 4"
                         class="flex flex-col items-start"
                       >
                         <div

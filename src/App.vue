@@ -19,7 +19,7 @@ export default {
     setInterval(() => {
       this.getCurrentTime();
       this.checkSixPm();
-      if (localStorage["role_id"] != 1 && this.isSixPm) {
+      if (localStorage["role_id"] != 1 && localStorage["role_id"] != 4 && this.isSixPm) {
         this.$router.push("/");
       }
     }, 1000);
