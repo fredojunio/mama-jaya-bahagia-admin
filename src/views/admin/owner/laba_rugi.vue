@@ -749,10 +749,10 @@ export default {
       // Fallback: If no report exists before the selected date, 
       // check if the rit arrived during the selected period or before searching.
       // If it arrived and there's no prior monthly snapshot, we use the arrival tonnage.
-      const arrivalDate = new Date(rit.delivery_date);
-      if (arrivalDate <= new Date(this.date[1])) {
-         return rit.buy_price * rit.arrived_tonnage;
-      }
+      // const arrivalDate = new Date(rit.delivery_date);
+      // if (arrivalDate <= new Date(this.date[1])) {
+      //    return rit.buy_price * rit.arrived_tonnage;
+      // }
       
       return 0;
     },
@@ -769,15 +769,14 @@ export default {
       if (prevReports.length > 0) {
         prevReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         tonnage = prevReports[0].tonnage_left;
+        return Math.round((parseFloat(tonnage) + Number.EPSILON) * 100) / 100;
       } else {
-        const arrivalDate = new Date(rit.delivery_date);
-        if (arrivalDate <= new Date(this.date[1])) {
-           tonnage = rit.arrived_tonnage;
-        }
+        // const arrivalDate = new Date(rit.delivery_date);
+        // if (arrivalDate <= new Date(this.date[1])) {
+        //    tonnage = rit.arrived_tonnage;
+        // }
+        return 0;
       }
-      
-      // Round to 2 decimals to avoid floating point issues
-      return Math.round((parseFloat(tonnage) + Number.EPSILON) * 100) / 100;
     },
     openRitDetail(rit) {
       this.selectedRit = rit;

@@ -1,9 +1,9 @@
 <template>
   <div class="font-poppins">
-    <TransitionRoot as="template" :show="sidebarOpen">
+    <TransitionRoot as="template" :show="sidebarOpen" class="no-print">
       <Dialog
         as="div"
-        class="fixed inset-0 flex z-40"
+        class="fixed inset-0 flex z-40 no-print"
         @close="sidebarOpen = false"
       >
         <TransitionChild
@@ -147,7 +147,7 @@
       </Dialog>
     </TransitionRoot>
     <div class="flex flex-col">
-      <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
+      <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow no-print">
         <button
           type="button"
           class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -389,5 +389,11 @@ export default {
 <style scoped>
 .router-link-active {
   @apply bg-gray-900 text-white;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
 </style>
