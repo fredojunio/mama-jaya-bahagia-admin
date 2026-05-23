@@ -180,7 +180,7 @@
                     >
                       <div class="flex flex-col items-start gap-y-1">
                         <div
-                          v-if="transaction.finance_approved == 0"
+                          v-if="transaction.finance_approved == 0 && role_id != 4"
                           @click="showApprovalForm(transaction.id, false)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >

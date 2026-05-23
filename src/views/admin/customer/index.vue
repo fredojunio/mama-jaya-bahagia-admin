@@ -49,6 +49,7 @@
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
             <button
+              v-if="role_id != 4"
               @click="
                 showAddCustomerForm = true;
                 resetData();

@@ -12,12 +12,13 @@
     </div>
   </div>
   <Admin>
-    <div
-      class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
-    >
-      <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Jual Barang</h1>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div v-if="role_id != 4">
+      <div
+        class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
+      >
+        <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Jual Barang</h1>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="sm:hidden">
         <label for="tabs" class="sr-only">Select a tab</label>
         <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
@@ -1750,7 +1751,10 @@
         </div>
       </Dialog>
     </TransitionRoot>
-    <!-- //!SECTION -->
+    </div>
+    <div v-else class="max-w-7xl mx-auto px-4 py-8 text-center text-red-500 font-bold">
+      Akses Ditolak (Viewer tidak diperbolehkan menjual barang)
+    </div>
   </Admin>
 </template>
 

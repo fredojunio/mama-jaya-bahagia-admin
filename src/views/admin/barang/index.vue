@@ -6,6 +6,7 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Barang</h1>
       <div class="relative inline-block text-left"> 
         <button
+          v-if="role_id != 4"
           @click="showForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
         >
@@ -71,6 +72,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
+                          v-if="role_id != 4"
                           @click="showEdit(item.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >

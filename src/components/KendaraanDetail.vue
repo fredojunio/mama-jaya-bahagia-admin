@@ -16,6 +16,7 @@
               </h1>
               <div class="flex flex-col gap-2">
                 <button
+                  v-if="role_id != 4"
                   @click="toggleForm"
                   class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
                 >
@@ -36,6 +37,7 @@
             }}</span>
           </h1>
           <button
+            v-if="role_id != 4"
             @click="toggleForm"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
           >

@@ -38,14 +38,14 @@
           />
         </div>
         <button
-          v-if="currentTab == tabs[2].name"
+          v-if="currentTab == tabs[2].name && role_id != 4"
           @click="showTopUpForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
         >
           Top Up
         </button>
         <button
-          v-if="currentTab == tabs[2].name"
+          v-if="currentTab == tabs[2].name && role_id != 4"
           @click="showExchangeForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
         >
@@ -213,7 +213,8 @@
                         v-if="
                           transaction.revision_requested != 1 &&
                           isWithin3Days(transaction.created_at) &&
-                          transaction.type != 'Cas'
+                          transaction.type != 'Cas' &&
+                          role_id != 4
                         "
                         @click="openRevisionForm(transaction.id)"
                         class="flex items-center"
@@ -315,7 +316,7 @@
                     >
                       <div class="flex flex-col items-start gap-y-1">
                         <div
-                          v-if="transaction.finance_approved == 0"
+                          v-if="transaction.finance_approved == 0 && role_id != 4"
                           @click="showApprovalForm(transaction.id, false)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -353,7 +354,8 @@
                           v-if="
                             transaction.revision_allowed == 1 &&
                             isToday(transaction.created_at) &&
-                            transaction.type != 'Cas'
+                            transaction.type != 'Cas' &&
+                            role_id != 4
                           "
                           :to="{
                             path: `/admin/rit/jual_barang/${transaction.id}`,
@@ -375,7 +377,8 @@
                           v-if="
                             transaction.revision_allowed == 1 &&
                             isToday(transaction.created_at) &&
-                            transaction.type != 'Cas'
+                            transaction.type != 'Cas' &&
+                            role_id != 4
                           "
                           class="flex flex-col items-start"
                         >

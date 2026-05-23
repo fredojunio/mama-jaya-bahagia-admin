@@ -139,6 +139,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
+                          v-if="role_id != 4"
                           @click="showApprovalForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >

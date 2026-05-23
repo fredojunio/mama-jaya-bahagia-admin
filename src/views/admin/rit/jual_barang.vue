@@ -12,14 +12,15 @@
     </div>
   </div>
   <Admin>
-    <div
-      class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
-    >
-      <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Jual Barang</h1>
-    </div>
-    <div
-      class="max-w-7xl grid grid-cols-1 sm:grid-cols-5 mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
-    >
+    <div v-if="role_id != 4">
+      <div
+        class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
+      >
+        <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Jual Barang</h1>
+      </div>
+      <div
+        class="max-w-7xl grid grid-cols-1 sm:grid-cols-5 mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
+      >
       <div
         class="flex flex-col col-span-3 sm:border-r-2 h-full sm:pr-2 gap-y-2"
       >
@@ -718,7 +719,10 @@
         </div>
       </Dialog>
     </TransitionRoot>
-    <!-- //!SECTION  -->
+    </div>
+    <div v-else class="max-w-7xl mx-auto px-4 py-8 text-center text-red-500 font-bold">
+      Akses Ditolak (Viewer tidak diperbolehkan menjual barang)
+    </div>
   </Admin>
 </template>
 

@@ -103,15 +103,15 @@
                       </svg>
                     </DisclosureButton>
                     <DisclosurePanel class="space-y-1">
-                      <a
-                        v-for="subItem in item.children"
-                        :key="subItem.name"
-                        as="a"
-                        :href="subItem.href"
-                        class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"
-                      >
-                        {{ subItem.name }}
-                      </a>
+                      <template v-for="subItem in item.children" :key="subItem.name">
+                        <a
+                          v-if="!(subItem.name === 'Jual Barang' && role_id == 4)"
+                          :href="subItem.href"
+                          class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"
+                        >
+                          {{ subItem.name }}
+                        </a>
+                      </template>
                     </DisclosurePanel>
                   </Disclosure>
                 </template>
