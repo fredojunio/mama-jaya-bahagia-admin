@@ -48,6 +48,32 @@
               class="w-full"
             />
           </div>
+          <!-- Range Print Controls -->
+          <div class="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-white w-full sm:w-auto text-xs">
+            <label class="flex items-center gap-1 cursor-pointer font-semibold text-gray-700 whitespace-nowrap">
+              <input type="checkbox" v-model="isRangePrintActive" class="rounded text-black focus:ring-black" />
+              Batas Cetak
+            </label>
+            <div v-if="isRangePrintActive" class="flex items-center gap-1">
+              <input
+                type="number"
+                v-model="startPrintIndex"
+                placeholder="Mulai"
+                min="1"
+                :max="transactions.length"
+                class="w-16 px-1.5 py-0.5 border border-gray-300 rounded text-xs focus:ring-black focus:border-black"
+              />
+              <span class="text-gray-500">-</span>
+              <input
+                type="number"
+                v-model="endPrintIndex"
+                placeholder="Sampai"
+                min="1"
+                :max="transactions.length"
+                class="w-16 px-1.5 py-0.5 border border-gray-300 rounded text-xs focus:ring-black focus:border-black"
+              />
+            </div>
+          </div>
           <button
             @click="printPage"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -64,89 +90,100 @@
         Tidak ada transaksi pada tanggal {{ formattedDateDisplay }}.
       </div>
       <div v-else>
-        <!-- Ledger Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4 items-start min-h-[600px]">
-          <div v-for="(column, colIndex) in paginatedTransactions" :key="colIndex" class="flex flex-col gap-4">
-            <div 
-              v-for="(transaction, transIndex) in column" 
-              :key="transaction.id" 
-              class="bg-white p-3 rounded shadow-sm border-l-4 border-black font-mono text-[13px] leading-tight print:shadow-none print:border-l-2"
-            >
-              <div class="flex justify-between items-start mb-1 border-b border-gray-100 pb-1">
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-[11px] font-bold">
-                    {{ transaction.display_index }}
-                  </span>
-                  <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
-                </div>
-                <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
-              </div>
-
-              <div class="space-y-1">
-                <!-- Rit Items -->
-                <div v-for="rit in transaction.rits" :key="rit.id" class="flex justify-between gap-2">
-                  <div class="flex-1">
-                    <span class="font-semibold">{{ formatNumber(rit.tonnage) }} x {{ formatNumber(rit.masak) }}</span>
-                    <span class="text-[11px] ml-1 italic font-bold text-black">{{ rit.rit.item.code }}</span>
+        <!-- Print Range Notice -->
+        <div v-if="isRangePrintActive && startPrintIndex && endPrintIndex" class="mb-4 text-sm font-semibold text-gray-700 no-print">
+          Mode Batas Cetak Aktif: Menampilkan transaksi nomor <span class="underline">{{ startPrintIndex }}</span> sampai <span class="underline">{{ endPrintIndex }}</span> (Total {{ activeTransactions.length }} item).
+        </div>
+        <!-- Ledger Sheets -->
+        <div 
+          v-for="(sheet, sheetIndex) in paginatedTransactions" 
+          :key="sheetIndex" 
+          class="print-sheet mb-8 last:mb-0 print:mb-0"
+        >
+          <!-- Ledger Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4 items-start min-h-[600px] print:min-h-0">
+            <div v-for="(column, colIndex) in sheet" :key="colIndex" class="flex flex-col gap-4">
+              <div 
+                v-for="(transaction, transIndex) in column" 
+                :key="transaction.id" 
+                class="bg-white p-3 rounded shadow-sm border-l-4 border-black font-mono text-[13px] leading-tight print:shadow-none print:border-l-2"
+              >
+                <div class="flex justify-between items-start mb-1 border-b border-gray-100 pb-1">
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-[11px] font-bold">
+                      {{ transaction.display_index }}
+                    </span>
+                    <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
                   </div>
-                  <div class="font-bold">
-                    {{ formatNumber(rit.total_price) }}
-                  </div>
+                  <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
                 </div>
 
-                <!-- Other Components -->
-                <div v-if="transaction.tb > 0" class="flex justify-between text-gray-600">
-                  <span>TB</span>
-                  <span>{{ formatNumber(transaction.tb) }}</span>
-                </div>
-                <div v-if="transaction.thr > 0" class="flex justify-between text-gray-600">
-                  <span>THR</span>
-                  <span>{{ formatNumber(transaction.thr) }}</span>
-                </div>
-                <div v-if="transaction.sack > 0" class="flex justify-between text-gray-600">
-                  <span>SAK</span>
-                  <span>{{ formatNumber(transaction.sack_price) }}</span>
-                </div>
-                <div v-if="transaction.other > 0" class="flex justify-between text-gray-600">
-                  <span>LAIN-LAIN</span>
-                  <span>{{ formatNumber(transaction.other) }}</span>
-                </div>
-                
-                <!-- Discount -->
-                <div v-if="transaction.discount > 0" class="flex justify-between text-red-600 font-bold border-t border-dashed border-gray-200 pt-1">
-                  <span>DISKON</span>
-                  <span>-{{ formatNumber(transaction.discount) }}</span>
-                </div>
-
-                <!-- Total -->
-                <div class="flex justify-between items-center border-t-2 border-black mt-2 pt-1 font-black text-sm">
-                  <span>TOTAL</span>
-                  <span class="underline decoration-double">{{ formatNumber(transaction.total_price) }}</span>
-                </div>
-
-                <!-- Payment Info -->
-                <div class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold">
-                  <div class="flex flex-col">
-                    <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar ({{ formatNumber(transaction.total_price - getTotalPayments(transaction)) }})</span>
-                    <span v-else-if="transaction.finance_approved == 2" class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Retur</span>
-                    <template v-else>
-                      <div v-if="getPelunasanInfo(transaction)" class="text-[10px] text-green-600 mb-1 italic leading-tight">
-                        + pelunasan {{ getPelunasanInfo(transaction).date }} {{ formatNumber(getPelunasanInfo(transaction).amount) }}
-                      </div>
-                      <span class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
-                    </template>
+                <div class="space-y-1">
+                  <!-- Rit Items -->
+                  <div v-for="rit in transaction.rits" :key="rit.id" class="flex justify-between gap-2">
+                    <div class="flex-1">
+                      <span class="font-semibold">{{ formatNumber(rit.tonnage) }} x {{ formatNumber(rit.masak) }}</span>
+                      <span class="text-[11px] ml-1 italic font-bold text-black">{{ rit.rit.item.code }}</span>
+                    </div>
+                    <div class="font-bold">
+                      {{ formatNumber(rit.total_price) }}
+                    </div>
                   </div>
 
-                  <div class="text-right ml-auto">
-                    <template v-if="getPaymentSummary(transaction).type === 'mixed'">
-                      <div class="flex flex-col leading-tight">
-                        <span class="text-gray-500">Trf: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span></span>
-                        <span class="text-gray-500">Tni: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).cash) }}</span></span>
-                      </div>
-                    </template>
-                    <template v-else>
-                      <span class="text-gray-500"><span class="text-black uppercase">{{ getPaymentSummary(transaction).label }}</span></span>
-                    </template>
+                  <!-- Other Components -->
+                  <div v-if="transaction.tb > 0" class="flex justify-between text-gray-600">
+                    <span>TB</span>
+                    <span>{{ formatNumber(transaction.tb) }}</span>
+                  </div>
+                  <div v-if="transaction.thr > 0" class="flex justify-between text-gray-600">
+                    <span>THR</span>
+                    <span>{{ formatNumber(transaction.thr) }}</span>
+                  </div>
+                  <div v-if="transaction.sack > 0" class="flex justify-between text-gray-600">
+                    <span>SAK</span>
+                    <span>{{ formatNumber(transaction.sack_price) }}</span>
+                  </div>
+                  <div v-if="transaction.other > 0" class="flex justify-between text-gray-600">
+                    <span>LAIN-LAIN</span>
+                    <span>{{ formatNumber(transaction.other) }}</span>
+                  </div>
+                  
+                  <!-- Discount -->
+                  <div v-if="transaction.discount > 0" class="flex justify-between text-red-600 font-bold border-t border-dashed border-gray-200 pt-1">
+                    <span>DISKON</span>
+                    <span>-{{ formatNumber(transaction.discount) }}</span>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="flex justify-between items-center border-t-2 border-black mt-2 pt-1 font-black text-sm">
+                    <span>TOTAL</span>
+                    <span class="underline decoration-double">{{ formatNumber(transaction.total_price) }}</span>
+                  </div>
+
+                  <!-- Payment Info -->
+                  <div class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold">
+                    <div class="flex flex-col">
+                      <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar ({{ formatNumber(transaction.total_price - getTotalPayments(transaction)) }})</span>
+                      <span v-else-if="transaction.finance_approved == 2" class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Retur</span>
+                      <template v-else>
+                        <div v-if="getPelunasanInfo(transaction)" class="text-[10px] text-green-600 mb-1 italic leading-tight">
+                          + pelunasan {{ getPelunasanInfo(transaction).date }} {{ formatNumber(getPelunasanInfo(transaction).amount) }}
+                        </div>
+                        <span class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
+                      </template>
+                    </div>
+
+                    <div class="text-right ml-auto">
+                      <template v-if="getPaymentSummary(transaction).type === 'mixed'">
+                        <div class="flex flex-col leading-tight">
+                          <span class="text-gray-500">Trf: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span></span>
+                          <span class="text-gray-500">Tni: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).cash) }}</span></span>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <span class="text-gray-500"><span class="text-black uppercase">{{ getPaymentSummary(transaction).label }}</span></span>
+                      </template>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -155,7 +192,7 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-4 no-print">
+        <div v-if="totalPages > 1 && !isRangePrintActive" class="mt-8 flex justify-center items-center gap-4 no-print">
           <button 
             @click="page_ledger--" 
             :disabled="page_ledger === 1"
@@ -204,8 +241,11 @@ export default {
       searchTransactionQuery: "",
       searchTimeout: null,
       page_ledger: 1,
-      itemsPerPage: 30,
-      rowsPerColumn: 6,
+      itemsPerPage: 25,
+      rowsPerColumn: 5,
+      isRangePrintActive: false,
+      startPrintIndex: null,
+      endPrintIndex: null,
     };
   },
   watch: {
@@ -223,6 +263,15 @@ export default {
     },
     date() {
       this.page_ledger = 1;
+    },
+    transactions(newVal) {
+      if (newVal && newVal.length > 0) {
+        this.startPrintIndex = 1;
+        this.endPrintIndex = newVal.length;
+      } else {
+        this.startPrintIndex = null;
+        this.endPrintIndex = null;
+      }
     }
   },
   computed: {
@@ -233,24 +282,44 @@ export default {
     totalPages() {
       return Math.ceil(this.transactions.length / this.itemsPerPage);
     },
-    paginatedTransactions() {
-      if (this.transactions.length === 0) return [];
-      
-      // Get items for current page
-      const start = (this.page_ledger - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      
-      // Enrich transactions with a display index based on overall position
-      const enriched = this.transactions.slice(start, end).map((t, index) => ({
+    activeTransactions() {
+      // Enrich ALL transactions with their overall 1-based index
+      const enriched = this.transactions.map((t, index) => ({
         ...t,
-        display_index: start + index + 1
+        display_index: index + 1
       }));
 
-      const cols = [];
-      for (let i = 0; i < 5; i++) {
-        cols.push(enriched.slice(i * this.rowsPerColumn, (i + 1) * this.rowsPerColumn));
+      // If range print is active and valid bounds are set
+      if (this.isRangePrintActive && this.startPrintIndex && this.endPrintIndex) {
+        const start = Math.max(1, parseInt(this.startPrintIndex)) - 1;
+        const end = Math.min(enriched.length, parseInt(this.endPrintIndex));
+        if (start <= end) {
+          return enriched.slice(start, end);
+        }
       }
-      return cols;
+
+      // Default to pagination
+      const start = (this.page_ledger - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return enriched.slice(start, end);
+    },
+    paginatedTransactions() {
+      const list = this.activeTransactions;
+      if (list.length === 0) return [];
+      
+      const sheets = [];
+      const sheetSize = 25;
+      const rows = 5;
+      
+      for (let s = 0; s < list.length; s += sheetSize) {
+        const sheetItems = list.slice(s, s + sheetSize);
+        const cols = [];
+        for (let c = 0; c < 5; c++) {
+          cols.push(sheetItems.slice(c * rows, (c + 1) * rows));
+        }
+        sheets.push(cols);
+      }
+      return sheets;
     }
   },
   created() {
@@ -396,11 +465,19 @@ export default {
     background: white;
     margin: 0;
     padding: 0;
-    font-size: 11px;
+    font-size: 13px;
   }
   @page {
     size: A4 portrait;
     margin: 0.5cm;
+  }
+  .print-sheet {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+  .print-sheet:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
   .max-w-\[1800px\] {
     max-width: none !important;
@@ -410,29 +487,29 @@ export default {
   .grid {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
-    gap: 0.2rem !important;
+    gap: 0.35rem !important;
     align-items: start !important;
   }
   .bg-white {
     background-color: white !important;
     border-width: 1px !important;
     border-color: #000 !important;
-    padding: 0.4rem !important;
+    padding: 0.5rem !important;
   }
   .text-\[13px\] {
-    font-size: 11px !important;
+    font-size: 13px !important;
   }
   .text-sm {
-    font-size: 11px !important;
+    font-size: 13px !important;
   }
   .text-\[11px\] {
-    font-size: 9px !important;
+    font-size: 11px !important;
   }
   .mt-2 {
-    margin-top: 0.25rem !important;
+    margin-top: 0.35rem !important;
   }
   .mb-1 {
-    margin-bottom: 0.1rem !important;
+    margin-bottom: 0.15rem !important;
   }
 }
 </style>
