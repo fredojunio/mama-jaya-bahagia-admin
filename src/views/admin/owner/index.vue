@@ -1,4 +1,16 @@
 <template>
+  <div
+    id="loading-modal"
+    class="fixed items-center justify-center min-w-full min-h-full z-50"
+    :class="isLoading ? 'flex' : 'hidden'"
+  >
+    <div
+      class="absolute z-50 min-w-full min-h-screen bg-black opacity-50"
+    ></div>
+    <div class="text-6xl animate-spin z-50 text-white">
+      <Icon icon="fa:circle-o-notch" />
+    </div>
+  </div>
   <Admin>
     <div
       class="max-w-7xl flex justify-end mx-auto px-4 sm:px-6 md:px-8 mb-8 gap-x-4"
@@ -346,6 +358,7 @@ export default {
       });
     },
     getAllData: function () {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -354,9 +367,11 @@ export default {
         .get("/admin/rit/get_owner_stock")
         .then((data) => {
           this.rits = data.data.data.results;
+          this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
+          this.isLoading = false;
         });
     },
     openEditRitPriceForm(id) {
@@ -370,6 +385,7 @@ export default {
       this.pricedRit.is_hold = this.selectedData.is_hold == 1 ? true : false;
     },
     ritHasBeenPriced() {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -381,6 +397,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.isLoading = false;
         });
     },
     resetPricedRit() {
@@ -391,6 +408,7 @@ export default {
       };
     },
     rejectRit() {
+      this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -402,6 +420,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.isLoading = false;
         });
     },
   },
@@ -410,6 +429,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       //ini buat owner kalo mau edit harga
       showEditRitPriceForm: false,
       rits: [],

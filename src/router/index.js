@@ -4,6 +4,7 @@ import Login from "/src/views/Login.vue";
 
 //Barang
 import BarangIndex from "/src/views/admin/barang/index.vue";
+import MasterHargaIndex from "/src/views/admin/barang/master_harga.vue";
 
 //Rit
 import RitIndex from "/src/views/admin/rit/index.vue";
@@ -56,6 +57,14 @@ const routes = [
     component: BarangIndex,
     meta: {
       title: "Barang - Index",
+    },
+  },
+  {
+    path: "/admin/barang/master_harga",
+    name: "MasterHargaIndex",
+    component: MasterHargaIndex,
+    meta: {
+      title: "Master Harga",
     },
   },
   {
