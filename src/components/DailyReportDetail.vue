@@ -18,10 +18,16 @@
                   )
                 }}
               </h1>
+              <button
+                @click="exportPDF"
+                class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+              >
+                Export PDF Laporan
+              </button>
             </div>
           </div>
         </div>
-        <div class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2">
+        <div class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2 items-center">
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
@@ -32,6 +38,12 @@
               )
             }}
           </h1>
+          <button
+            @click="exportPDF"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+          >
+            Export PDF Laporan
+          </button>
         </div>
       </div>
     </div>
@@ -153,9 +165,9 @@
             Rp. {{ formatNumber(selectedData.operational_expense) }}
           </dd>
         </div>
-        <div class="w-full col-span-2 border-t">
-          <div class="border-b border-gray-200">
-            <div class="mx-auto">
+        <div class="w-full col-span-2 border-t mt-4 pt-4">
+          <div class="border-b border-gray-200 w-full">
+            <div class="mx-auto flex justify-between items-end pb-2">
               <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                 <div
                   @click="changeTab(index)"
@@ -171,6 +183,14 @@
                   {{ tab.name }}
                 </div>
               </nav>
+              <div class="flex gap-2">
+                <button
+                  @click="exportExcel"
+                  class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+                >
+                  Export Excel
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -644,6 +664,9 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import * as XLSX from "xlsx";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -706,6 +729,100 @@ export default {
       } else {
         return true;
       }
+    },
+    exportPDF() {
+      if (!this.selectedData) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+      
+      const doc = new jsPDF();
+      
+      const title = `Laporan Harian - ${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tanggal'}`;
+      doc.setFontSize(16);
+      doc.text(title, 14, 20);
+      
+      const tableData = [
+        ["Total Penerimaan Uang", `Rp. ${this.formatNumber(this.selectedData.money)}`],
+        ["Total Penerimaan Uang Fisik", `Rp. ${this.formatNumber(this.selectedData.real_income)}`],
+        ["Total Pemasukan", `Rp. ${this.formatNumber(this.selectedData.income)}`],
+        ["Total Pengeluaran", `Rp. ${this.formatNumber(this.selectedData.expense)}`],
+        ["Penjualan", `Rp. ${this.formatNumber(this.selectedData.item_income)} - ${this.formatNumber(this.totalTonnageSold())} kg`],
+        ["Pengeluaran Gaji", `Rp. ${this.formatNumber(this.selectedData.salary_expense)}`],
+        ["Penjualan Kedelai", `Rp. ${this.formatNumber(this.selectedData.kedelai_income)}`],
+        ["Pemasukan TB", `Rp. ${this.formatNumber(this.selectedData.tb_income)}`],
+        ["Pengeluaran TB", `Rp. ${this.formatNumber(this.selectedData.tb_expense)}`],
+        ["Pemasukan THR", `Rp. ${this.formatNumber(this.selectedData.thr_income)}`],
+        ["Pengeluaran THR", `Rp. ${this.formatNumber(this.selectedData.thr_expense)}`],
+        ["Pemasukan Lain-lain", `Rp. ${this.formatNumber(this.selectedData.other_income)}`],
+        ["Pengeluaran Operasional", `Rp. ${this.formatNumber(this.selectedData.operational_expense)}`],
+      ];
+
+      autoTable(doc, {
+        startY: 30,
+        head: [['Deskripsi', 'Jumlah']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [0, 0, 0] }
+      });
+
+      doc.save(`Laporan_Harian_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tgl'}.pdf`);
+    },
+    exportExcel() {
+      if (!this.selectedData) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+      
+      let data = [];
+      const currentTabName = this.tabs.find(t => t.current).name;
+      
+      if (currentTabName === "Sisa Stok") {
+        if (!this.selectedData.rits || this.selectedData.rits.length === 0) {
+          alert("Tidak ada data sisa stok");
+          return;
+        }
+        data = this.selectedData.rits.map((ritReport) => ({
+          "Kode - Tanggal Datang": `${ritReport.rit.item.code} - ${this.formatDate ? this.formatDate(ritReport.rit.arrival_date) : ritReport.rit.arrival_date}`,
+          "Sisa Tonase Sistem": ritReport.tonnage_left,
+          "Sisa Tonase Fisik": ritReport.real_tonnage,
+          "Selisih Penyusutan": parseFloat(parseFloat(ritReport.real_tonnage) - parseFloat(ritReport.tonnage_left)).toFixed(2)
+        }));
+      } else if (currentTabName === "Penjualan") {
+        if (!this.selectedData.rits || this.selectedData.rits.length === 0) {
+          alert("Tidak ada data penjualan");
+          return;
+        }
+        data = this.selectedData.rits.map((ritReport) => ({
+          "Kode - Tanggal Datang": `${ritReport.rit.item.code} - ${this.formatDate ? this.formatDate(ritReport.rit.arrival_date) : ritReport.rit.arrival_date}`,
+          "Tonase Penjualan Harian": ritReport.tonnage_sold,
+          "Total Penjualan Harian": ritReport.tonnage_sold_price,
+          "Total Penjualan Barang": ritReport.total_tonnage_sold
+        }));
+      } else if (currentTabName === "Transaksi") {
+        if (!this.selectedData.transactions || this.selectedData.transactions.length === 0) {
+          alert("Tidak ada data transaksi");
+          return;
+        }
+        data = this.selectedData.transactions
+          .filter(t => this.shouldShowDate(t.settled_date))
+          .map((t) => ({
+            "Customer": t.transaction.customer ? t.transaction.customer.nickname : t.transaction.type,
+            "Jumlah (Rp.)": t.amount,
+            "Tanggal Transaksi": this.formatDate ? this.formatDate(t.transaction_date) : t.transaction_date,
+            "Tanggal Lunas": this.formatDate ? this.formatDate(t.settled_date) : t.settled_date
+          }));
+      }
+
+      if (data.length === 0) {
+        alert("Tidak ada baris data untuk dieksport pada tab ini");
+        return;
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Detail");
+      XLSX.writeFile(workbook, `Detail_Laporan_${currentTabName.replace(/ /g, '_')}_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tgl'}.xlsx`);
     },
   },
 };

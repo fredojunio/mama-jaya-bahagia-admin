@@ -27,6 +27,12 @@
             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4"
           />
         </div>
+        <button
+          @click="exportExcel"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+        >
+          Export Excel
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -550,6 +556,7 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import {
   Menu,
@@ -663,6 +670,59 @@ export default {
         total += rit.tonnage_sold;
       });
       return total;
+    },
+    exportExcel() {
+      if (!this.reports || this.reports.length === 0) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+      
+      let data = [];
+      
+      if (this.currentTab === this.tabs[0].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Penerimaan Uang": report.real_income,
+          "Total Penerimaan Uang": this.getCumulativeSum("real_income", index)
+        }));
+      } else if (this.currentTab === this.tabs[1].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Penerimaan": report.item_income,
+          "Tonase": this.totalTonnageSold(report),
+          "Total Penerimaan": this.getCumulativeSum("item_income", index),
+          "Total Tonase": this.getCumulativeSum("tonnage", index)
+        }));
+      } else if (this.currentTab === this.tabs[2].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Jumlah": report.tb_income + report.thr_income,
+          "Total Jumlah": this.getCumulativeSum("tb_income", index) + this.getCumulativeSum("thr_income", index)
+        }));
+      } else if (this.currentTab === this.tabs[3].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Jumlah": report.other_income,
+          "Total Jumlah": this.getCumulativeSum("other_income", index)
+        }));
+      } else if (this.currentTab === this.tabs[4].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Jumlah": report.expense,
+          "Total Jumlah": this.getCumulativeSum("expense", index)
+        }));
+      } else if (this.currentTab === this.tabs[5].name) {
+        data = this.reports.map((report, index) => ({
+          "Tanggal": this.formatDate ? this.formatDate(report.created_at) : report.created_at,
+          "Jumlah": report.tb_expense + report.thr_expense,
+          "Total Jumlah": this.getCumulativeSum("tb_expense", index) + this.getCumulativeSum("thr_expense", index)
+        }));
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+      XLSX.writeFile(workbook, `Laporan_Bulanan_${this.currentTab.replace(/ /g, '_')}_${this.month}.xlsx`);
     },
   },
 };
