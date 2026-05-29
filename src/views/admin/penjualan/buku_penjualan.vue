@@ -15,10 +15,14 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 no-print">
       <div class="flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 class="text-2xl font-semibold text-gray-900">Buku Penjualan</h1>
-        <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+        <div
+          class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto"
+        >
           <!-- Search Input -->
           <div class="relative rounded-md shadow-sm w-full sm:w-64">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
               <Icon icon="fa:search" class="h-4 w-4 text-gray-400" />
             </div>
             <input
@@ -48,6 +52,23 @@
               class="w-full"
             />
           </div>
+          <div class="flex items-center gap-2">
+            <input
+              type="number"
+              v-model="printStartIndex"
+              class="focus:ring-black focus:border-black block w-16 sm:text-sm border-gray-300 rounded-md py-1.5"
+              placeholder="Dari"
+              min="1"
+            />
+            <span class="text-sm text-gray-500">-</span>
+            <input
+              type="number"
+              v-model="printEndIndex"
+              class="focus:ring-black focus:border-black block w-16 sm:text-sm border-gray-300 rounded-md py-1.5"
+              placeholder="Sampai"
+              min="1"
+            />
+          </div>
           <button
             @click="printPage"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -59,95 +80,176 @@
       </div>
     </div>
 
-    <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pb-20 print:pb-0 print:px-0">
-      <div v-if="transactions.length === 0 && !isLoading" class="text-center py-20 text-gray-500 bg-white rounded-lg shadow">
+    <div
+      class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pb-20 print:pb-0 print:px-0"
+    >
+      <div
+        v-if="transactions.length === 0 && !isLoading"
+        class="text-center py-20 text-gray-500 bg-white rounded-lg shadow"
+      >
         Tidak ada transaksi pada tanggal {{ formattedDateDisplay }}.
       </div>
       <div v-else>
         <!-- Ledger Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4 items-start min-h-[600px]">
-          <div v-for="(column, colIndex) in paginatedTransactions" :key="colIndex" class="flex flex-col gap-4">
-            <div 
-              v-for="(transaction, transIndex) in column" 
-              :key="transaction.id" 
-              class="bg-white p-3 rounded shadow-sm border-l-4 border-black font-mono text-[13px] leading-tight print:shadow-none print:border-l-2"
+        <div
+          class="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4 min-h-[600px]"
+          id="print-ledger"
+        >
+          <div
+            v-for="transaction in paginatedTransactions"
+            :key="transaction.id"
+            class="bg-white p-3 rounded shadow-sm border-l-4 border-black font-mono text-[14px] leading-tight print:shadow-none print:border-l-2 break-inside-avoid inline-block w-full"
+          >
+            <div
+              class="flex justify-between items-start mb-1 border-b border-gray-100 pb-1"
             >
-              <div class="flex justify-between items-start mb-1 border-b border-gray-100 pb-1">
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-[11px] font-bold">
-                    {{ transaction.display_index }}
-                  </span>
-                  <span class="font-bold uppercase">{{ transaction.customer?.nickname || transaction.customer?.name || 'Customer' }}</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-[11px] font-bold"
+                >
+                  {{ transaction.display_index }}
+                </span>
+                <span class="font-bold uppercase">{{
+                  transaction.customer?.nickname ||
+                  transaction.customer?.name ||
+                  "Customer"
+                }}</span>
+              </div>
+              <span class="font-bold text-black">{{
+                formatTime(transaction.updated_at)
+              }}</span>
+            </div>
+
+            <div class="space-y-1">
+              <!-- Rit Items -->
+              <div
+                v-for="rit in transaction.rits"
+                :key="rit.id"
+                class="flex justify-between gap-2"
+              >
+                <div class="flex-1">
+                  <span class="font-semibold"
+                    >{{ formatNumber(rit.tonnage) }} x
+                    {{ formatNumber(rit.masak) }}</span
+                  >
+                  <span class="text-[11px] ml-1 italic font-bold text-black">{{
+                    rit.rit.item.code
+                  }}</span>
                 </div>
-                <span class="font-bold text-black">{{ formatTime(transaction.updated_at) }}</span>
+                <div class="font-bold">
+                  {{ formatNumber(rit.total_price) }}
+                </div>
               </div>
 
-              <div class="space-y-1">
-                <!-- Rit Items -->
-                <div v-for="rit in transaction.rits" :key="rit.id" class="flex justify-between gap-2">
-                  <div class="flex-1">
-                    <span class="font-semibold">{{ formatNumber(rit.tonnage) }} x {{ formatNumber(rit.masak) }}</span>
-                    <span class="text-[11px] ml-1 italic font-bold text-black">{{ rit.rit.item.code }}</span>
-                  </div>
-                  <div class="font-bold">
-                    {{ formatNumber(rit.total_price) }}
-                  </div>
+              <!-- Other Components -->
+              <div
+                v-if="transaction.tb > 0"
+                class="flex justify-between text-gray-600"
+              >
+                <span>TB</span>
+                <span>{{ formatNumber(transaction.tb) }}</span>
+              </div>
+              <div
+                v-if="transaction.thr > 0"
+                class="flex justify-between text-gray-600"
+              >
+                <span>THR</span>
+                <span>{{ formatNumber(transaction.thr) }}</span>
+              </div>
+              <div
+                v-if="transaction.sack > 0"
+                class="flex justify-between text-gray-600"
+              >
+                <span>SAK</span>
+                <span>{{ formatNumber(transaction.sack_price) }}</span>
+              </div>
+              <div
+                v-if="transaction.other > 0"
+                class="flex justify-between text-gray-600"
+              >
+                <span>LAIN-LAIN</span>
+                <span>{{ formatNumber(transaction.other) }}</span>
+              </div>
+
+              <!-- Discount -->
+              <div
+                v-if="transaction.discount > 0"
+                class="flex justify-between text-red-600 font-bold border-t border-dashed border-gray-200 pt-1"
+              >
+                <span>DISKON</span>
+                <span>-{{ formatNumber(transaction.discount) }}</span>
+              </div>
+
+              <!-- Total -->
+              <div
+                class="flex justify-between items-center border-t-2 border-black mt-2 pt-1 font-black text-sm"
+              >
+                <span>TOTAL</span>
+                <span class="underline decoration-double">{{
+                  formatNumber(transaction.total_price)
+                }}</span>
+              </div>
+
+              <!-- Payment Info -->
+              <div
+                class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold"
+              >
+                <div class="flex flex-col">
+                  <span
+                    v-if="transaction.finance_approved == 0"
+                    class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit"
+                    >Kurang Bayar ({{
+                      formatNumber(
+                        transaction.total_price - getTotalPayments(transaction),
+                      )
+                    }})</span
+                  >
+                  <span
+                    v-else-if="transaction.finance_approved == 2"
+                    class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit"
+                    >Retur</span
+                  >
+                  <template v-else>
+                    <div
+                      v-if="getPelunasanInfo(transaction)"
+                      class="text-[10px] text-green-600 mb-1 italic leading-tight"
+                    >
+                      + pelunasan {{ getPelunasanInfo(transaction).date }}
+                      {{ formatNumber(getPelunasanInfo(transaction).amount) }}
+                    </div>
+                    <span
+                      class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit"
+                      >Lunas</span
+                    >
+                  </template>
                 </div>
 
-                <!-- Other Components -->
-                <div v-if="transaction.tb > 0" class="flex justify-between text-gray-600">
-                  <span>TB</span>
-                  <span>{{ formatNumber(transaction.tb) }}</span>
-                </div>
-                <div v-if="transaction.thr > 0" class="flex justify-between text-gray-600">
-                  <span>THR</span>
-                  <span>{{ formatNumber(transaction.thr) }}</span>
-                </div>
-                <div v-if="transaction.sack > 0" class="flex justify-between text-gray-600">
-                  <span>SAK</span>
-                  <span>{{ formatNumber(transaction.sack_price) }}</span>
-                </div>
-                <div v-if="transaction.other > 0" class="flex justify-between text-gray-600">
-                  <span>LAIN-LAIN</span>
-                  <span>{{ formatNumber(transaction.other) }}</span>
-                </div>
-                
-                <!-- Discount -->
-                <div v-if="transaction.discount > 0" class="flex justify-between text-red-600 font-bold border-t border-dashed border-gray-200 pt-1">
-                  <span>DISKON</span>
-                  <span>-{{ formatNumber(transaction.discount) }}</span>
-                </div>
-
-                <!-- Total -->
-                <div class="flex justify-between items-center border-t-2 border-black mt-2 pt-1 font-black text-sm">
-                  <span>TOTAL</span>
-                  <span class="underline decoration-double">{{ formatNumber(transaction.total_price) }}</span>
-                </div>
-
-                <!-- Payment Info -->
-                <div class="flex justify-between items-start mt-2 pt-1 border-t border-dashed border-gray-200 text-[11px] font-bold">
-                  <div class="flex flex-col">
-                    <span v-if="transaction.finance_approved == 0" class="text-red-600 uppercase border border-red-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Kurang Bayar ({{ formatNumber(transaction.total_price - getTotalPayments(transaction)) }})</span>
-                    <span v-else-if="transaction.finance_approved == 2" class="text-blue-600 uppercase border border-blue-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Retur</span>
-                    <template v-else>
-                      <div v-if="getPelunasanInfo(transaction)" class="text-[10px] text-green-600 mb-1 italic leading-tight">
-                        + pelunasan {{ getPelunasanInfo(transaction).date }} {{ formatNumber(getPelunasanInfo(transaction).amount) }}
-                      </div>
-                      <span class="text-green-600 uppercase border border-green-600 px-1 rounded-[2px] mb-1 inline-block w-fit">Lunas</span>
-                    </template>
-                  </div>
-
-                  <div class="text-right ml-auto">
-                    <template v-if="getPaymentSummary(transaction).type === 'mixed'">
-                      <div class="flex flex-col leading-tight">
-                        <span class="text-gray-500">Trf: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span></span>
-                        <span class="text-gray-500">Tni: <span class="text-black">{{ formatNumber(getPaymentSummary(transaction).cash) }}</span></span>
-                      </div>
-                    </template>
-                    <template v-else>
-                      <span class="text-gray-500"><span class="text-black uppercase">{{ getPaymentSummary(transaction).label }}</span></span>
-                    </template>
-                  </div>
+                <div class="text-right ml-auto">
+                  <template
+                    v-if="getPaymentSummary(transaction).type === 'mixed'"
+                  >
+                    <div class="flex flex-col leading-tight">
+                      <span class="text-gray-500"
+                        >Trf:
+                        <span class="text-black">{{
+                          formatNumber(getPaymentSummary(transaction).transfer)
+                        }}</span></span
+                      >
+                      <span class="text-gray-500"
+                        >Tni:
+                        <span class="text-black">{{
+                          formatNumber(getPaymentSummary(transaction).cash)
+                        }}</span></span
+                      >
+                    </div>
+                  </template>
+                  <template v-else>
+                    <span class="text-gray-500"
+                      ><span class="text-black uppercase">{{
+                        getPaymentSummary(transaction).label
+                      }}</span></span
+                    >
+                  </template>
                 </div>
               </div>
             </div>
@@ -155,9 +257,12 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-4 no-print">
-          <button 
-            @click="page_ledger--" 
+        <div
+          v-if="totalPages > 1"
+          class="mt-8 flex justify-center items-center gap-4 no-print"
+        >
+          <button
+            @click="page_ledger--"
             :disabled="page_ledger === 1"
             class="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -166,8 +271,8 @@
           <span class="text-sm text-gray-600 font-medium">
             Halaman {{ page_ledger }} dari {{ totalPages }}
           </span>
-          <button 
-            @click="page_ledger++" 
+          <button
+            @click="page_ledger++"
             :disabled="page_ledger === totalPages"
             class="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -204,8 +309,9 @@ export default {
       searchTransactionQuery: "",
       searchTimeout: null,
       page_ledger: 1,
-      itemsPerPage: 30,
-      rowsPerColumn: 6,
+      itemsPerPage: 24,
+      printStartIndex: null,
+      printEndIndex: null,
     };
   },
   watch: {
@@ -223,35 +329,49 @@ export default {
     },
     date() {
       this.page_ledger = 1;
-    }
+    },
   },
   computed: {
     formattedDateDisplay() {
       if (!this.date || !this.date[0]) return "";
-      return new Intl.DateTimeFormat('id-ID', { dateStyle: 'full' }).format(new Date(this.date[0]));
+      return new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
+        new Date(this.date[0]),
+      );
     },
     totalPages() {
+      // If filtering by range, it's effectively 1 page containing those items
+      if (this.printStartIndex || this.printEndIndex) {
+        return 1;
+      }
       return Math.ceil(this.transactions.length / this.itemsPerPage);
     },
     paginatedTransactions() {
       if (this.transactions.length === 0) return [];
-      
-      // Get items for current page
-      const start = (this.page_ledger - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      
+
       // Enrich transactions with a display index based on overall position
-      const enriched = this.transactions.slice(start, end).map((t, index) => ({
+      const enriched = this.transactions.map((t, index) => ({
         ...t,
-        display_index: start + index + 1
+        display_index: index + 1,
       }));
 
-      const cols = [];
-      for (let i = 0; i < 5; i++) {
-        cols.push(enriched.slice(i * this.rowsPerColumn, (i + 1) * this.rowsPerColumn));
+      // Filter for print range if specified
+      let finalTransactions = enriched;
+      if (this.printStartIndex || this.printEndIndex) {
+        const start = this.printStartIndex ? parseInt(this.printStartIndex) : 1;
+        const end = this.printEndIndex
+          ? parseInt(this.printEndIndex)
+          : enriched.length;
+        finalTransactions = enriched.slice(start - 1, end);
+        // When printing range, we show them all on one page and ignore pagination
+        return finalTransactions;
       }
-      return cols;
-    }
+
+      // Normal pagination logic
+      const start = (this.page_ledger - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+
+      return finalTransactions.slice(start, end);
+    },
   },
   created() {
     this.getAllTransactions();
@@ -270,26 +390,35 @@ export default {
 
       while (hasMore) {
         try {
-          const response = await instance.post("/admin/transaction/get_completed_transactions_buku", {
-            start_date: this.date[0].toString(),
-            end_date: this.date[1].toString(),
-            page: currentPage,
-            per_page: 50, // Slightly larger batch
-          });
+          const response = await instance.post(
+            "/admin/transaction/get_completed_transactions_buku",
+            {
+              start_date: this.date[0].toString(),
+              end_date: this.date[1].toString(),
+              page: currentPage,
+              per_page: 50, // Slightly larger batch
+            },
+          );
 
-          const results = 
-            response.data?.data?.data?.results || 
-            response.data?.data?.results || 
-            response.data?.results || [];
-          
-          this.transactions = [...this.transactions, ...results.filter(t => t !== null)];
+          const results =
+            response.data?.data?.data?.results ||
+            response.data?.data?.results ||
+            response.data?.results ||
+            [];
 
-          const pagination = response.data?.data?.data?.pagination || response.data?.data?.pagination;
+          this.transactions = [
+            ...this.transactions,
+            ...results.filter((t) => t !== null),
+          ];
+
+          const pagination =
+            response.data?.data?.data?.pagination ||
+            response.data?.data?.pagination;
           hasMore = pagination?.has_more;
           currentPage++;
 
           // Safety break to prevent infinite loops
-          if (currentPage > 20) break; 
+          if (currentPage > 20) break;
         } catch (err) {
           console.error("Error fetching transactions:", err);
           hasMore = false;
@@ -311,10 +440,12 @@ export default {
           search_query: query,
         })
         .then((data) => {
-          this.transactions = 
-            (data.data?.data?.data?.results || 
-             data.data?.data?.results || 
-             data.data?.results || []).filter(t => t !== null);
+          this.transactions = (
+            data.data?.data?.data?.results ||
+            data.data?.data?.results ||
+            data.data?.results ||
+            []
+          ).filter((t) => t !== null);
           this.isLoading = false;
         })
         .catch((err) => {
@@ -327,16 +458,16 @@ export default {
     },
     getPaymentSummary(transaction) {
       if (!transaction.payments || transaction.payments.length === 0) {
-        return { type: 'none', label: '-' };
+        return { type: "none", label: "-" };
       }
 
       let cashSum = 0;
       let transferSum = 0;
 
-      transaction.payments.forEach(payment => {
+      transaction.payments.forEach((payment) => {
         // Checking for both 'Cash' and 'Cash ' (with space) or other variants
         const type = payment.type?.toLowerCase().trim();
-        if (type === 'transfer') {
+        if (type === "transfer") {
           transferSum += payment.amount;
         } else {
           // Assume anything else is Cash/Tunai
@@ -346,14 +477,14 @@ export default {
 
       if (cashSum > 0 && transferSum > 0) {
         return {
-          type: 'mixed',
+          type: "mixed",
           cash: cashSum,
-          transfer: transferSum
+          transfer: transferSum,
         };
       } else if (transferSum > 0) {
-        return { type: 'single', label: 'Transfer' };
+        return { type: "single", label: "Transfer" };
       } else {
-        return { type: 'single', label: 'Tunai' };
+        return { type: "single", label: "Tunai" };
       }
     },
     getTotalPayments(transaction) {
@@ -362,14 +493,18 @@ export default {
       }, 0);
     },
     getPelunasanInfo(transaction) {
-      if (transaction.finance_approved !== 1 || !transaction.payments || transaction.payments.length === 0) {
+      if (
+        transaction.finance_approved !== 1 ||
+        !transaction.payments ||
+        transaction.payments.length === 0
+      ) {
         return null;
       }
-      
+
       const lastPayment = transaction.payments[transaction.payments.length - 1];
       const transDate = new Date(transaction.created_at);
       const payDate = new Date(lastPayment.created_at);
-      
+
       // Compare dates (day, month, year)
       if (
         transDate.getDate() !== payDate.getDate() ||
@@ -378,7 +513,7 @@ export default {
       ) {
         return {
           date: `${payDate.getDate()}/${payDate.getMonth() + 1}`,
-          amount: lastPayment.amount
+          amount: lastPayment.amount,
         };
       }
       return null;
@@ -407,11 +542,15 @@ export default {
     padding: 0 !important;
     margin: 0 !important;
   }
-  .grid {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: 0.2rem !important;
-    align-items: start !important;
+  #print-ledger {
+    display: block !important;
+    column-count: 4 !important;
+    column-gap: 0.4rem !important;
+  }
+  .break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 0.4rem !important;
   }
   .bg-white {
     background-color: white !important;
