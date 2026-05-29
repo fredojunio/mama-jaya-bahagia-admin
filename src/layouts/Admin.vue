@@ -105,7 +105,7 @@
                     <DisclosurePanel class="space-y-1">
                       <template v-for="subItem in item.children" :key="subItem.name">
                         <a
-                          v-if="!(subItem.name === 'Jual Barang' && role_id == 4)"
+                          v-if="!(subItem.name === 'Jual Barang' && role_id == 4) && !(subItem.name === 'Purchase Order' && role_id != 1)"
                           :href="subItem.href"
                           class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"
                         >
@@ -280,6 +280,7 @@ var navigation = [
     children: [
       { name: "Daftar Rit", href: "/admin/rit" },
       { name: "Jual Barang", href: "/admin/rit/jual_barang" },
+      { name: "Purchase Order", href: "/admin/rit/purchase_order" },
       { name: "Nota", href: "/admin/rit/nota" },
     ],
   },

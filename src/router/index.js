@@ -13,6 +13,7 @@ import RitNota from "/src/views/admin/rit/nota.vue";
 import RitNotaDetail from "/src/views/admin/rit/nota_detail.vue";
 import RitMiniNotaDetail from "/src/views/admin/rit/mini_nota.vue";
 import RitSuratJalan from "/src/views/admin/rit/surat_jalan.vue";
+import RitPurchaseOrder from "/src/views/admin/rit/purchase_order.vue";
 
 //Customer
 import CustomerIndex from "/src/views/admin/customer/index.vue";
@@ -134,6 +135,14 @@ const routes = [
     props: true,
     meta: {
       title: "Print Savings",
+    },
+  },
+  {
+    path: "/admin/rit/purchase_order",
+    name: "Purchase Order",
+    component: RitPurchaseOrder,
+    meta: {
+      requiresAuth: true,
     },
   },
   {
