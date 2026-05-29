@@ -300,6 +300,14 @@ var navigation = [
     ],
   },
   {
+    name: "Keuangan",
+    icon: "mdi:bank",
+    children: [
+      { name: "Buku Besar", href: "/admin/keuangan/buku_besar" },
+      { name: "Neraca", href: "/admin/keuangan/neraca" }
+    ],
+  },
+  {
     name: "Penjualan",
     icon: "mdi:cart",
     children: [{ name: "Buku Penjualan", href: "/admin/penjualan/buku_penjualan" }],

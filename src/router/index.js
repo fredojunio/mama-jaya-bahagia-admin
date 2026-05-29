@@ -41,6 +41,8 @@ import OwnerLabaRugi from "/src/views/admin/owner/laba_rugi.vue";
 
 //Penjualan
 import BukuPenjualan from "/src/views/admin/penjualan/buku_penjualan.vue";
+//Keuangan
+import KeuanganBukuBesar from "/src/views/admin/keuangan/buku_besar.vue";
 
 //Routes
 const routes = [
@@ -247,6 +249,14 @@ const routes = [
     component: BukuPenjualan,
     meta: {
       title: "Buku Penjualan",
+    },
+  },
+  {
+    path: "/admin/keuangan/buku_besar",
+    name: "KeuanganBukuBesar",
+    component: KeuanganBukuBesar,
+    meta: {
+      title: "Buku Besar",
     },
   },
 ];
