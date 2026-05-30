@@ -108,7 +108,7 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          v-if="role_id == 1"
+                          v-if="role_id == 1 || email == 'admin2@gmail.com' || user_id == 6"
                           @click="showEdit(item)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >

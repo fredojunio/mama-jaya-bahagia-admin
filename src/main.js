@@ -65,6 +65,8 @@ app.mixin({
   data() {
     return {
       role_id: localStorage["role_id"],
+      user_id: localStorage["user_id"],
+      email: localStorage["email"],
       currentTime: null,
       isSixPm: false,
     };
