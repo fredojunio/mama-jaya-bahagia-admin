@@ -293,7 +293,7 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1 || role_id == 4"
+                        v-if="role_id == 1 || role_id == 4 || email == 'admin2@gmail.com' || user_id == 6"
                         class="flex flex-col items-start"
                       >
                         <div
@@ -826,7 +826,7 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1 || role_id == 4"
+                        v-if="role_id == 1 || role_id == 4 || email == 'admin2@gmail.com' || user_id == 6"
                         class="flex flex-col items-start"
                       >
                         <div

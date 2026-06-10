@@ -269,7 +269,10 @@ var navigation = [
   {
     name: "Barang",
     icon: "mdi-sack",
-    children: [{ name: "Daftar Barang", href: "/admin/barang" }],
+    children: [
+      { name: "Daftar Barang", href: "/admin/barang" },
+      { name: "Master Harga", href: "/admin/barang/master_harga" },
+    ],
   },
   {
     name: "Rit",
