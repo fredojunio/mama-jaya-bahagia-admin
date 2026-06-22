@@ -38,6 +38,12 @@
           />
         </div>
         <button
+          @click="exportExcel"
+          class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:w-auto"
+        >
+          Export Excel
+        </button>
+        <button
           v-if="role_id != 4"
           @click="showAddExpenseForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -1016,6 +1022,7 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -1160,6 +1167,51 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    exportExcel() {
+      if (!this.expenses || this.expenses.length === 0) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+
+      let data = [];
+      if (this.currentTab === "Kendaraan") {
+        data = this.expenses.map((e) => ({
+          "Kendaraan": e.trip && e.trip.vehicle ? e.trip.vehicle.name : "-",
+          "BBM (Rp.)": e.trip ? e.trip.gas : 0,
+          "E-Toll (Rp.)": e.trip ? e.trip.toll : 0,
+          "Sangu (Rp.)": e.trip ? e.trip.allowance : 0,
+          "Tanggal": this.formatDate(e.time),
+          "Note": e.note || "-"
+        }));
+      } else if (this.currentTab === "Tabungan" || this.currentTab === "Cashback") {
+        data = this.expenses.map((e) => ({
+          "Customer": e.name || "-",
+          "Jumlah (Rp.)": e.amount || 0,
+          "Tipe/Keterangan": e.type || "-",
+          "Tanggal": this.formatDate(e.time)
+        }));
+      } else if (this.currentTab === "Operasional") {
+        data = this.expenses.map((e) => ({
+          "Jumlah (Rp.)": e.amount || 0,
+          "Keterangan": e.note || "-",
+          "Waktu": e.time ? this.formatDate(e.time) : "-"
+        }));
+      } else if (this.currentTab === "Gaji") {
+        data = this.expenses.map((e) => ({
+          "Nama": e.name || "-",
+          "Jumlah (Rp.)": e.amount || 0,
+          "Tanggal": this.formatDate(e.time),
+          "Keterangan": e.note || "-"
+        }));
+      }
+
+      if (data.length === 0) return;
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Pengeluaran");
+      XLSX.writeFile(workbook, `Pengeluaran_${this.currentTab.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
     },
   },
 };
