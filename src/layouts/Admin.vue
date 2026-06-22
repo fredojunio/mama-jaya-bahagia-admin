@@ -76,7 +76,9 @@
                     v-slot="{ open }"
                   >
                     <DisclosureButton
-                      v-if="role_id == 1 || role_id == 4 || item.name != 'Owner'"
+                      v-if="
+                        role_id == 1 || role_id == 4 || item.name != 'Owner'
+                      "
                       :class="[
                         item.current
                           ? 'bg-gray-100 text-gray-900'
@@ -103,9 +105,14 @@
                       </svg>
                     </DisclosureButton>
                     <DisclosurePanel class="space-y-1">
-                      <template v-for="subItem in item.children" :key="subItem.name">
+                      <template
+                        v-for="subItem in item.children"
+                        :key="subItem.name"
+                      >
                         <a
-                          v-if="!(subItem.name === 'Jual Barang' && role_id == 4)"
+                          v-if="
+                            !(subItem.name === 'Jual Barang' && role_id == 4)
+                          "
                           :href="subItem.href"
                           class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"
                         >
@@ -147,7 +154,9 @@
       </Dialog>
     </TransitionRoot>
     <div class="flex flex-col">
-      <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow no-print">
+      <div
+        class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow no-print"
+      >
         <button
           type="button"
           class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -296,12 +305,15 @@ var navigation = [
       { name: "Daftar Pengeluaran", href: "/admin/finance" },
       { name: "Daftar Rit", href: "/admin/finance/rit" },
       { name: "Daftar Cashback", href: "/admin/finance/cashback" },
+      { name: "Laba Rugi", href: "/admin/owner/laba_rugi" },
     ],
   },
   {
     name: "Penjualan",
     icon: "mdi:cart",
-    children: [{ name: "Buku Penjualan", href: "/admin/penjualan/buku_penjualan" }],
+    children: [
+      { name: "Buku Penjualan", href: "/admin/penjualan/buku_penjualan" },
+    ],
   },
   {
     name: "Kendaraan",

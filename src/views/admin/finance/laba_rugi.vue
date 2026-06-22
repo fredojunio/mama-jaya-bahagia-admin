@@ -95,6 +95,18 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Tunai
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Transfer
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Total Penjualan
                     </th>
                     <th
@@ -188,6 +200,24 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ formatNumber(totalTonnage(rit)) }} kg
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(totalTunai(rit)) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          Rp. {{ formatNumber(totalTransfer(rit)) }}
                         </div>
                       </div>
                     </td>
@@ -685,6 +715,28 @@ export default {
       return this.totalRevenue(rit) - rit.arrived_tonnage * rit.buy_price;
 
       // return totalProfit;
+    },
+    totalTunai(rit) {
+      var total = 0;
+      rit.transactions?.forEach((transaction) => {
+        transaction.transaction.payments?.forEach((payment) => {
+          if (payment.type?.toLowerCase().trim() === "cash") {
+            total += parseInt(payment.amount);
+          }
+        });
+      });
+      return total;
+    },
+    totalTransfer(rit) {
+      var total = 0;
+      rit.transactions?.forEach((transaction) => {
+        transaction.transaction.payments?.forEach((payment) => {
+          if (payment.type?.toLowerCase().trim() === "transfer") {
+            total += parseInt(payment.amount);
+          }
+        });
+      });
+      return total;
     },
     calculateNominalAkhirBulan(rit) {
       if (!this.date || !this.date[0] || !rit.reports) return 0;
