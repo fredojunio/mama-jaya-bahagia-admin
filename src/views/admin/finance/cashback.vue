@@ -18,6 +18,12 @@
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">
         Daftar Cashback
       </h1>
+      <button
+        @click="exportExcel"
+        class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:w-auto"
+      >
+        Export Excel
+      </button>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mt-8 flex flex-col">
@@ -196,6 +202,7 @@ import axios from "axios";
 </script>
 
 <script>
+import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -286,6 +293,22 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    exportExcel() {
+      if (!this.cashbacks || this.cashbacks.length === 0) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+
+      const data = this.cashbacks.map((c) => ({
+        "Customer": c.customer ? c.customer.nickname : "-",
+        "Jumlah (Rp.)": c.amount || 0
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Cashback");
+      XLSX.writeFile(workbook, `Cashback_${new Date().toISOString().split('T')[0]}.xlsx`);
     },
   },
   data() {

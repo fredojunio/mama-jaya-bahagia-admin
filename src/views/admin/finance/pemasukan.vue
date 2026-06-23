@@ -51,6 +51,12 @@
         >
           Tukar Uang
         </button>
+        <button
+          @click="exportExcel"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+        >
+          Export Excel
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1799,6 +1805,7 @@ import moment from "moment";
 </script>
 
 <script>
+import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -2293,6 +2300,93 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    async exportExcel() {
+      let data = [];
+      if (this.currentTab === "Penjualan") {
+        let txs = [];
+        if (this.searchTransactionQuery && this.searchTransactionQuery.trim() !== "") {
+          txs = this.transactions;
+        } else {
+          this.isLoading = true;
+          try {
+            const instance = axios.create({
+              baseURL: this.url,
+              headers: { Authorization: "Bearer " + localStorage["access_token"] },
+            });
+            let page = 1;
+            let hasMore = true;
+            while (hasMore) {
+              const response = await instance.post("/admin/transaction/get_completed_transactions", {
+                start_date: this.date[0].toString(),
+                end_date: this.date[1].toString(),
+                page: page,
+                per_page: 250,
+              });
+              const results = response.data.data.results || [];
+              txs.push(...results);
+              hasMore = response.data.data.pagination.has_more;
+              page = response.data.data.pagination.current_page + 1;
+            }
+          } catch (err) {
+            console.error("Gagal mengambil seluruh data transaksi untuk export:", err);
+            alert("Gagal mengambil seluruh data transaksi");
+            this.isLoading = false;
+            return;
+          } finally {
+            this.isLoading = false;
+          }
+        }
+
+        if (!txs || txs.length === 0) {
+          alert("Tidak ada data untuk dieksport");
+          return;
+        }
+        data = txs.map((t) => {
+          const paymentSum = this.getPaymentSummary(t);
+          return {
+            "ID": t.daily_id,
+            "Customer": t.type == 'Cabang' ? 'Cabang' : t.type == 'Cas' ? 'Cas' : (t.customer ? t.customer.nickname : ''),
+            "Jumlah (Rp.)": t.total_price,
+            "Status": t.finance_approved == 0 ? "Kurang Bayar" : t.finance_approved == 2 ? "Retur" : "Lunas",
+            "Transfer/Tunai": paymentSum.type === 'mixed' ? `Transfer: ${paymentSum.transfer}, Tunai: ${paymentSum.cash}` : paymentSum.label,
+            "Tanggal": t.finance_approved == 2 ? (this.formatDate ? this.formatDate(t.updated_at) : t.updated_at) : (this.formatDate ? this.formatDate(t.created_at) : t.created_at)
+          };
+        });
+      } else if (this.currentTab === "Tabungan") {
+        if (!this.savings || this.savings.length === 0) {
+          alert("Tidak ada data untuk dieksport");
+          return;
+        }
+        data = this.savings.map((s) => ({
+          "Tanggal": this.formatDate ? this.formatDate(s.created_at) : s.created_at,
+          "Customer": s.customer ? s.customer.nickname : '',
+          "TB": s.tb,
+          "THR": s.thr
+        }));
+      } else if (this.currentTab === "Cas") {
+        if (!this.cases || this.cases.length === 0) {
+          alert("Tidak ada data untuk dieksport");
+          return;
+        }
+        data = this.cases.map((c) => ({
+          "Tanggal": this.formatDate ? this.formatDate(c.created_at) : c.created_at,
+          "Total": c.total,
+          "Koin": c.koin,
+          "1.000": c.seribu,
+          "2.000": c.duaribu,
+          "5.000": c.limaribu,
+          "10.000": c.sepuluhribu,
+          "20.000": c.duapuluhribu
+        }));
+      }
+
+      if (data.length === 0) return;
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Pemasukan");
+      XLSX.writeFile(workbook, `Pemasukan_${this.currentTab.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
     },
   },
   data() {

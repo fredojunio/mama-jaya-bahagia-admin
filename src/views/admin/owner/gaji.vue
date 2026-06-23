@@ -24,6 +24,12 @@
           />
         </div>
         <button
+          @click="exportExcel"
+          class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:w-auto"
+        >
+          Export Excel
+        </button>
+        <button
           v-if="role_id != 4"
           @click="showAddSalaryForm = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
@@ -280,6 +286,7 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
+import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -346,6 +353,24 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    exportExcel() {
+      if (!this.expenses || this.expenses.length === 0) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
+
+      const data = this.expenses.map((e) => ({
+        "Nama": e.name || "-",
+        "Jumlah (Rp.)": e.amount || 0,
+        "Tanggal": this.formatDate(e.time),
+        "Keterangan": e.note || "-"
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Gaji");
+      XLSX.writeFile(workbook, `Gaji_${new Date().toISOString().split('T')[0]}.xlsx`);
     },
   },
   data() {
