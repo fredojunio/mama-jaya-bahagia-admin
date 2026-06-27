@@ -741,7 +741,15 @@ export default {
     calculateNominalAkhirBulan(rit) {
       if (!this.date || !this.date[0] || !rit.reports) return 0;
 
-      const startDate = new Date(this.date[0]);
+      const startDate = new Date(
+        this.date[0].getFullYear(),
+        this.date[0].getMonth(),
+        1,
+        0,
+        0,
+        0,
+        0,
+      );
 
       // Find the latest report that is strictly before the selected start date
       const prevReports = rit.reports.filter((report) => {
@@ -773,6 +781,10 @@ export default {
         this.date[0].getFullYear(),
         this.date[0].getMonth(),
         1,
+        0,
+        0,
+        0,
+        0,
       );
 
       const prevReports = rit.reports.filter((report) => {

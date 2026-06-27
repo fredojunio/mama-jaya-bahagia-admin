@@ -693,6 +693,10 @@ export default {
         this.date[0].getFullYear(),
         this.date[0].getMonth(),
         1,
+        0,
+        0,
+        0,
+        0,
       );
 
       // Find the latest report that is strictly before the selected start date
@@ -725,6 +729,10 @@ export default {
         this.date[0].getFullYear(),
         this.date[0].getMonth(),
         1,
+        0,
+        0,
+        0,
+        0,
       );
 
       const prevReports = rit.reports.filter((report) => {
