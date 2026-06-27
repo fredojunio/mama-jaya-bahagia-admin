@@ -35,6 +35,12 @@
             :enable-time-picker="false"
           />
         </div>
+        <button
+          @click="exportExcel"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
+        >
+          Export Excel
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -602,6 +608,7 @@ import axios from "axios";
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import * as XLSX from "xlsx";
 import {
   Menu,
   MenuButton,
@@ -635,6 +642,35 @@ export default {
     this.getAllRits();
   },
   methods: {
+    exportExcel() {
+      if (!this.rits || this.rits.length === 0) {
+        alert("Tidak ada data untuk diexport");
+        return;
+      }
+
+      const dataToExport = this.rits.map((rit) => ({
+        "Kode": rit.item.code,
+        "Tanggal Datang": this.formatDate(rit.delivery_date),
+        "Tonase Awal Customer (kg)": rit.customer_tonnage,
+        "Tonase Awal Cabang (kg)": rit.branch_tonnage,
+        "Tonase Awal Pusat (kg)": rit.arrived_tonnage,
+        "Harga Beli": rit.buy_price,
+        "Nominal Beli": rit.buy_price * rit.arrived_tonnage,
+        "Tonase Akhir Bulan (kg)": this.calculateTonaseAkhirBulan(rit),
+        "Nominal Akhir Bulan": Math.round(this.calculateNominalAkhirBulan(rit)),
+        "Tonase Terjual (kg)": this.totalTonnage(rit),
+        "Total Penjualan": this.totalRevenue(rit),
+        "Hasil Laba/Rugi": this.totalProfit(rit),
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Laba Rugi");
+      
+      let dateString = new Date().toISOString().slice(0, 10);
+      const fileName = `Laba_Rugi_${dateString}.xlsx`;
+      XLSX.writeFile(workbook, fileName);
+    },
     getAllRits: function () {
       this.isLoading = true;
       const instance = axios.create({
