@@ -39,85 +39,81 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mt-8 flex flex-col">
-        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div
-            class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
-          >
-            <div
-              class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
-            >
+        <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle md:px-6 lg:px-8">
+            <div class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="sticky left-0 bg-gray-50 z-10 border-r border-gray-200 py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Kode - Tanggal Datang
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Tonase Awal
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Harga Beli
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Nominal Beli
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Tonase Akhir Bulan
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Nominal Akhir Bulan
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Tonase Terjual
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Tunai
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Transfer
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Total Penjualan
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Hasil Laba/Rugi
                     </th>
                     <th
                       scope="col"
-                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Detail
                     </th>
@@ -126,7 +122,7 @@
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr v-for="rit in rits" :key="rit.id">
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="sticky left-0 bg-white z-10 border-r border-gray-200 whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -136,9 +132,9 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
-                      <div class="flex flex-col gap-y-2">
+                      <div class="flex flex-col gap-y-0.5">
                         <div class="font-medium text-gray-900">
                           Customer: {{ formatNumber(rit.customer_tonnage) }} kg
                         </div>
@@ -151,7 +147,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -160,7 +156,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -172,7 +168,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -181,7 +177,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -195,7 +191,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -204,7 +200,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -213,7 +209,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -222,7 +218,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -231,7 +227,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
@@ -240,7 +236,7 @@
                       </div>
                     </td>
                     <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="flex flex-col items-start">
                         <div

@@ -23,6 +23,7 @@ import FinanceIndex from "/src/views/admin/finance/index.vue";
 import FinanceRit from "/src/views/admin/finance/rit.vue";
 import FinancePemasukan from "/src/views/admin/finance/pemasukan.vue";
 import FinanceCashback from "/src/views/admin/finance/cashback.vue";
+import FinanceLabaRugi from "/src/views/admin/finance/laba_rugi.vue";
 
 //Kendaraan
 import KendaraanIndex from "/src/views/admin/kendaraan/index.vue";
@@ -166,6 +167,14 @@ const routes = [
     component: FinanceCashback,
     meta: {
       title: "Finance - Cashback",
+    },
+  },
+  {
+    path: "/admin/finance/laba_rugi",
+    name: "FinanceLabaRugi",
+    component: FinanceLabaRugi,
+    meta: {
+      title: "Finance - Laba Rugi",
     },
   },
   {

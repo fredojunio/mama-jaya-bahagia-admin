@@ -305,7 +305,7 @@ var navigation = [
       { name: "Daftar Pengeluaran", href: "/admin/finance" },
       { name: "Daftar Rit", href: "/admin/finance/rit" },
       { name: "Daftar Cashback", href: "/admin/finance/cashback" },
-      { name: "Laba Rugi", href: "/admin/owner/laba_rugi" },
+      { name: "Laba Rugi", href: "/admin/finance/laba_rugi" },
     ],
   },
   {
