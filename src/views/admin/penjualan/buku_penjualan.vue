@@ -70,6 +70,12 @@
             />
           </div>
           <button
+            @click="exportExcel"
+            class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:w-auto"
+          >
+            Export Excel
+          </button>
+          <button
             @click="printPage"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
           >
@@ -288,6 +294,7 @@
 import Admin from "../../../layouts/Admin.vue";
 import { Icon } from "@iconify/vue";
 import axios from "axios";
+import * as XLSX from "xlsx";
 </script>
 
 <script>
@@ -463,29 +470,169 @@ export default {
 
       let cashSum = 0;
       let transferSum = 0;
+      if (
+        transaction.transfer_amount > 0 &&
+        transaction.cash_amount > 0 &&
+        transaction.transfer_amount + transaction.cash_amount ===
+          transaction.total_price
+      ) {
+        return {
+          type: "mixed",
+          transfer: transaction.transfer_amount,
+          cash: transaction.cash_amount,
+        };
+      } else if (transaction.payment_method === 1) {
+        return { type: "transfer", label: "Transfer" };
+      } else {
+        return { type: "cash", label: "Tunai" };
+      }
+    },
+    exportExcel() {
+      if (!this.transactions || this.transactions.length === 0) {
+        alert("Tidak ada data untuk dieksport");
+        return;
+      }
 
-      transaction.payments.forEach((payment) => {
-        // Checking for both 'Cash' and 'Cash ' (with space) or other variants
-        const type = payment.type?.toLowerCase().trim();
-        if (type === "transfer") {
-          transferSum += payment.amount;
+      const aoa = [
+        [
+          "Waktu",
+          "Customer",
+          "Item (Rit)",
+          "Tonnage",
+          "Masak",
+          "Harga Item",
+          "TB",
+          "THR",
+          "SAK",
+          "Lain-Lain",
+          "Diskon",
+          "Total Transaksi",
+          "Status Bayar"
+        ]
+      ];
+
+      const merges = [];
+      let currentRow = 1;
+
+      this.transactions.forEach((t) => {
+        const startRow = currentRow;
+
+        let statusText = "Lunas";
+        if (t.finance_approved == 0) {
+          statusText = "Kurang Bayar";
+        } else if (t.finance_approved == 2) {
+          statusText = "Retur";
+        }
+        
+        const paymentSum = this.getPaymentSummary(t);
+        const paymentText =
+          paymentSum.type === "mixed"
+            ? `Trf: ${this.formatNumber(paymentSum.transfer)}, Tni: ${this.formatNumber(paymentSum.cash)}`
+            : paymentSum.label;
+
+        let totalRits = t.rits ? t.rits.length : 0;
+
+        let timeStr = this.formatTime(t.updated_at);
+        let custName = t.customer?.nickname || t.customer?.name || "Customer";
+
+        if (totalRits === 0) {
+          aoa.push([
+            timeStr,
+            custName,
+            "-",
+            "-",
+            "-",
+            0,
+            Number(t.tb) || 0,
+            Number(t.thr) || 0,
+            Number(t.sack_price) || 0,
+            Number(t.other) || 0,
+            Number(t.discount) || 0,
+            Number(t.total_price),
+            `${statusText} - ${paymentText}`
+          ]);
+          currentRow++;
         } else {
-          // Assume anything else is Cash/Tunai
-          cashSum += payment.amount;
+          t.rits.forEach((rit, index) => {
+            let ritCode = rit.rit?.item?.code || "-";
+            if (index === 0) {
+              aoa.push([
+                timeStr,
+                custName,
+                ritCode,
+                Number(rit.tonnage),
+                Number(rit.masak),
+                Number(rit.total_price),
+                Number(t.tb) || 0,
+                Number(t.thr) || 0,
+                Number(t.sack_price) || 0,
+                Number(t.other) || 0,
+                Number(t.discount) || 0,
+                Number(t.total_price),
+                `${statusText} - ${paymentText}`
+              ]);
+            } else {
+              aoa.push([
+                "",
+                "",
+                ritCode,
+                Number(rit.tonnage),
+                Number(rit.masak),
+                Number(rit.total_price),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]);
+            }
+            currentRow++;
+          });
+
+          if (totalRits > 1) {
+            merges.push({ s: { r: startRow, c: 0 }, e: { r: currentRow - 1, c: 0 } }); // Waktu
+            merges.push({ s: { r: startRow, c: 1 }, e: { r: currentRow - 1, c: 1 } }); // Customer
+            merges.push({ s: { r: startRow, c: 6 }, e: { r: currentRow - 1, c: 6 } }); // TB
+            merges.push({ s: { r: startRow, c: 7 }, e: { r: currentRow - 1, c: 7 } }); // THR
+            merges.push({ s: { r: startRow, c: 8 }, e: { r: currentRow - 1, c: 8 } }); // SAK
+            merges.push({ s: { r: startRow, c: 9 }, e: { r: currentRow - 1, c: 9 } }); // Lain-Lain
+            merges.push({ s: { r: startRow, c: 10 }, e: { r: currentRow - 1, c: 10 } }); // Diskon
+            merges.push({ s: { r: startRow, c: 11 }, e: { r: currentRow - 1, c: 11 } }); // Total Transaksi
+            merges.push({ s: { r: startRow, c: 12 }, e: { r: currentRow - 1, c: 12 } }); // Status Bayar
+          }
         }
       });
 
-      if (cashSum > 0 && transferSum > 0) {
-        return {
-          type: "mixed",
-          cash: cashSum,
-          transfer: transferSum,
-        };
-      } else if (transferSum > 0) {
-        return { type: "single", label: "Transfer" };
-      } else {
-        return { type: "single", label: "Tunai" };
+      const worksheet = XLSX.utils.aoa_to_sheet(aoa);
+      worksheet["!merges"] = merges;
+      
+      const wscols = [
+        { wch: 10 }, // Waktu
+        { wch: 15 }, // Customer
+        { wch: 12 }, // Item
+        { wch: 10 }, // Tonnage
+        { wch: 10 }, // Masak
+        { wch: 15 }, // Harga Item
+        { wch: 10 }, // TB
+        { wch: 10 }, // THR
+        { wch: 10 }, // SAK
+        { wch: 12 }, // Lain-Lain
+        { wch: 10 }, // Diskon
+        { wch: 15 }, // Total
+        { wch: 25 }, // Status
+      ];
+      worksheet["!cols"] = wscols;
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Buku Penjualan");
+      
+      let dateString = "Export";
+      if (this.date && this.date[0]) {
+         dateString = new Date(this.date[0]).toISOString().split('T')[0];
       }
+      XLSX.writeFile(workbook, `Buku_Penjualan_${dateString}.xlsx`);
     },
     getTotalPayments(transaction) {
       return (transaction.payments || []).reduce((total, pay) => {
