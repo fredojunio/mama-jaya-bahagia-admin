@@ -111,7 +111,8 @@
                       >
                         <a
                           v-if="
-                            !(subItem.name === 'Jual Barang' && role_id == 4)
+                            !(subItem.name === 'Jual Barang' && role_id == 4) &&
+                            !(subItem.name === 'Laba Rugi' && item.name === 'Finance' && role_id != 1 && role_id != 4 && email !== 'admin2@gmail.com')
                           "
                           :href="subItem.href"
                           class="group w-full ml-1 flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-50 rounded-md hover:text-gray-900 hover:bg-gray-50"

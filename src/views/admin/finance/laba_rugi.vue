@@ -658,6 +658,10 @@ export default {
     SwitchLabel,
   },
   created() {
+    if (this.role_id != 1 && this.role_id != 4 && this.email !== 'admin2@gmail.com') {
+      this.$router.push('/admin');
+      return;
+    }
     this.getAllRits();
   },
   methods: {
