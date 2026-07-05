@@ -470,18 +470,23 @@ export default {
 
       let cashSum = 0;
       let transferSum = 0;
-      if (
-        transaction.transfer_amount > 0 &&
-        transaction.cash_amount > 0 &&
-        transaction.transfer_amount + transaction.cash_amount ===
-          transaction.total_price
-      ) {
+
+      transaction.payments.forEach((payment) => {
+        const type = payment.type?.toLowerCase().trim();
+        if (type === "transfer") {
+          transferSum += payment.amount;
+        } else {
+          cashSum += payment.amount;
+        }
+      });
+
+      if (cashSum > 0 && transferSum > 0) {
         return {
           type: "mixed",
-          transfer: transaction.transfer_amount,
-          cash: transaction.cash_amount,
+          cash: cashSum,
+          transfer: transferSum,
         };
-      } else if (transaction.payment_method === 1) {
+      } else if (transferSum > 0) {
         return { type: "transfer", label: "Transfer" };
       } else {
         return { type: "cash", label: "Tunai" };
