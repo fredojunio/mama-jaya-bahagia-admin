@@ -203,19 +203,7 @@
                         :key="index"
                         class="rounded-md !bg-yellow-50 p-4"
                       >
-                        <a
-                          :href="
-                            notification.title != 'Barang Cabang'
-                              ? notification.title != 'Barang Dalam Perjalanan'
-                                ? notification.title != 'Input Pemasukan'
-                                  ? notification.title != 'Penjualan Customer'
-                                    ? ''
-                                    : '/admin/owner/jual_barang'
-                                  : '/admin/finance/pemasukan'
-                                : '/admin/rit'
-                              : '/admin/owner/jual_barang'
-                          "
-                        >
+                        <a :href="getNotificationUrl(notification)">
                           <div class="flex">
                             <div class="flex-shrink-0">
                               <Icon
@@ -249,17 +237,12 @@
     <div class="flex flex-col flex-1">
       <main class="flex-1">
         <div class="py-6">
-          <slot />
+          <slot></slot>
         </div>
       </main>
     </div>
   </div>
 </template>
-
-<script setup>
-import { Icon } from "@iconify/vue";
-import axios from "axios";
-</script>
 
 <script>
 import {
@@ -267,14 +250,17 @@ import {
   DialogOverlay,
   TransitionChild,
   TransitionRoot,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
 } from "@headlessui/vue";
+import { Icon } from "@iconify/vue";
+import axios from "axios";
+
 var navigation = [
   {
     name: "Barang",
@@ -356,6 +342,7 @@ export default {
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
+    Icon,
   },
   setup() {
     return {
@@ -369,6 +356,23 @@ export default {
       localStorage["role_id"] = null;
       this.$router.push("/");
     },
+    getNotificationUrl(notification) {
+      if (notification.title === "Recall Customer") {
+        return "/admin/customer";
+      } else if (
+        notification.title === "Barang Cabang" ||
+        notification.title === "Penjualan Customer"
+      ) {
+        return this.role_id == 1 || this.role_id == 4
+          ? "/admin/owner/jual_barang"
+          : "/admin/rit/jual_barang";
+      } else if (notification.title === "Barang Dalam Perjalanan") {
+        return "/admin/rit";
+      } else if (notification.title === "Input Pemasukan") {
+        return "/admin/finance/pemasukan";
+      }
+      return "";
+    },
     getNotifications: function () {
       const instance = axios.create({
         baseURL: this.url,
@@ -377,7 +381,7 @@ export default {
       instance
         .get("/admin/get_notification")
         .then((data) => {
-          if (this.role_id == 1 || this.role_id == 4) {
+          if (this.role_id == 1 || this.role_id == 2 || this.role_id == 4) {
             this.notifications = data.data.data.results;
           } else {
             this.notifications = data.data.data.results.filter((item) => {
