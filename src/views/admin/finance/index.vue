@@ -111,19 +111,19 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      BBM (Rp.)
+                      BBM (Rp.) <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalBbmSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      E-Toll (Rp.)
+                      E-Toll (Rp.) <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalEtollSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Sangu (Rp.)
+                      Sangu (Rp.) <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalSanguSum) }})</span>
                     </th>
                     <th
                       scope="col"
@@ -1087,6 +1087,20 @@ export default {
   },
   created() {
     this.getAllData();
+  },
+  computed: {
+    totalBbmSum() {
+      if (!this.expenses) return 0;
+      return this.expenses.reduce((acc, expense) => acc + (expense.trip ? parseFloat(expense.trip.gas) : 0), 0);
+    },
+    totalEtollSum() {
+      if (!this.expenses) return 0;
+      return this.expenses.reduce((acc, expense) => acc + (expense.trip ? parseFloat(expense.trip.toll) : 0), 0);
+    },
+    totalSanguSum() {
+      if (!this.expenses) return 0;
+      return this.expenses.reduce((acc, expense) => acc + (expense.trip ? parseFloat(expense.trip.allowance) : 0), 0);
+    }
   },
   methods: {
     changeTab(tabName) {

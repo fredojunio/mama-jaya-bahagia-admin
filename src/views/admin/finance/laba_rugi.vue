@@ -41,7 +41,9 @@
       <div class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle md:px-6 lg:px-8">
-            <div class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <div
+              class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
               <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                   <tr>
@@ -67,49 +69,49 @@
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Nominal Beli
+                      Nominal Beli <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalNominalBeliSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tonase Akhir Bulan
+                      Tonase Akhir Bulan <br/><span class="text-[10px] font-normal whitespace-nowrap">({{ formatNumber(totalTonaseAkhirBulanSum) }} kg)</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Nominal Akhir Bulan
+                      Nominal Akhir Bulan <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalNominalAkhirBulanSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tonase Terjual
+                      Tonase Terjual <br/><span class="text-[10px] font-normal whitespace-nowrap">({{ formatNumber(totalTonaseTerjualSum) }} kg)</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tunai
+                      Tunai <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalTunaiSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Transfer
+                      Transfer <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalTransferSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Total Penjualan
+                      Total Penjualan <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalTotalPenjualanSum) }})</span>
                     </th>
                     <th
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Hasil Laba/Rugi
+                      Hasil Laba/Rugi Jual <br/><span class="text-[10px] font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalHasilLabaRugiSum) }})</span>
                     </th>
                     <th
                       scope="col"
@@ -658,11 +660,49 @@ export default {
     SwitchLabel,
   },
   created() {
-    if (this.role_id != 1 && this.role_id != 4 && this.email !== 'admin2@gmail.com') {
-      this.$router.push('/admin');
+    if (
+      this.role_id != 1 &&
+      this.role_id != 4 &&
+      this.email !== "admin2@gmail.com"
+    ) {
+      this.$router.push("/admin");
       return;
     }
     this.getAllRits();
+  },
+  computed: {
+    totalNominalBeliSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + (rit.buy_price * rit.arrived_tonnage), 0);
+    },
+    totalTonaseAkhirBulanSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.calculateTonaseAkhirBulan(rit), 0);
+    },
+    totalNominalAkhirBulanSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + Math.round(this.calculateNominalAkhirBulan(rit)), 0);
+    },
+    totalTonaseTerjualSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.totalTonnage(rit), 0);
+    },
+    totalTunaiSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.totalTunai(rit), 0);
+    },
+    totalTransferSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.totalTransfer(rit), 0);
+    },
+    totalTotalPenjualanSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.totalRevenue(rit), 0);
+    },
+    totalHasilLabaRugiSum() {
+      if (!this.rits) return 0;
+      return this.rits.reduce((acc, rit) => acc + this.totalProfit(rit), 0);
+    }
   },
   methods: {
     getAllRits: function () {

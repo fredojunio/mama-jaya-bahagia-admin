@@ -24,7 +24,7 @@
         <td>{{ transaction.customer.name }}</td>
       </tr>
       <tr>
-        <td>TELP: 081281371762</td>
+        <td>TELP: +62 896-8883-7888</td>
         <td></td>
         <td></td>
         <td>ALAMAT:</td>
@@ -102,13 +102,14 @@
         <td>-</td>
       </tr>
       <tr class="border-t-2 border-black">
-        <td>TANDA TERIMA</td>
-        <td>HORMAT KAMI</td>
-        <td></td>
+        <td colspan="3">
+          TANDA TERIMA <span class="ml-20">ADMIN</span>
+          <span class="ml-20">PENGIRIM</span>
+        </td>
         <td>TOTAL</td>
         <td>{{ formatNumber(transaction.total_price) }}</td>
       </tr>
-			<tr v-if="transaction.discount > 0">
+      <tr v-if="transaction.discount > 0">
         <td></td>
         <td></td>
         <td></td>
@@ -116,7 +117,7 @@
         <td>{{ formatNumber(transaction.discount) }}</td>
       </tr>
       <tr>
-        <td class="font-bold">Nomor Resmi Gudang/Toko Hubungi</td>
+        <td></td>
         <td></td>
         <td></td>
         <td>BAYAR</td>
@@ -125,13 +126,132 @@
         </td>
       </tr>
       <tr>
-        <td class="font-bold">+62 896-8883-7888</td>
+        <td></td>
         <td></td>
         <td></td>
         <td>KURANG</td>
         <td>
           {{ formatNumber(transaction.total_price - getTotalPayments()) }}
         </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{ transaction.customer.nickname }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
     </table>
   </div>
@@ -173,7 +293,7 @@ export default {
       const options = { day: "numeric", month: "numeric", year: "numeric" };
       return new Date(this.transaction.created_at).toLocaleDateString(
         "id-ID",
-        options
+        options,
       );
     },
   },

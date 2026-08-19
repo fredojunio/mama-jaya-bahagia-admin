@@ -313,6 +313,7 @@ var navigation = [
     children: [
       { name: "Laporan Harian", href: "/admin/laporan" },
       { name: "Laporan Bulanan", href: "/admin/laporan/bulanan" },
+      { name: "Laporan Laba Rugi", href: "/admin/laporan/laba_rugi" },
     ],
   },
   {
