@@ -249,7 +249,7 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Jumlah (Rp.)
+                      Jumlah <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalAmountSum) }})</span>
                     </th>
                     <th
                       scope="col"
@@ -357,7 +357,7 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Jumlah (Rp.)
+                      Jumlah <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalAmountSum) }})</span>
                     </th>
                     <th
                       scope="col"
@@ -444,7 +444,7 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Jumlah (Rp.)
+                      Jumlah <br/><span class="text-xs font-normal whitespace-nowrap">(Rp. {{ formatNumber(totalAmountSum) }})</span>
                     </th>
                     <th
                       scope="col"
@@ -1100,6 +1100,10 @@ export default {
     totalSanguSum() {
       if (!this.expenses) return 0;
       return this.expenses.reduce((acc, expense) => acc + (expense.trip ? parseFloat(expense.trip.allowance) || 0 : 0), 0);
+    },
+    totalAmountSum() {
+      if (!this.expenses) return 0;
+      return this.expenses.reduce((acc, expense) => acc + (parseFloat(expense.amount) || 0), 0);
     }
   },
   methods: {
