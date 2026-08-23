@@ -14,7 +14,7 @@
                 Laporan -
                 {{
                   formatDate(
-                    selectedData.created_at ?? new Date().toLocaleDateString()
+                    selectedData.created_at ?? new Date().toLocaleDateString(),
                   )
                 }}
               </h1>
@@ -27,14 +27,16 @@
             </div>
           </div>
         </div>
-        <div class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2 items-center">
+        <div
+          class="hidden sm:flex 2xl:hidden min-w-0 flex-1 gap-2 items-center"
+        >
           <h1
             class="text-2xl font-bold text-gray-900 truncate mr-auto flex flex-col"
           >
             Laporan -
             {{
               formatDate(
-                selectedData.created_at ?? new Date().toLocaleDateString()
+                selectedData.created_at ?? new Date().toLocaleDateString(),
               )
             }}
           </h1>
@@ -52,18 +54,14 @@
       <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div class="sm:col-span-1">
           <!-- //NOTE - ini itu total pemasukan - total pengeluaran - transaksi yang belum bayar -->
-          <dt class="text-xl font-medium text-gray-500">
-            Total Penerimaan Uang
-          </dt>
+          <dt class="text-xl font-medium text-gray-500">Total Saldo Kas</dt>
           <dd class="mt-1 text-xl text-gray-900">
             Rp. {{ formatNumber(selectedData.money) }}
           </dd>
         </div>
         <div class="sm:col-span-1">
           <!-- //NOTE - ini itu total pemasukan - total pengeluaran - transaksi yang belum bayar -->
-          <dt class="text-xl font-medium text-gray-500">
-            Total Penerimaan Uang Fisik
-          </dt>
+          <dt class="text-xl font-medium text-gray-500">Total Fisik Kas</dt>
           <dd class="mt-1 text-xl text-gray-900">
             Rp.
             {{ formatNumber(selectedData.real_income) }}
@@ -85,19 +83,21 @@
           </dd>
         </div>
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Total Pemasukan</dt>
+          <dt class="text-sm font-medium text-gray-500">Total Kas Masuk</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.income) }}
           </dd>
         </div>
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Total Pengeluaran</dt>
+          <dt class="text-sm font-medium text-gray-500">Total Kas Keluar</dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.expense) }}
           </dd>
         </div>
         <div class="sm:col-span-1">
-          <dt class="text-sm font-medium text-gray-500">Penjualan</dt>
+          <dt class="text-sm font-medium text-gray-500">
+            Total Faktur Penjualan
+          </dt>
           <dd class="mt-1 text-sm text-gray-900">
             Rp. {{ formatNumber(selectedData.item_income) }} -
             {{ formatNumber(totalTonnageSold()) }} kg
@@ -295,8 +295,8 @@
                               formatNumber(
                                 parseFloat(
                                   parseFloat(ritReport.real_tonnage) -
-                                    parseFloat(ritReport.tonnage_left)
-                                ).toFixed(2)
+                                    parseFloat(ritReport.tonnage_left),
+                                ).toFixed(2),
                               )
                             }}
                             kg
@@ -305,7 +305,7 @@
                             {{
                               formatNumber(
                                 parseFloat(ritReport.real_tonnage) -
-                                  parseFloat(ritReport.tonnage_left)
+                                  parseFloat(ritReport.tonnage_left),
                               )
                             }}
                             kg
@@ -735,48 +735,89 @@ export default {
         alert("Tidak ada data untuk dieksport");
         return;
       }
-      
+
       const doc = new jsPDF();
-      
-      const title = `Laporan Harian - ${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tanggal'}`;
+
+      const title = `Laporan Harian - ${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : "Tanggal"}`;
       doc.setFontSize(16);
       doc.text(title, 14, 20);
-      
+
       const tableData = [
-        ["Total Penerimaan Uang", `Rp. ${this.formatNumber(this.selectedData.money)}`],
-        ["Total Penerimaan Uang Fisik", `Rp. ${this.formatNumber(this.selectedData.real_income)}`],
-        ["Total Pemasukan", `Rp. ${this.formatNumber(this.selectedData.income)}`],
-        ["Total Pengeluaran", `Rp. ${this.formatNumber(this.selectedData.expense)}`],
-        ["Penjualan", `Rp. ${this.formatNumber(this.selectedData.item_income)} - ${this.formatNumber(this.totalTonnageSold())} kg`],
-        ["Pengeluaran Gaji", `Rp. ${this.formatNumber(this.selectedData.salary_expense)}`],
-        ["Penjualan Kedelai", `Rp. ${this.formatNumber(this.selectedData.kedelai_income)}`],
-        ["Pemasukan TB", `Rp. ${this.formatNumber(this.selectedData.tb_income)}`],
-        ["Pengeluaran TB", `Rp. ${this.formatNumber(this.selectedData.tb_expense)}`],
-        ["Pemasukan THR", `Rp. ${this.formatNumber(this.selectedData.thr_income)}`],
-        ["Pengeluaran THR", `Rp. ${this.formatNumber(this.selectedData.thr_expense)}`],
-        ["Pemasukan Lain-lain", `Rp. ${this.formatNumber(this.selectedData.other_income)}`],
-        ["Pengeluaran Operasional", `Rp. ${this.formatNumber(this.selectedData.operational_expense)}`],
+        [
+          "Total Saldo Kas",
+          `Rp. ${this.formatNumber(this.selectedData.money)}`,
+        ],
+        [
+          "Total Fisik Kas",
+          `Rp. ${this.formatNumber(this.selectedData.real_income)}`,
+        ],
+        [
+          "Total Kas Masuk",
+          `Rp. ${this.formatNumber(this.selectedData.income)}`,
+        ],
+        [
+          "Total Kas Keluar",
+          `Rp. ${this.formatNumber(this.selectedData.expense)}`,
+        ],
+        [
+          "Penjualan",
+          `Rp. ${this.formatNumber(this.selectedData.item_income)} - ${this.formatNumber(this.totalTonnageSold())} kg`,
+        ],
+        [
+          "Pengeluaran Gaji",
+          `Rp. ${this.formatNumber(this.selectedData.salary_expense)}`,
+        ],
+        [
+          "Penjualan Kedelai",
+          `Rp. ${this.formatNumber(this.selectedData.kedelai_income)}`,
+        ],
+        [
+          "Pemasukan TB",
+          `Rp. ${this.formatNumber(this.selectedData.tb_income)}`,
+        ],
+        [
+          "Pengeluaran TB",
+          `Rp. ${this.formatNumber(this.selectedData.tb_expense)}`,
+        ],
+        [
+          "Pemasukan THR",
+          `Rp. ${this.formatNumber(this.selectedData.thr_income)}`,
+        ],
+        [
+          "Pengeluaran THR",
+          `Rp. ${this.formatNumber(this.selectedData.thr_expense)}`,
+        ],
+        [
+          "Pemasukan Lain-lain",
+          `Rp. ${this.formatNumber(this.selectedData.other_income)}`,
+        ],
+        [
+          "Pengeluaran Operasional",
+          `Rp. ${this.formatNumber(this.selectedData.operational_expense)}`,
+        ],
       ];
 
       autoTable(doc, {
         startY: 30,
-        head: [['Deskripsi', 'Jumlah']],
+        head: [["Deskripsi", "Jumlah"]],
         body: tableData,
-        theme: 'striped',
-        headStyles: { fillColor: [0, 0, 0] }
+        theme: "striped",
+        headStyles: { fillColor: [0, 0, 0] },
       });
 
-      doc.save(`Laporan_Harian_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tgl'}.pdf`);
+      doc.save(
+        `Laporan_Harian_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : "Tgl"}.pdf`,
+      );
     },
     exportExcel() {
       if (!this.selectedData) {
         alert("Tidak ada data untuk dieksport");
         return;
       }
-      
+
       let data = [];
-      const currentTabName = this.tabs.find(t => t.current).name;
-      
+      const currentTabName = this.tabs.find((t) => t.current).name;
+
       if (currentTabName === "Sisa Stok") {
         if (!this.selectedData.rits || this.selectedData.rits.length === 0) {
           alert("Tidak ada data sisa stok");
@@ -786,7 +827,10 @@ export default {
           "Kode - Tanggal Datang": `${ritReport.rit.item.code} - ${this.formatDate ? this.formatDate(ritReport.rit.arrival_date) : ritReport.rit.arrival_date}`,
           "Sisa Tonase Sistem": ritReport.tonnage_left,
           "Sisa Tonase Fisik": ritReport.real_tonnage,
-          "Selisih Penyusutan": parseFloat(parseFloat(ritReport.real_tonnage) - parseFloat(ritReport.tonnage_left)).toFixed(2)
+          "Selisih Penyusutan": parseFloat(
+            parseFloat(ritReport.real_tonnage) -
+              parseFloat(ritReport.tonnage_left),
+          ).toFixed(2),
         }));
       } else if (currentTabName === "Penjualan") {
         if (!this.selectedData.rits || this.selectedData.rits.length === 0) {
@@ -797,20 +841,29 @@ export default {
           "Kode - Tanggal Datang": `${ritReport.rit.item.code} - ${this.formatDate ? this.formatDate(ritReport.rit.arrival_date) : ritReport.rit.arrival_date}`,
           "Tonase Penjualan Harian": ritReport.tonnage_sold,
           "Total Penjualan Harian": ritReport.tonnage_sold_price,
-          "Total Penjualan Barang": ritReport.total_tonnage_sold
+          "Total Penjualan Barang": ritReport.total_tonnage_sold,
         }));
       } else if (currentTabName === "Transaksi") {
-        if (!this.selectedData.transactions || this.selectedData.transactions.length === 0) {
+        if (
+          !this.selectedData.transactions ||
+          this.selectedData.transactions.length === 0
+        ) {
           alert("Tidak ada data transaksi");
           return;
         }
         data = this.selectedData.transactions
-          .filter(t => this.shouldShowDate(t.settled_date))
+          .filter((t) => this.shouldShowDate(t.settled_date))
           .map((t) => ({
-            "Customer": t.transaction.customer ? t.transaction.customer.nickname : t.transaction.type,
+            Customer: t.transaction.customer
+              ? t.transaction.customer.nickname
+              : t.transaction.type,
             "Jumlah (Rp.)": t.amount,
-            "Tanggal Transaksi": this.formatDate ? this.formatDate(t.transaction_date) : t.transaction_date,
-            "Tanggal Lunas": this.formatDate ? this.formatDate(t.settled_date) : t.settled_date
+            "Tanggal Transaksi": this.formatDate
+              ? this.formatDate(t.transaction_date)
+              : t.transaction_date,
+            "Tanggal Lunas": this.formatDate
+              ? this.formatDate(t.settled_date)
+              : t.settled_date,
           }));
       }
 
@@ -822,7 +875,10 @@ export default {
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Detail");
-      XLSX.writeFile(workbook, `Detail_Laporan_${currentTabName.replace(/ /g, '_')}_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : 'Tgl'}.xlsx`);
+      XLSX.writeFile(
+        workbook,
+        `Detail_Laporan_${currentTabName.replace(/ /g, "_")}_${this.formatDate ? this.formatDate(this.selectedData.created_at ?? new Date()) : "Tgl"}.xlsx`,
+      );
     },
   },
 };
