@@ -271,7 +271,7 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{
-                            transaction.finance_approved == 0
+                            (transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction))
                               ? "Kurang Bayar"
                               : transaction.finance_approved == 2
                               ? "Retur"
@@ -322,7 +322,7 @@
                     >
                       <div class="flex flex-col items-start gap-y-1">
                         <div
-                          v-if="transaction.finance_approved == 0 && role_id != 4"
+                          v-if="(transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction)) && role_id != 4"
                           @click="showApprovalForm(transaction.id, false)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -334,7 +334,7 @@
                         </div>
                         <div
                           v-if="
-                            transaction.finance_approved == 0 && role_id == 1
+                            (transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction)) && role_id == 1
                           "
                           @click="showApprovalForm(transaction.id, true)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -358,7 +358,7 @@
                         </div>
                         <router-link
                           v-if="
-                            transaction.revision_allowed == 1 &&
+                            (transaction.revision_allowed == 1 || email == 'angeliaveronikaa@gmail.com') &&
                             isToday(transaction.created_at) &&
                             transaction.type != 'Cas' &&
                             role_id != 4
@@ -2117,6 +2117,12 @@ export default {
         return total + pay.amount;
       }, 0);
     },
+    getPaymentTotal(transaction) {
+      if (!transaction || !transaction.payments) return 0;
+      return transaction.payments.reduce((total, pay) => {
+        return total + pay.amount;
+      }, 0);
+    },
     approveTransaction() {
       const instance = axios.create({
         baseURL: this.url,
@@ -2348,7 +2354,7 @@ export default {
             "ID": t.daily_id,
             "Customer": t.type == 'Cabang' ? 'Cabang' : t.type == 'Cas' ? 'Cas' : (t.customer ? t.customer.nickname : ''),
             "Jumlah (Rp.)": t.total_price,
-            "Status": t.finance_approved == 0 ? "Kurang Bayar" : t.finance_approved == 2 ? "Retur" : "Lunas",
+            "Status": (t.finance_approved == 0 || t.total_price > this.getPaymentTotal(t)) ? "Kurang Bayar" : t.finance_approved == 2 ? "Retur" : "Lunas",
             "Transfer/Tunai": paymentSum.type === 'mixed' ? `Transfer: ${paymentSum.transfer}, Tunai: ${paymentSum.cash}` : paymentSum.label,
             "Tanggal": t.finance_approved == 2 ? (this.formatDate ? this.formatDate(t.updated_at) : t.updated_at) : (this.formatDate ? this.formatDate(t.created_at) : t.created_at)
           };
@@ -2391,6 +2397,7 @@ export default {
   },
   data() {
     return {
+      email: localStorage["email"],
       isLoading: false,
       tabs: [
         { name: "Penjualan", current: true },
