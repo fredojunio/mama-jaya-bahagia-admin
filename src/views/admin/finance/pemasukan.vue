@@ -208,17 +208,14 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr
-                    v-for="transaction in transactions"
-                    :key="transaction.id"
-                  >
+                  <tr v-for="transaction in transactions" :key="transaction.id">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div
                         v-if="
                           transaction.revision_requested != 1 &&
-                          isWithin3Days(transaction.created_at) &&
+                          isWithin7Days(transaction.created_at) &&
                           transaction.type != 'Cas' &&
                           role_id != 4
                         "
@@ -249,7 +246,7 @@
                           v-else-if="transaction.type == 'Cas'"
                           class="font-medium text-gray-900"
                         >
-                          Cas
+                          Tukar Uang
                         </div>
                         <div v-else class="font-medium text-gray-900">
                           {{ transaction.customer.nickname }}
@@ -271,11 +268,13 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{
-                            (transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction))
+                            transaction.finance_approved == 0 ||
+                            transaction.total_price >
+                              getPaymentTotal(transaction)
                               ? "Kurang Bayar"
                               : transaction.finance_approved == 2
-                              ? "Retur"
-                              : "Lunas"
+                                ? "Retur"
+                                : "Lunas"
                           }}
                         </div>
                       </div>
@@ -285,16 +284,30 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          <template v-if="getPaymentSummary(transaction).type === 'mixed'">
-                            <div class="flex flex-col text-[11px] leading-tight min-w-[120px]">
+                          <template
+                            v-if="
+                              getPaymentSummary(transaction).type === 'mixed'
+                            "
+                          >
+                            <div
+                              class="flex flex-col text-[11px] leading-tight min-w-[120px]"
+                            >
                               <div class="flex justify-between gap-2">
                                 <span>Transfer</span>
-                                <span>{{ formatNumber(getPaymentSummary(transaction).transfer) }}</span>
+                                <span>{{
+                                  formatNumber(
+                                    getPaymentSummary(transaction).transfer,
+                                  )
+                                }}</span>
                               </div>
                               <div class="border-t border-gray-300 my-1"></div>
                               <div class="flex justify-between gap-2 font-bold">
                                 <span>Tunai</span>
-                                <span>{{ formatNumber(getPaymentSummary(transaction).cash) }}</span>
+                                <span>{{
+                                  formatNumber(
+                                    getPaymentSummary(transaction).cash,
+                                  )
+                                }}</span>
                               </div>
                             </div>
                           </template>
@@ -322,7 +335,12 @@
                     >
                       <div class="flex flex-col items-start gap-y-1">
                         <div
-                          v-if="(transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction)) && role_id != 4"
+                          v-if="
+                            (transaction.finance_approved == 0 ||
+                              transaction.total_price >
+                                getPaymentTotal(transaction)) &&
+                            role_id != 4
+                          "
                           @click="showApprovalForm(transaction.id, false)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -334,7 +352,10 @@
                         </div>
                         <div
                           v-if="
-                            (transaction.finance_approved == 0 || transaction.total_price > getPaymentTotal(transaction)) && role_id == 1
+                            (transaction.finance_approved == 0 ||
+                              transaction.total_price >
+                                getPaymentTotal(transaction)) &&
+                            role_id == 1
                           "
                           @click="showApprovalForm(transaction.id, true)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -358,7 +379,8 @@
                         </div>
                         <router-link
                           v-if="
-                            (transaction.revision_allowed == 1 || email == 'angeliaveronikaa@gmail.com') &&
+                            (transaction.revision_allowed == 1 ||
+                              email == 'angeliaveronikaa@gmail.com') &&
                             isToday(transaction.created_at) &&
                             transaction.type != 'Cas' &&
                             role_id != 4
@@ -382,7 +404,7 @@
                         <div
                           v-if="
                             transaction.revision_allowed == 1 &&
-                            isToday(transaction.created_at) &&
+                            isWithin7Days(transaction.created_at) &&
                             transaction.type != 'Cas' &&
                             role_id != 4
                           "
@@ -416,6 +438,17 @@
                             <span class="ml-3">Print</span>
                           </div>
                         </router-link>
+                        <div
+                          v-if="email == 'angeliaveronikaa@gmail.com'"
+                          @click="deleteTransaction(transaction.id)"
+                          class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-red-500 font-medium border border-transparent rounded-bl-lg hover:text-red-700 group/edit mt-2"
+                        >
+                          <Icon
+                            icon="uil:trash-alt"
+                            class="w-5 h-5 text-red-400 group-hover/edit:text-red-600"
+                          ></Icon>
+                          <span class="ml-3">Hapus</span>
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -552,6 +585,12 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Metode
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Koin
                     </th>
                     <th
@@ -603,6 +642,15 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           Rp. {{ formatNumber(cas.total) }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ cas.transfer > 0 ? "Transfer" : "Tunai" }}
                         </div>
                       </div>
                     </td>
@@ -739,7 +787,7 @@
                         Kurang Bayar: Rp.
                         {{
                           formatNumber(
-                            selectedData.total_price - getTotalPayments()
+                            selectedData.total_price - getTotalPayments(),
                           )
                         }}
                       </h3>
@@ -995,7 +1043,7 @@
                               casBalance.duaribu +
                               casBalance.limaribu +
                               casBalance.sepuluhribu +
-                              casBalance.duapuluhribu
+                              casBalance.duapuluhribu,
                           )
                         }}
                       </h3>
@@ -1256,7 +1304,7 @@
                               casBalance.duaribu +
                               casBalance.limaribu +
                               casBalance.sepuluhribu +
-                              casBalance.duapuluhribu
+                              casBalance.duapuluhribu,
                           )
                         }}
                       </h3>
@@ -1301,7 +1349,33 @@
                           />
                         </div>
                       </div>
-                      <h3 class="text-md leading-6 font-medium text-gray-900">
+
+                      <div class="col-span-2 flex items-center space-x-6 my-2">
+                        <label class="text-sm font-medium text-gray-700">Metode:</label>
+                        <label class="inline-flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            v-model="exchange.type"
+                            value="Tunai"
+                            class="focus:ring-black h-4 w-4 text-black border-gray-300"
+                          />
+                          <span class="ml-2 text-sm text-gray-700">Tunai</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            v-model="exchange.type"
+                            value="Transfer"
+                            class="focus:ring-black h-4 w-4 text-black border-gray-300"
+                          />
+                          <span class="ml-2 text-sm text-gray-700">Transfer</span>
+                        </label>
+                      </div>
+
+                      <h3
+                        v-if="exchange.type === 'Tunai'"
+                        class="text-md leading-6 font-medium text-gray-900"
+                      >
                         Sisa uang:
                         {{
                           exchange.total -
@@ -1317,13 +1391,14 @@
                         Biaya:
                         {{
                           formatNumber(
-                            Math.ceil(exchange.total / 2000000) * 5000
+                            Math.ceil(exchange.total / 2000000) * 5000,
                           )
                         }}
                       </h3>
                     </div>
 
                     <div
+                      v-if="exchange.type === 'Tunai'"
                       class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-3"
                     >
                       <div>
@@ -1438,21 +1513,23 @@
                     <button
                       type="button"
                       :disabled="
-                        exchange.total -
-                          (exchange.koin +
-                            exchange.seribu +
-                            exchange.duaribu +
-                            exchange.limaribu +
-                            exchange.sepuluhribu +
-                            exchange.duapuluhribu) !=
-                          0 ||
+                        !exchange.total ||
                         exchange.total <= 0 ||
-                        exchange.koin > casBalance.koin ||
-                        exchange.seribu > casBalance.seribu ||
-                        exchange.duaribu > casBalance.duaribu ||
-                        exchange.limaribu > casBalance.limaribu ||
-                        exchange.sepuluhribu > casBalance.sepuluhribu ||
-                        exchange.duapuluhribu > casBalance.duapuluhribu
+                        (exchange.type === 'Tunai' &&
+                          (exchange.total -
+                            (exchange.koin +
+                              exchange.seribu +
+                              exchange.duaribu +
+                              exchange.limaribu +
+                              exchange.sepuluhribu +
+                              exchange.duapuluhribu) !=
+                            0 ||
+                            exchange.koin > casBalance.koin ||
+                            exchange.seribu > casBalance.seribu ||
+                            exchange.duaribu > casBalance.duaribu ||
+                            exchange.limaribu > casBalance.limaribu ||
+                            exchange.sepuluhribu > casBalance.sepuluhribu ||
+                            exchange.duapuluhribu > casBalance.duapuluhribu))
                       "
                       @click.once="exchangeMoney()"
                       class="disabled:opacity-50 ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
@@ -1735,7 +1812,7 @@
                                   {{ formatDate(itemRit.rit.arrival_date) }} -
                                   ({{
                                     formatNumber(
-                                      itemRit.tonnage * itemRit.masak
+                                      itemRit.tonnage * itemRit.masak,
                                     )
                                   }}
                                   kg)
@@ -1856,7 +1933,7 @@ export default {
       }
 
       // If search query is empty, reset to normal transactions
-      if (!newValue || newValue.trim() === '') {
+      if (!newValue || newValue.trim() === "") {
         this.transactions = [];
         this.currentPage = 1;
         this.hasMore = true;
@@ -1888,7 +1965,7 @@ export default {
         this.getCompletedTransactions();
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
-      } else if (this.currentTab == "Cas") {
+      } else if (this.currentTab == "Tukar Uang") {
         this.getCurrentCasBalance();
         this.getCases();
       }
@@ -1906,7 +1983,7 @@ export default {
         this.getCompletedTransactions();
       } else if (this.currentTab == "Tabungan") {
         this.getSavingsIncomes();
-      } else if (this.currentTab == "Cas") {
+      } else if (this.currentTab == "Tukar Uang") {
         this.getCurrentCasBalance();
         this.getCases();
       }
@@ -1952,6 +2029,45 @@ export default {
 
       // Check if the difference is 3 days or less
       return daysDifference <= 3;
+    },
+    isWithin7Days(dateString) {
+      // Parse the input date
+      var inputDate = new Date(dateString);
+
+      // Get current date
+      var currentDate = new Date();
+
+      // Calculate the difference in milliseconds
+      var timeDifference = inputDate.getTime() - currentDate.getTime();
+
+      // Convert milliseconds to days (1000 ms * 60 s * 60 min * 24 hrs)
+      var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24));
+
+      // Check if the difference is 7 days or less
+      return daysDifference <= 7;
+    },
+    deleteTransaction(id) {
+      if (confirm("Apakah anda yakin ingin menghapus transaksi ini?")) {
+        this.isLoading = true;
+        const instance = axios.create({
+          baseURL: this.url,
+          headers: { Authorization: "Bearer " + localStorage["access_token"] },
+        });
+        instance
+          .delete("admin/transaction/" + id)
+          .then((data) => {
+            this.transactions = [];
+            this.currentPage = 1;
+            this.hasMore = true;
+            this.getCompletedTransactions();
+            this.isLoading = false;
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("Terjadi kesalahan saat menghapus transaksi");
+            this.isLoading = false;
+          });
+      }
     },
     checkDailyReport() {
       const instance = axios.create({
@@ -2090,7 +2206,7 @@ export default {
           "admin/transaction/" + this.selectedData.id + "/request_revision",
           {
             note: this.revision.note,
-          }
+          },
         )
         .then((data) => {
           this.$router.go(0);
@@ -2212,6 +2328,8 @@ export default {
     },
     exchangeMoney() {
       this.exchange.fee = Math.ceil(this.exchange.total / 2000000) * 5000;
+      this.exchange.transfer =
+        this.exchange.type === "Transfer" ? this.exchange.total : 0;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -2253,7 +2371,7 @@ export default {
       instance
         .post(
           `admin/transaction/${this.selectedData.id}/return`,
-          this.returnTransaction
+          this.returnTransaction,
         )
         .then((data) => {
           this.$router.go(0);
@@ -2264,16 +2382,16 @@ export default {
     },
     getPaymentSummary(transaction) {
       if (!transaction.payments || transaction.payments.length === 0) {
-        return { type: 'none', label: '-' };
+        return { type: "none", label: "-" };
       }
 
       let cashSum = 0;
       let transferSum = 0;
 
-      transaction.payments.forEach(payment => {
+      transaction.payments.forEach((payment) => {
         // Checking for both 'Cash' and 'Cash ' (with space) or other variants
         const type = payment.type?.toLowerCase().trim();
-        if (type === 'transfer') {
+        if (type === "transfer") {
           transferSum += payment.amount;
         } else {
           // Assume anything else is Cash/Tunai
@@ -2283,14 +2401,14 @@ export default {
 
       if (cashSum > 0 && transferSum > 0) {
         return {
-          type: 'mixed',
+          type: "mixed",
           cash: cashSum,
-          transfer: transferSum
+          transfer: transferSum,
         };
       } else if (transferSum > 0) {
-        return { type: 'single', label: 'Transfer' };
+        return { type: "single", label: "Transfer" };
       } else {
-        return { type: 'single', label: 'Tunai' };
+        return { type: "single", label: "Tunai" };
       }
     },
     getAllVehicles: function () {
@@ -2311,31 +2429,42 @@ export default {
       let data = [];
       if (this.currentTab === "Penjualan") {
         let txs = [];
-        if (this.searchTransactionQuery && this.searchTransactionQuery.trim() !== "") {
+        if (
+          this.searchTransactionQuery &&
+          this.searchTransactionQuery.trim() !== ""
+        ) {
           txs = this.transactions;
         } else {
           this.isLoading = true;
           try {
             const instance = axios.create({
               baseURL: this.url,
-              headers: { Authorization: "Bearer " + localStorage["access_token"] },
+              headers: {
+                Authorization: "Bearer " + localStorage["access_token"],
+              },
             });
             let page = 1;
             let hasMore = true;
             while (hasMore) {
-              const response = await instance.post("/admin/transaction/get_completed_transactions", {
-                start_date: this.date[0].toString(),
-                end_date: this.date[1].toString(),
-                page: page,
-                per_page: 250,
-              });
+              const response = await instance.post(
+                "/admin/transaction/get_completed_transactions",
+                {
+                  start_date: this.date[0].toString(),
+                  end_date: this.date[1].toString(),
+                  page: page,
+                  per_page: 250,
+                },
+              );
               const results = response.data.data.results || [];
               txs.push(...results);
               hasMore = response.data.data.pagination.has_more;
               page = response.data.data.pagination.current_page + 1;
             }
           } catch (err) {
-            console.error("Gagal mengambil seluruh data transaksi untuk export:", err);
+            console.error(
+              "Gagal mengambil seluruh data transaksi untuk export:",
+              err,
+            );
             alert("Gagal mengambil seluruh data transaksi");
             this.isLoading = false;
             return;
@@ -2351,12 +2480,34 @@ export default {
         data = txs.map((t) => {
           const paymentSum = this.getPaymentSummary(t);
           return {
-            "ID": t.daily_id,
-            "Customer": t.type == 'Cabang' ? 'Cabang' : t.type == 'Cas' ? 'Cas' : (t.customer ? t.customer.nickname : ''),
+            ID: t.daily_id,
+            Customer:
+              t.type == "Cabang"
+                ? "Cabang"
+                : t.type == "Cas"
+                  ? "Cas"
+                  : t.customer
+                    ? t.customer.nickname
+                    : "",
             "Jumlah (Rp.)": t.total_price,
-            "Status": (t.finance_approved == 0 || t.total_price > this.getPaymentTotal(t)) ? "Kurang Bayar" : t.finance_approved == 2 ? "Retur" : "Lunas",
-            "Transfer/Tunai": paymentSum.type === 'mixed' ? `Transfer: ${paymentSum.transfer}, Tunai: ${paymentSum.cash}` : paymentSum.label,
-            "Tanggal": t.finance_approved == 2 ? (this.formatDate ? this.formatDate(t.updated_at) : t.updated_at) : (this.formatDate ? this.formatDate(t.created_at) : t.created_at)
+            Status:
+              t.finance_approved == 0 || t.total_price > this.getPaymentTotal(t)
+                ? "Kurang Bayar"
+                : t.finance_approved == 2
+                  ? "Retur"
+                  : "Lunas",
+            "Transfer/Tunai":
+              paymentSum.type === "mixed"
+                ? `Transfer: ${paymentSum.transfer}, Tunai: ${paymentSum.cash}`
+                : paymentSum.label,
+            Tanggal:
+              t.finance_approved == 2
+                ? this.formatDate
+                  ? this.formatDate(t.updated_at)
+                  : t.updated_at
+                : this.formatDate
+                  ? this.formatDate(t.created_at)
+                  : t.created_at,
           };
         });
       } else if (this.currentTab === "Tabungan") {
@@ -2365,25 +2516,30 @@ export default {
           return;
         }
         data = this.savings.map((s) => ({
-          "Tanggal": this.formatDate ? this.formatDate(s.created_at) : s.created_at,
-          "Customer": s.customer ? s.customer.nickname : '',
-          "TB": s.tb,
-          "THR": s.thr
+          Tanggal: this.formatDate
+            ? this.formatDate(s.created_at)
+            : s.created_at,
+          Customer: s.customer ? s.customer.nickname : "",
+          TB: s.tb,
+          THR: s.thr,
         }));
-      } else if (this.currentTab === "Cas") {
+      } else if (this.currentTab === "Tukar Uang") {
         if (!this.cases || this.cases.length === 0) {
           alert("Tidak ada data untuk dieksport");
           return;
         }
         data = this.cases.map((c) => ({
-          "Tanggal": this.formatDate ? this.formatDate(c.created_at) : c.created_at,
-          "Total": c.total,
-          "Koin": c.koin,
+          Tanggal: this.formatDate
+            ? this.formatDate(c.created_at)
+            : c.created_at,
+          Metode: c.transfer > 0 ? "Transfer" : "Tunai",
+          Total: c.total,
+          Koin: c.koin,
           "1.000": c.seribu,
           "2.000": c.duaribu,
           "5.000": c.limaribu,
           "10.000": c.sepuluhribu,
-          "20.000": c.duapuluhribu
+          "20.000": c.duapuluhribu,
         }));
       }
 
@@ -2392,7 +2548,10 @@ export default {
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Pemasukan");
-      XLSX.writeFile(workbook, `Pemasukan_${this.currentTab.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+      XLSX.writeFile(
+        workbook,
+        `Pemasukan_${this.currentTab.replace(/ /g, "_")}_${new Date().toISOString().split("T")[0]}.xlsx`,
+      );
     },
   },
   data() {
@@ -2402,7 +2561,7 @@ export default {
       tabs: [
         { name: "Penjualan", current: true },
         { name: "Tabungan", current: false },
-        { name: "Cas", current: false },
+        { name: "Tukar Uang", current: false },
       ],
       currentTab: "Penjualan",
       date: [
@@ -2438,6 +2597,7 @@ export default {
         limaribu: null,
         sepuluhribu: null,
         duapuluhribu: null,
+        type: "Tunai",
       },
       revision: {
         note: null,
