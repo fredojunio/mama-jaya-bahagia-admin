@@ -204,7 +204,7 @@
                     >
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
-                          Rp. {{ formatNumber(report.item_income) }}
+                          Rp. {{ formatNumber(report.income) }}
                         </div>
                       </div>
                     </td>
