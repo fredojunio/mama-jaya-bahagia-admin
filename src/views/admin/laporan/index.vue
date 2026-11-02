@@ -321,6 +321,7 @@ export default {
   methods: {
     getAllReports: function () {
       this.isLoading = true;
+      console.log("Requesting:", this.url + "/admin/report/get_today_report");
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
