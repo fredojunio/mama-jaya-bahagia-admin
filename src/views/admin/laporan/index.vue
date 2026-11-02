@@ -341,25 +341,63 @@ export default {
           console.log(err);
         });
     },
-    getTodayReport: function () {
-      const instance = axios.create({
-        baseURL: this.url,
-        headers: { Authorization: "Bearer " + localStorage["access_token"] },
-      });
-      instance
-        .get("/admin/report/get_today_report")
-        .then((data) => {
-          this.selectedData = data.data.data.results[0];
-          this.selectedData.rits = data.data.data.results[1];
-          this.selectedData.transactions = data.data.data.results[2];
-          this.todayReport = data.data.data.results[0];
-          this.todayReport.rits = data.data.data.results[1];
-          this.todayReport.transactions = data.data.data.results[2];
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    getTodayReport() {
+  const instance = axios.create({
+    baseURL: this.url,
+    headers: {
+      Authorization: "Bearer " + localStorage["access_token"],
     },
+  });
+
+  console.log("Requesting:", this.url + "/admin/report/get_today_report");
+
+  instance
+    .get("/admin/report/get_today_report")
+    .then(({ data }) => {
+      console.log("Today report response:", data);
+
+      const results = data?.data?.results;
+
+      if (!Array.isArray(results) || results.length < 3) {
+        console.error("Unexpected API response shape:", data);
+        return;
+      }
+
+      this.selectedData = {
+        ...results[0],
+        rits: results[1],
+        transactions: results[2],
+      };
+
+      this.todayReport = this.selectedData;
+    })
+    .catch((err) => {
+      console.error("Today report request failed:", {
+        message: err.message,
+        status: err.response?.status,
+        response: err.response?.data,
+      });
+    });
+},
+    // getTodayReport: function () {
+    //   const instance = axios.create({
+    //     baseURL: this.url,
+    //     headers: { Authorization: "Bearer " + localStorage["access_token"] },
+    //   });
+    //   instance
+    //     .get("/admin/report/get_today_report")
+    //     .then((data) => {
+    //       this.selectedData = data.data.data.results[0];
+    //       this.selectedData.rits = data.data.data.results[1];
+    //       this.selectedData.transactions = data.data.data.results[2];
+    //       this.todayReport = data.data.data.results[0];
+    //       this.todayReport.rits = data.data.data.results[1];
+    //       this.todayReport.transactions = data.data.data.results[2];
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     createDailyReport: function () {
       const instance = axios.create({
         baseURL: this.url,
