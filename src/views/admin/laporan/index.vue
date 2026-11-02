@@ -315,8 +315,8 @@ export default {
     };
   },
   created() {
-    this.getAllReports();
     this.getTodayReport();
+    this.getAllReports();
   },
   methods: {
     getAllReports: function () {
