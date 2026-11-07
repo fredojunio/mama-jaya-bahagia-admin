@@ -203,6 +203,12 @@
                       scope="col"
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
+                      Dibuat Oleh
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
                       Action
                     </th>
                   </tr>
@@ -327,6 +333,15 @@
                               ? formatDate(transaction.updated_at)
                               : formatDate(transaction.created_at)
                           }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ transaction.user ? transaction.user.name : "-" }}
                         </div>
                       </div>
                     </td>
@@ -2508,6 +2523,7 @@ export default {
                 : this.formatDate
                   ? this.formatDate(t.created_at)
                   : t.created_at,
+            "Dibuat Oleh": t.user ? t.user.name : "-",
           };
         });
       } else if (this.currentTab === "Tabungan") {
