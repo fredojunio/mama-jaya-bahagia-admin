@@ -95,7 +95,10 @@
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
                       <div class="flex flex-col text-sm text-gray-900">
-                        <span v-if="item.activeRits && item.activeRits.length > 0" class="text-green-600 font-medium">
+                        <span
+                          v-if="item.activeRits && item.activeRits.length > 0"
+                          class="text-green-600 font-medium"
+                        >
                           {{ item.activeRits.length }} Rit Aktif
                         </span>
                         <span v-else class="text-gray-400">
@@ -108,7 +111,11 @@
                     >
                       <div class="flex flex-col items-start">
                         <div
-                          v-if="role_id == 1 || email == 'admin2@gmail.com' || user_id == 6"
+                          v-if="
+                            role_id == 1 ||
+                            email == 'adminutama@gmail.com' ||
+                            user_id == 6
+                          "
                           @click="showEdit(item)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
                         >
@@ -128,7 +135,7 @@
         </div>
       </div>
     </div>
-    
+
     <TransitionRoot as="template" :show="showForm">
       <Dialog
         as="div"
@@ -177,13 +184,14 @@
                         Update Harga Jual
                       </h3>
                       <p class="mt-1 text-sm text-gray-500">
-                        Update harga jual untuk semua rit aktif dengan kode barang ini.
+                        Update harga jual untuk semua rit aktif dengan kode
+                        barang ini.
                       </p>
                     </div>
 
                     <div class="mt-4">
                       <h4 class="text-md font-medium text-gray-900">
-                        Barang: {{ selectedItem ? selectedItem.code : '' }}
+                        Barang: {{ selectedItem ? selectedItem.code : "" }}
                       </h4>
                     </div>
 
@@ -284,13 +292,15 @@ export default {
       try {
         const [itemsRes, ritsRes] = await Promise.all([
           instance.get("/admin/item"),
-          instance.get("/admin/rit/get_owner_stock")
+          instance.get("/admin/rit/get_owner_stock"),
         ]);
 
         const activeRits = ritsRes.data.data.results;
-        
+
         const mappedItems = itemsRes.data.data.results.map((item) => {
-          const itemActiveRits = activeRits.filter((rit) => rit.item.id === item.id);
+          const itemActiveRits = activeRits.filter(
+            (rit) => rit.item.id === item.id,
+          );
           return {
             id: item.id,
             code: item.code,
@@ -298,8 +308,8 @@ export default {
             activeRits: itemActiveRits,
           };
         });
-        
-        this.items = mappedItems.filter(item => item.activeRits.length > 0);
+
+        this.items = mappedItems.filter((item) => item.activeRits.length > 0);
       } catch (err) {
         console.log(err);
       } finally {
@@ -327,7 +337,8 @@ export default {
     },
     showEdit(item) {
       this.selectedItem = item;
-      this.tempData.sell_price = item.activeRits.length > 0 ? item.activeRits[0].sell_price : null;
+      this.tempData.sell_price =
+        item.activeRits.length > 0 ? item.activeRits[0].sell_price : null;
       this.showForm = true;
     },
   },

@@ -175,7 +175,7 @@
                         rit.arrival_date != null &&
                         rit.sell_price > 0 &&
                         rit.is_hold != 1 &&
-                        rit.sold_date == null
+                        rit.sold_date == null,
                       // rit.customer_tonnage == null
                     )"
                     :key="rit.id"
@@ -293,7 +293,12 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1 || role_id == 4 || email == 'admin2@gmail.com' || user_id == 6"
+                        v-if="
+                          role_id == 1 ||
+                          role_id == 4 ||
+                          email == 'adminutama@gmail.com' ||
+                          user_id == 6
+                        "
                         class="flex flex-col items-start"
                       >
                         <div
@@ -376,7 +381,7 @@
                   <tr
                     v-for="rit in rits.filter(
                       (rit) =>
-                        rit.arrival_date == null && rit.finance_approved == 1
+                        rit.arrival_date == null && rit.finance_approved == 1,
                     )"
                     :key="rit.id"
                   >
@@ -443,7 +448,10 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
-                      <div class="flex flex-col items-start" v-if="role_id != 4">
+                      <div
+                        class="flex flex-col items-start"
+                        v-if="role_id != 4"
+                      >
                         <div
                           @click="openEditRitArrivalForm(rit.id)"
                           class="cursor-pointer relative flex-1 inline-flex items-center justify-between text-sm text-gray-500 font-medium border border-transparent rounded-bl-lg hover:text-black group/edit"
@@ -517,7 +525,7 @@
                 <tbody class="divide-y divide-gray-200 bg-white">
                   <tr
                     v-for="rit in rits.filter(
-                      (rit) => rit.is_hold == 1 && sold_date == null
+                      (rit) => rit.is_hold == 1 && sold_date == null,
                     )"
                     :key="rit.id"
                   >
@@ -826,7 +834,12 @@
                         </div>
                       </div>
                       <div
-                        v-if="role_id == 1 || role_id == 4 || email == 'admin2@gmail.com' || user_id == 6"
+                        v-if="
+                          role_id == 1 ||
+                          role_id == 4 ||
+                          email == 'adminutama@gmail.com' ||
+                          user_id == 6
+                        "
                         class="flex flex-col items-start"
                       >
                         <div
@@ -1037,7 +1050,7 @@
                           >
                             <option
                               v-for="customer in customers.filter(
-                                (customer) => customer.type == 'Owner'
+                                (customer) => customer.type == 'Owner',
                               )"
                               :key="customer.id"
                               :value="customer.id"
@@ -1805,14 +1818,14 @@
                         transferBranchRit.vehicle_id == null ||
                         transferBranchRit.plate_number == '' ||
                         transferBranchRit.rits.some(
-                          (rit) => rit.id == null || rit.amount <= 0
+                          (rit) => rit.id == null || rit.amount <= 0,
                         ) ||
                         transferBranchRit.rits.some(
                           (rit) =>
                             rits.find((oRit) => oRit.id === rit.id) &&
                             rit.amount >
                               rits.find((oRit) => oRit.id === rit.id)
-                                .tonnage_left
+                                .tonnage_left,
                         )
                       "
                       @click.once="transferRitsToBranch()"
@@ -2383,7 +2396,7 @@
                                           ? transaction.customer_name
                                               .toLowerCase()
                                               .includes(searchRitDetailQuery)
-                                          : true)
+                                          : true),
                                     )"
                                     :key="ritTransaction.id"
                                   >
@@ -2403,7 +2416,7 @@
                                         <div class="font-medium text-gray-900">
                                           {{
                                             formatDate(
-                                              ritTransaction.created_at
+                                              ritTransaction.created_at,
                                             )
                                           }}
                                         </div>
@@ -2417,7 +2430,7 @@
                                           {{
                                             formatNumber(
                                               ritTransaction.tonnage *
-                                                ritTransaction.masak
+                                                ritTransaction.masak,
                                             )
                                           }}
                                           kg
@@ -2432,7 +2445,7 @@
                                           Rp.
                                           {{
                                             formatNumber(
-                                              ritTransaction.total_price
+                                              ritTransaction.total_price,
                                             )
                                           }}
                                         </div>
@@ -2445,7 +2458,7 @@
                                         <div class="font-medium text-gray-900">
                                           {{
                                             formatNumber(
-                                              ritTransaction.tonnage_left
+                                              ritTransaction.tonnage_left,
                                             )
                                           }}
                                           kg
@@ -2959,7 +2972,7 @@ export default {
         (acc, transaction) => {
           return acc + transaction.tonnage * transaction.masak;
         },
-        0
+        0,
       );
       return totalTonnageSoldToday;
     },
@@ -3029,7 +3042,7 @@ export default {
         tonnage: null,
         sack: null,
         toll_used: null,
-        bbm_used: null
+        bbm_used: null,
       },
       pricedRit: {
         tonnage: null,
