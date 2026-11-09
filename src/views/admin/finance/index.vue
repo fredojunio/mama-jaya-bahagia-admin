@@ -44,8 +44,8 @@
           Export Excel
         </button>
         <button
-          v-if="role_id != 4"
-          @click="showAddExpenseForm = true"
+          v-if="showAddButton"
+          @click="openAddExpenseForm"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:opacity-90 focus:ring-offset-2 sm:w-auto"
         >
           Tambah Pengeluaran
@@ -62,14 +62,22 @@
           name="tabs"
           class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         >
-          <option v-for="tab in tabs" :key="tab.name" :selected="tab.current">
+          <option
+            v-for="tab in tabs"
+            :key="tab.name"
+            :value="tab.name"
+            :selected="tab.current"
+          >
             {{ tab.name }}
           </option>
         </select>
       </div>
       <div class="hidden sm:block">
         <div class="border-b border-gray-200">
-          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav
+            class="-mb-px flex space-x-8 overflow-x-auto"
+            aria-label="Tabs"
+          >
             <div
               @click="changeTab(tab.name)"
               v-for="tab in tabs"
@@ -78,7 +86,7 @@
                 tab.current
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                'cursor-pointer whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+                'cursor-pointer whitespace-nowrap flex-shrink-0 py-4 px-1 border-b-2 font-medium text-sm',
               ]"
               :aria-current="tab.current ? 'page' : undefined"
             >
@@ -89,8 +97,15 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mt-6">
+        <h2 class="text-lg font-semibold text-gray-900">
+          {{ currentTabData.title }}
+        </h2>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- //SECTION - Tab Kendaraan -->
-      <div v-if="currentTab == tabs[0].name" class="mt-8 flex flex-col">
+      <div v-if="currentTabData.kind === 'kendaraan'" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -136,6 +151,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Note
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      COA
                     </th>
                     <th
                       v-if="role_id == 1"
@@ -203,6 +224,15 @@
                       </div>
                     </td>
                     <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.coa ? expense.coa.code : "-" }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
                       v-if="role_id == 1"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -228,7 +258,7 @@
       </div>
       <!-- //!SECTION  -->
       <!-- //SECTION - Tab Tabungan  -->
-      <div v-if="currentTab == tabs[1].name" class="mt-8 flex flex-col">
+      <div v-if="currentTabData.kind === 'tabungan'" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -262,6 +292,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Tanggal
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      COA
                     </th>
                     <th
                       v-if="role_id == 1"
@@ -311,6 +347,15 @@
                       </div>
                     </td>
                     <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.coa ? expense.coa.code : "-" }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
                       v-if="role_id == 1"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -336,7 +381,7 @@
       </div>
       <!-- //!SECTION  -->
       <!-- //SECTION - Tab Cashback  -->
-      <div v-if="currentTab == tabs[2].name" class="mt-8 flex flex-col">
+      <div v-if="currentTabData.kind === 'cashback'" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -364,6 +409,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Tanggal
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      COA
                     </th>
                     <th
                       v-if="role_id == 1"
@@ -404,6 +455,15 @@
                       </div>
                     </td>
                     <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.coa ? expense.coa.code : "-" }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
                       v-if="role_id == 1"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -429,7 +489,7 @@
       </div>
       <!-- //!SECTION  -->
       <!-- //SECTION - Tab Operasional  -->
-      <div v-if="currentTab == tabs[3].name" class="mt-8 flex flex-col">
+      <div v-if="currentTabData.kind === 'coa'" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -457,6 +517,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Waktu
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      COA
                     </th>
                     <th
                       v-if="role_id == 1"
@@ -497,6 +563,15 @@
                       </div>
                     </td>
                     <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.coa ? expense.coa.code : "-" }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
                       v-if="role_id == 1"
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
                     >
@@ -522,7 +597,7 @@
       </div>
       <!-- //!SECTION  -->
       <!-- //SECTION - Tab Gaji  -->
-      <div v-if="currentTab == tabs[4].name" class="mt-8 flex flex-col">
+      <div v-if="currentTabData.kind === 'gaji'" class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div
             class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
@@ -556,6 +631,12 @@
                       class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
                       Keterangan
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      COA
                     </th>
                     <th
                       v-if="role_id == 1"
@@ -601,6 +682,15 @@
                       <div class="flex items-center">
                         <div class="font-medium text-gray-900">
                           {{ expense.note }}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 grow"
+                    >
+                      <div class="flex items-center">
+                        <div class="font-medium text-gray-900">
+                          {{ expense.coa ? expense.coa.code : "-" }}
                         </div>
                       </div>
                     </td>
@@ -670,7 +760,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
+              class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6"
             >
               <form class="space-y-8 divide-y divide-gray-200">
                 <div class="space-y-8 divide-y divide-gray-200">
@@ -687,6 +777,101 @@
                     <div
                       class="mt-6 grid grid-cols-1 gap-y-2 gap-x-4 sm:grid-cols-6"
                     >
+                      <div v-if="showCoaField" class="sm:col-span-6">
+                        <label
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          COA
+                        </label>
+                        <div class="mt-1">
+                          <Combobox
+                            as="div"
+                            v-model="selectedCoa"
+                            @update:modelValue="selectCoa"
+                          >
+                            <div class="relative mt-1">
+                              <ComboboxInput
+                                autocomplete="off"
+                                class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                                placeholder="Cari kode / nama COA"
+                                @input="
+                                  coaQuery = $event.target.value;
+                                  filterCoa();
+                                "
+                                :display-value="
+                                  (coa) =>
+                                    coa ? `${coa.code} - ${coa.name}` : ''
+                                "
+                              />
+                              <ComboboxOptions
+                                v-if="filteredCoas.length > 0"
+                                class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                              >
+                                <ComboboxOption
+                                  v-for="coa in filteredCoas"
+                                  :key="coa.id"
+                                  :value="coa"
+                                  as="template"
+                                  v-slot="{ active, selected }"
+                                >
+                                  <li
+                                    :class="[
+                                      'relative cursor-default select-none py-2 pl-3 pr-9',
+                                      active
+                                        ? 'bg-black text-white'
+                                        : 'text-gray-900',
+                                    ]"
+                                  >
+                                    <span
+                                      :class="[
+                                        'block truncate',
+                                        selected && 'font-semibold',
+                                      ]"
+                                    >
+                                      {{ coa.code }} - {{ coa.name }}
+                                    </span>
+                                  </li>
+                                </ComboboxOption>
+                              </ComboboxOptions>
+                            </div>
+                          </Combobox>
+                        </div>
+                      </div>
+                      <div
+                        v-if="currentTabData.kind === 'tabungan'"
+                        class="sm:col-span-6"
+                      >
+                        <label
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Tipe Tabungan
+                        </label>
+                        <div class="mt-1">
+                          <select
+                            v-model="savingType"
+                            @change="expense.type = savingType"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          >
+                            <option value="TB">TB</option>
+                            <option value="TW">TW</option>
+                            <option value="THR">THR</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div v-if="showNameField" class="sm:col-span-6">
+                        <label
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Nama
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            v-model="expense.name"
+                            type="text"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
                       <div class="sm:col-span-6">
                         <label
                           for="amount"
@@ -1026,6 +1211,10 @@ import * as XLSX from "xlsx";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
   Menu,
   MenuButton,
   MenuItem,
@@ -1042,6 +1231,10 @@ import {
 export default {
   components: {
     VueDatePicker,
+    Combobox,
+    ComboboxInput,
+    ComboboxOption,
+    ComboboxOptions,
     Menu,
     MenuButton,
     MenuItem,
@@ -1065,30 +1258,53 @@ export default {
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
-      tabs: [
-        { name: "Kendaraan", current: true },
-        { name: "Tabungan", current: false },
-        { name: "Cashback", current: false },
-        { name: "Operasional", current: false },
-        { name: "Gaji", current: false },
-      ],
-      currentTab: "Kendaraan",
+      tabs: [],
+      currentTab: "",
+      coas: [],
+      filteredCoas: [],
+      coaQuery: "",
+      selectedCoa: null,
+      savingType: "TB",
       expense: {
         amount: null,
         note: null,
         name: null,
         time: null,
         type: "Operasional",
+        coa_id: null,
       },
       selectedExpense: null,
       expenses: [],
       filteredExpenses: [],
     };
   },
-  created() {
-    this.getAllData();
+  async created() {
+    await this.getCoas();
   },
   computed: {
+    currentTabData() {
+      return (
+        this.tabs.find((tab) => tab.name === this.currentTab) ||
+        this.tabs[0] || {
+          name: "",
+          title: "",
+          kind: "coa",
+          coaCode: null,
+          coaId: null,
+        }
+      );
+    },
+    showAddButton() {
+      return this.role_id != 4 && this.currentTabData.kind !== "kendaraan";
+    },
+    showCoaField() {
+      return ["coa", "gaji"].includes(this.currentTabData.kind);
+    },
+    showNameField() {
+      return ["gaji", "cashback", "tabungan"].includes(
+        this.currentTabData.kind
+      );
+    },
     totalBbmSum() {
       if (!this.expenses) return 0;
       return this.expenses.reduce((acc, expense) => acc + (expense.trip ? parseFloat(expense.trip.gas) || 0 : 0), 0);
@@ -1107,48 +1323,173 @@ export default {
     }
   },
   methods: {
-    changeTab(tabName) {
-      this.tabs.forEach((tab) => {
-        if (tab.current) {
-          tab.current = false;
-        }
-      });
-      this.tabs.find((tab) => tab.name === tabName).current = true;
-      this.currentTab = tabName;
-      this.getAllData();
-    },
-    changeTabMobile(event) {
-      this.tabs.forEach((tab) => {
-        if (tab.name == event.target.value) {
-          tab.current = true;
-          this.currentTab = tab.name;
-        } else {
-          tab.current = false;
-        }
-      });
-      this.getAllData();
-    },
-    getAllData: function () {
+    async getCoas() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
+      try {
+        const data = await instance.get("/admin/coa?leaves_only=1");
+        this.coas = data.data.data.results || [];
+      } catch (err) {
+        console.log(err);
+        this.coas = [];
+      }
+      this.buildTabs();
+      this.getAllData();
+    },
+    makeCoaTab(code, kind) {
+      const coa = this.coas.find((item) => item.code === code);
+      return {
+        name: code,
+        title: coa ? coa.name : code,
+        kind,
+        coaCode: code,
+        coaId: coa ? coa.id : null,
+      };
+    },
+    buildTabs() {
+      const baseDefinitions = [
+        { code: "4.2.00.04", kind: "kendaraan" },
+        { name: "Tabungan", kind: "tabungan" },
+        { name: "Cashback", kind: "cashback" },
+        { code: "4.2.00.09", kind: "coa" },
+        { code: "4.2.00.01", kind: "gaji" },
+      ];
+      const baseTabs = baseDefinitions.map((definition) =>
+        definition.code
+          ? this.makeCoaTab(definition.code, definition.kind)
+          : {
+              name: definition.name,
+              title: definition.name,
+              kind: definition.kind,
+              coaCode: null,
+              coaId: null,
+            }
+      );
+      const mappedCodes = baseDefinitions
+        .filter((definition) => definition.code)
+        .map((definition) => definition.code);
+      const restTabs = this.coas
+        .filter((coa) => !mappedCodes.includes(coa.code))
+        .map((coa) => this.makeCoaTab(coa.code, "coa"));
+
+      this.tabs = [...baseTabs, ...restTabs].map((tab, index) => ({
+        ...tab,
+        current: index === 0,
+      }));
+      this.currentTab = this.tabs.length > 0 ? this.tabs[0].name : "";
+    },
+    changeTab(tabName) {
+      this.tabs.forEach((tab) => {
+        tab.current = tab.name === tabName;
+      });
+      this.currentTab = tabName;
+      this.getAllData();
+    },
+    changeTabMobile(event) {
+      this.changeTab(event.target.value);
+    },
+    makeEmptyExpense() {
+      return {
+        amount: null,
+        note: null,
+        name: null,
+        time: null,
+        type: "Operasional",
+        coa_id: null,
+      };
+    },
+    openAddExpenseForm() {
+      this.expense = this.makeEmptyExpense();
+      this.selectedCoa = null;
+      this.savingType = "TB";
+      this.coaQuery = "";
+      this.filteredCoas = [];
+
+      if (this.currentTabData.kind === "tabungan") {
+        this.expense.type = this.savingType;
+      } else if (this.currentTabData.kind === "cashback") {
+        this.expense.type = "Cashback";
+      } else if (this.currentTabData.coaCode) {
+        this.selectCoa(
+          this.coas.find((coa) => coa.code === this.currentTabData.coaCode) ||
+            null
+        );
+      }
+
+      this.showAddExpenseForm = true;
+    },
+    selectCoa(coa) {
+      this.selectedCoa = coa;
+      this.expense.coa_id = coa ? coa.id : null;
+      this.expense.type =
+        coa && coa.expense_type ? coa.expense_type : "Operasional";
+    },
+    filterCoa() {
+      const query = (this.coaQuery || "").toLowerCase();
+      if (!query) {
+        this.filteredCoas = this.coas;
+        return;
+      }
+      this.filteredCoas = this.coas.filter(
+        (coa) =>
+          coa.code.toLowerCase().includes(query) ||
+          coa.name.toLowerCase().includes(query)
+      );
+    },
+    getAllData: function () {
+      if (!this.currentTab) {
+        this.isLoading = false;
+        return;
+      }
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      const payload = {
+        start_date: this.date[0].toString(),
+        end_date: this.date[1].toString(),
+      };
+      if (this.currentTabData.coaId) {
+        payload.coa_id = this.currentTabData.coaId;
+      } else if (this.currentTabData.kind === "tabungan") {
+        payload.filter = "Tabungan";
+      } else if (this.currentTabData.kind === "cashback") {
+        payload.filter = "Cashback";
+      } else if (this.currentTabData.kind === "kendaraan") {
+        payload.filter = "Kendaraan";
+      } else if (this.currentTabData.kind === "gaji") {
+        payload.filter = "Gaji";
+      } else if (this.currentTabData.coaCode === "4.2.00.09") {
+        payload.filter = "Operasional";
+      } else {
+        // Without a resolved COA we cannot filter this tab reliably.
+        this.expenses = [];
+        this.isLoading = false;
+        return;
+      }
       instance
-        .post("/admin/expense/filter", {
-          start_date: this.date[0].toString(),
-          end_date: this.date[1].toString(),
-          filter: this.currentTab,
-        })
+        .post("/admin/expense/filter", payload)
         .then((data) => {
           this.expenses = data.data.data.results;
           this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
+          this.isLoading = false;
         });
     },
     createExpense() {
+      if (this.showCoaField && !this.expense.coa_id) {
+        alert("Pilih COA terlebih dahulu");
+        return;
+      }
+      if (this.currentTabData.kind === "tabungan") {
+        this.expense.type = this.savingType;
+      }
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
@@ -1193,34 +1534,39 @@ export default {
       }
 
       let data = [];
-      if (this.currentTab === "Kendaraan") {
+      const coaCode = (e) => (e.coa ? e.coa.code : "-");
+      if (this.currentTabData.kind === "kendaraan") {
         data = this.expenses.map((e) => ({
           "Kendaraan": e.trip && e.trip.vehicle ? e.trip.vehicle.name : "-",
           "BBM (Rp.)": e.trip ? e.trip.gas : 0,
           "E-Toll (Rp.)": e.trip ? e.trip.toll : 0,
           "Sangu (Rp.)": e.trip ? e.trip.allowance : 0,
           "Tanggal": this.formatDate(e.time),
-          "Note": e.note || "-"
+          "Note": e.note || "-",
+          "COA": coaCode(e),
         }));
-      } else if (this.currentTab === "Tabungan" || this.currentTab === "Cashback") {
+      } else if (["tabungan", "cashback"].includes(this.currentTabData.kind)) {
         data = this.expenses.map((e) => ({
           "Customer": e.name || "-",
           "Jumlah (Rp.)": e.amount || 0,
           "Tipe/Keterangan": e.type || "-",
-          "Tanggal": this.formatDate(e.time)
+          "Tanggal": this.formatDate(e.time),
+          "COA": coaCode(e),
         }));
-      } else if (this.currentTab === "Operasional") {
-        data = this.expenses.map((e) => ({
-          "Jumlah (Rp.)": e.amount || 0,
-          "Keterangan": e.note || "-",
-          "Waktu": e.time ? this.formatDate(e.time) : "-"
-        }));
-      } else if (this.currentTab === "Gaji") {
+      } else if (this.currentTabData.kind === "gaji") {
         data = this.expenses.map((e) => ({
           "Nama": e.name || "-",
           "Jumlah (Rp.)": e.amount || 0,
           "Tanggal": this.formatDate(e.time),
-          "Keterangan": e.note || "-"
+          "Keterangan": e.note || "-",
+          "COA": coaCode(e),
+        }));
+      } else {
+        data = this.expenses.map((e) => ({
+          "Jumlah (Rp.)": e.amount || 0,
+          "Keterangan": e.note || "-",
+          "Waktu": e.time ? this.formatDate(e.time) : "-",
+          "COA": coaCode(e),
         }));
       }
 
@@ -1229,7 +1575,13 @@ export default {
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Pengeluaran");
-      XLSX.writeFile(workbook, `Pengeluaran_${this.currentTab.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+      XLSX.writeFile(
+        workbook,
+        `Pengeluaran_${this.currentTab.replace(
+          /[^a-zA-Z0-9]/g,
+          "_"
+        )}_${new Date().toISOString().split("T")[0]}.xlsx`
+      );
     },
   },
 };
