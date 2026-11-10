@@ -35,7 +35,10 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div v-if="report" class="mt-8 p-6 bg-white w-full max-w-2xl">
+      <div
+        v-if="report"
+        class="mt-8 border border-gray-400 p-6 bg-white w-full max-w-2xl"
+      >
         <h2 class="text-md font-medium text-gray-900 mb-4">{{ monthName }},</h2>
         <table class="w-full text-sm">
           <tbody>
