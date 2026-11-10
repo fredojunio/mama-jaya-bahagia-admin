@@ -35,21 +35,72 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div v-if="summary" class="mt-8 border border-gray-400 p-6 bg-white w-full max-w-sm shadow-sm">
+      <div
+        v-if="report"
+        class="mt-8 border border-gray-400 p-6 bg-white w-full max-w-2xl shadow-sm"
+      >
         <h2 class="text-md font-medium text-gray-900 mb-4">{{ monthName }},</h2>
-        <table class="w-full text-right text-sm">
+        <table class="w-full text-right text-sm border-collapse">
           <tbody>
             <tr>
-              <td class="py-1 pr-4 text-left font-semibold">Laba/Rugi Jual</td>
-              <td class="py-1 font-semibold">{{ formatNumberCustom(summary.labaRugiJual) }}</td>
-            </tr>
-            <tr class="border-b border-black">
-              <td class="py-1 pr-4 text-left">Pengeluaran Operasional</td>
-              <td class="py-1">{{ formatNumberCustom(summary.pengeluaranOperasional) }}</td>
+              <td class="border border-gray-300 px-3 py-1 text-left">
+                Stok Awal
+              </td>
+              <td class="border border-gray-300 px-3 py-1">
+                {{ formatNumberCustom(report.stok_awal.total) }}
+              </td>
             </tr>
             <tr>
-              <td class="py-2 pr-4 text-left font-bold text-base">Laba Kotor =</td>
-              <td class="py-2 font-bold text-base">{{ formatNumberCustom(summary.labaKotor) }}</td>
+              <td class="border border-gray-300 px-3 py-1 text-left">
+                Beli Barang
+              </td>
+              <td class="border border-gray-300 px-3 py-1">
+                {{ formatNumberCustom(report.beli_barang.total) }}
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-3 py-1 text-left">
+                Stok Akhir
+              </td>
+              <td class="border border-gray-300 px-3 py-1">
+                {{ formatNumberCustom(report.stok_akhir.total) }}
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="border border-gray-300 px-3 py-1 text-left font-semibold"
+              >
+                HPP =
+              </td>
+              <td class="border border-gray-300 px-3 py-1 font-semibold">
+                {{ formatNumberCustom(report.hpp) }}
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-3 py-1 text-left">
+                Omset =
+              </td>
+              <td class="border border-gray-300 px-3 py-1">
+                {{ formatNumberCustom(report.omset) }}
+              </td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-3 py-1 text-left">
+                Biaya =
+              </td>
+              <td class="border border-gray-300 px-3 py-1">
+                {{ formatNumberCustom(report.biaya) }}
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="border border-gray-300 px-3 py-2 text-left font-bold text-base"
+              >
+                Laba =
+              </td>
+              <td class="border border-gray-300 px-3 py-2 font-bold text-base">
+                {{ formatNumberCustom(report.laba) }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -66,17 +117,7 @@ import axios from "axios";
 
 <script>
 import * as XLSX from "xlsx";
-
 export default {
-  data() {
-    return {
-      isLoading: false,
-      month: new Date().toISOString().slice(0, 7),
-      date: [],
-      summary: null,
-      monthName: "",
-    };
-  },
   created() {
     if (this.role_id != 1 && this.role_id != 4) {
       this.$router.push("/admin");
@@ -84,41 +125,24 @@ export default {
     }
     this.getAllData();
   },
+  data() {
+    return {
+      isLoading: false,
+      month: `${new Date().getFullYear()}-${String(
+        new Date().getMonth() + 1
+      ).padStart(2, "0")}`,
+      monthName: "",
+      report: null,
+    };
+  },
   methods: {
-    formatNumberCustom(value) {
-      if (value === 0 || value === "0") return "-";
-      let parts = Number(value).toFixed(2).split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return parts.join(",");
-    },
-    exportExcel() {
-      if (!this.summary) {
-        alert("Tidak ada data untuk diexport");
-        return;
-      }
-
-      const dataToExport = [
-        { Kolom1: "Laba/Rugi Jual", Kolom2: this.summary.labaRugiJual },
-        { Kolom1: "Pengeluaran Operasional", Kolom2: this.summary.pengeluaranOperasional },
-        { Kolom1: "Laba Kotor =", Kolom2: this.summary.labaKotor },
-      ];
-
-      const worksheet = XLSX.utils.json_to_sheet(dataToExport, { skipHeader: true });
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Laba Rugi");
-      
-      let dateString = this.month;
-      const fileName = `Laba_Rugi_${dateString}.xlsx`;
-      XLSX.writeFile(workbook, fileName);
-    },
     async getAllData() {
       if (!this.month) return;
-      const [year, m] = this.month.split('-');
-      this.date = [
-        new Date(year, m - 1, 1),
-        new Date(year, m, 0, 23, 59, 59, 999)
-      ];
-      this.monthName = new Date(year, m - 1, 1).toLocaleString('id-ID', { month: 'long' });
+
+      const [year, m] = this.month.split("-");
+      this.monthName = new Date(year, m - 1, 1).toLocaleString("id-ID", {
+        month: "long",
+      });
 
       this.isLoading = true;
       const instance = axios.create({
@@ -127,56 +151,50 @@ export default {
       });
 
       try {
-        const [ritRes, expenseRes] = await Promise.all([
-          instance.post("/admin/rit/get_empty_stock", {
-            start_date: this.date[0].toString(),
-            end_date: this.date[1].toString(),
-          }),
-          instance.post("/admin/expense/filter", {
-            start_date: this.date[0].toString(),
-            end_date: this.date[1].toString(),
-            filter: "All",
-          })
-        ]);
-
-        const rits = ritRes.data.data.results;
-        const expenses = expenseRes.data.data.results;
-
-        let labaRugiJual = 0;
-        let pengeluaranOperasional = 0;
-
-        expenses.forEach(e => {
-          if (['Kendaraan', 'Operasional', 'Gaji'].includes(e.type)) {
-            if (e.type === 'Kendaraan') {
-              pengeluaranOperasional += (parseFloat(e.trip?.gas) || 0) + (parseFloat(e.trip?.toll) || 0) + (parseFloat(e.trip?.allowance) || 0);
-            } else {
-              pengeluaranOperasional += parseFloat(e.amount) || 0;
-            }
-          }
+        const response = await instance.post("/admin/laba_rugi/get_report", {
+          month: this.month,
         });
-
-        rits.forEach(rit => {
-          let ritRevenue = 0;
-          rit.transactions?.forEach(t => {
-            ritRevenue += parseFloat(t.total_price) || 0;
-          });
-          labaRugiJual += (ritRevenue - (parseFloat(rit.arrived_tonnage || 0) * parseFloat(rit.buy_price || 0)));
-        });
-
-        const labaKotor = labaRugiJual - pengeluaranOperasional;
-
-        this.summary = {
-          labaRugiJual,
-          pengeluaranOperasional,
-          labaKotor
-        };
-
-        this.isLoading = false;
+        this.report = response.data.data.results;
       } catch (err) {
         console.log(err);
-        this.isLoading = false;
+        this.report = null;
       }
-    }
-  }
+
+      this.isLoading = false;
+    },
+    formatNumberCustom(value) {
+      if (value === 0 || value === "0" || value === null || value === undefined) {
+        return "-";
+      }
+      let parts = Number(value).toFixed(2).split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return parts.join(",");
+    },
+    exportExcel() {
+      if (!this.report) {
+        alert("Tidak ada data untuk diexport");
+        return;
+      }
+
+      const dataToExport = [
+        { Keterangan: "Stok Awal", Nominal: this.report.stok_awal.total },
+        { Keterangan: "Beli Barang", Nominal: this.report.beli_barang.total },
+        { Keterangan: "Stok Akhir", Nominal: this.report.stok_akhir.total },
+        { Keterangan: "HPP", Nominal: this.report.hpp },
+        { Keterangan: "Omset", Nominal: this.report.omset },
+        { Keterangan: "Biaya", Nominal: this.report.biaya },
+        { Keterangan: "Laba", Nominal: this.report.laba },
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport, {
+        skipHeader: true,
+      });
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Laba Rugi");
+      XLSX.writeFile(workbook, `Laba_Rugi_${this.month}.xlsx`);
+    },
+  },
 };
 </script>
+
+<style></style>

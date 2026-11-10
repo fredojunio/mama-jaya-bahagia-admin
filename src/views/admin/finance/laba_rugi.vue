@@ -17,27 +17,40 @@
     >
       <h1 class="text-2xl font-semibold text-gray-900 mr-auto">Laba Rugi</h1>
       <div class="relative flex gap-2 text-left">
-        <div class="relative rounded-md shadow-sm w-96">
-          <div
-            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-          >
-            <Icon icon="fa:calendar" class="h-5 w-5 text-gray-400" />
-          </div>
-          <VueDatePicker
-            v-model="date"
-            @update:model-value="getAllRits"
-            locale="id"
-            :start-time="[
-              { hours: 0, minutes: 0, seconds: 0 },
-              { hours: 23, minutes: 59, seconds: 59 },
-            ]"
-            range
-            :enable-time-picker="false"
+        <div class="relative">
+          <input
+            id="month"
+            v-model="month"
+            type="month"
+            @change="getAllData"
+            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4"
           />
         </div>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
+          <div
+            v-for="tab in tabs"
+            :key="tab.key"
+            @click="currentTab = tab.key"
+            :class="[
+              currentTab === tab.key
+                ? 'border-indigo-500 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'cursor-pointer whitespace-nowrap flex-shrink-0 py-4 px-1 border-b-2 font-medium text-sm',
+            ]"
+          >
+            {{ tab.name }}
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div
+      v-if="currentTab === 'rincian'"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
       <div class="mt-8 flex flex-col">
         <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle md:px-6 lg:px-8">
@@ -78,7 +91,7 @@
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Tonase Akhir Bulan <br /><span
+                      Tonase Awal Bulan <br /><span
                         class="text-[10px] font-normal whitespace-nowrap"
                         >({{ formatNumber(totalTonaseAkhirBulanSum) }} kg)</span
                       >
@@ -87,7 +100,7 @@
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
-                      Nominal Akhir Bulan <br /><span
+                      Nominal Awal Bulan <br /><span
                         class="text-[10px] font-normal whitespace-nowrap"
                         >(Rp.
                         {{ formatNumber(totalNominalAkhirBulanSum) }})</span
@@ -300,7 +313,392 @@
           </div>
         </div>
       </div>
-      <!-- //SECTION Detail -->
+    </div>
+    <!-- //SECTION Stok Awal -->
+    <div
+      v-if="currentTab === 'stok_awal'"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle md:px-6 lg:px-8">
+            <div
+              class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="sticky left-0 bg-gray-50 z-10 border-r border-gray-200 py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode Item
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Akhir Bulan<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >({{ formatNumber(totalTonaseStokAwal) }} kg)</span
+                      >
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Harga Beli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Nominal<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >(Rp. {{ formatNumber(stokAwalTotal) }})</span
+                      >
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="row in stokAwalRows" :key="row.rit_id">
+                    <td
+                      class="sticky left-0 bg-white z-10 border-r border-gray-200 whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ row.item_code || "-" }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatDate(row.arrival_date) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatNumber(row.tonnage) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.buy_price) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.nominal) }}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="stokAwalRows.length === 0">
+                    <td
+                      colspan="5"
+                      class="py-4 pl-4 pr-3 text-center text-xs text-gray-500 sm:pl-6"
+                    >
+                      Tidak ada data
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                  <tr>
+                    <td
+                      colspan="2"
+                      class="py-2 pl-4 pr-3 text-right text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Total
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatNumber(totalTonaseStokAwal) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6"
+                    ></td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Rp. {{ formatNumber(stokAwalTotal) }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //SECTION Stok Akhir -->
+    <div
+      v-if="currentTab === 'stok_akhir'"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle md:px-6 lg:px-8">
+            <div
+              class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="sticky left-0 bg-gray-50 z-10 border-r border-gray-200 py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode Item
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Akhir Bulan<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >({{ formatNumber(totalTonaseStokAkhir) }} kg)</span
+                      >
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Harga Beli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Nominal<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >(Rp. {{ formatNumber(stokAkhirTotal) }})</span
+                      >
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="row in stokAkhirRows" :key="row.rit_id">
+                    <td
+                      class="sticky left-0 bg-white z-10 border-r border-gray-200 whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ row.item_code || "-" }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatDate(row.arrival_date) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatNumber(row.tonnage) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.buy_price) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.nominal) }}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="stokAkhirRows.length === 0">
+                    <td
+                      colspan="5"
+                      class="py-4 pl-4 pr-3 text-center text-xs text-gray-500 sm:pl-6"
+                    >
+                      Tidak ada data
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                  <tr>
+                    <td
+                      colspan="2"
+                      class="py-2 pl-4 pr-3 text-right text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Total
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatNumber(totalTonaseStokAkhir) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6"
+                    ></td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Rp. {{ formatNumber(stokAkhirTotal) }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //SECTION Beli Barang -->
+    <div
+      v-if="currentTab === 'beli_barang'"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle md:px-6 lg:px-8">
+            <div
+              class="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="sticky left-0 bg-gray-50 z-10 border-r border-gray-200 py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Kode Item
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Datang<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >({{ formatNumber(totalTonaseBeliBarang) }} kg)</span
+                      >
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Harga Beli
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Nominal<br /><span
+                        class="text-[10px] font-normal whitespace-nowrap"
+                        >(Rp. {{ formatNumber(beliBarangTotal) }})</span
+                      >
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  <tr v-for="row in beliBarangRows" :key="row.rit_id">
+                    <td
+                      class="sticky left-0 bg-white z-10 border-r border-gray-200 whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ row.item_code || "-" }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatDate(row.arrival_date) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatNumber(row.tonnage) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.buy_price) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        Rp. {{ formatNumber(row.nominal) }}
+                      </div>
+                    </td>
+                  </tr>
+                  <tr v-if="beliBarangRows.length === 0">
+                    <td
+                      colspan="5"
+                      class="py-4 pl-4 pr-3 text-center text-xs text-gray-500 sm:pl-6"
+                    >
+                      Tidak ada data
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                  <tr>
+                    <td
+                      colspan="2"
+                      class="py-2 pl-4 pr-3 text-right text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Total
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatNumber(totalTonaseBeliBarang) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6"
+                    ></td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Rp. {{ formatNumber(beliBarangTotal) }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //SECTION Detail -->
       <TransitionRoot as="template" :show="showRitDetail">
         <Dialog
           as="div"
@@ -643,7 +1041,6 @@
         </Dialog>
       </TransitionRoot>
       <!-- //!SECTION -->
-    </div>
   </Admin>
 </template>
 
@@ -653,8 +1050,6 @@ import { Icon } from "@iconify/vue";
 import axios from "axios";
 </script>
 <script>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 import {
   Menu,
   MenuButton,
@@ -693,9 +1088,45 @@ export default {
       this.$router.push("/admin");
       return;
     }
-    this.getAllRits();
+    this.getAllData();
   },
   computed: {
+    stokAwalRows() {
+      return this.report ? this.report.stok_awal.rows : [];
+    },
+    stokAkhirRows() {
+      return this.report ? this.report.stok_akhir.rows : [];
+    },
+    beliBarangRows() {
+      return this.report ? this.report.beli_barang.rows : [];
+    },
+    stokAwalTotal() {
+      return this.report ? this.report.stok_awal.total : 0;
+    },
+    stokAkhirTotal() {
+      return this.report ? this.report.stok_akhir.total : 0;
+    },
+    beliBarangTotal() {
+      return this.report ? this.report.beli_barang.total : 0;
+    },
+    totalTonaseStokAwal() {
+      return this.stokAwalRows.reduce(
+        (acc, row) => acc + (parseFloat(row.tonnage) || 0),
+        0,
+      );
+    },
+    totalTonaseStokAkhir() {
+      return this.stokAkhirRows.reduce(
+        (acc, row) => acc + (parseFloat(row.tonnage) || 0),
+        0,
+      );
+    },
+    totalTonaseBeliBarang() {
+      return this.beliBarangRows.reduce(
+        (acc, row) => acc + (parseFloat(row.tonnage) || 0),
+        0,
+      );
+    },
     totalNominalBeliSum() {
       if (!this.rits) return 0;
       return this.rits.reduce(
@@ -739,23 +1170,39 @@ export default {
     },
   },
   methods: {
-    getAllRits: function () {
+    getAllData: function () {
+      if (!this.month) return;
+
+      const [year, m] = this.month.split("-");
+      this.date = [
+        new Date(year, m - 1, 1),
+        new Date(year, m, 0, 23, 59, 59, 999),
+      ];
+
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
         headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
-      instance
-        .post("/admin/rit/get_empty_stock", {
+
+      Promise.all([
+        instance.post("/admin/rit/get_empty_stock", {
           start_date: this.date[0].toString(),
           end_date: this.date[1].toString(),
-        })
-        .then((data) => {
-          this.rits = data.data.data.results;
+          filter_transactions: true,
+        }),
+        instance.post("/admin/laba_rugi/get_report", {
+          month: this.month,
+        }),
+      ])
+        .then(([ritResponse, reportResponse]) => {
+          this.rits = ritResponse.data.data.results;
+          this.report = reportResponse.data.data.results;
           this.isLoading = false;
         })
         .catch((err) => {
           console.log(err);
+          this.isLoading = false;
         });
     },
     totalTonnage(rit) {
@@ -897,11 +1344,22 @@ export default {
       //ini buat cek detail
       showRitDetail: false,
       showRitHistory: false,
+      month: `${new Date().getFullYear()}-${String(
+        new Date().getMonth() + 1
+      ).padStart(2, "0")}`,
+      tabs: [
+        { key: "rincian", name: "Rincian RIT" },
+        { key: "stok_awal", name: "Stok Awal" },
+        { key: "stok_akhir", name: "Stok Akhir" },
+        { key: "beli_barang", name: "Beli Barang" },
+      ],
+      currentTab: "rincian",
       date: [
         new Date(new Date().setHours(0, 0, 0, 0)),
         new Date(new Date().setHours(23, 59, 59, 59)),
       ],
       rits: null,
+      report: null,
       selectedRit: null,
     };
   },
