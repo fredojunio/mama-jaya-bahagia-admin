@@ -35,70 +35,51 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div
-        v-if="report"
-        class="mt-8 border border-gray-400 p-6 bg-white w-full max-w-2xl shadow-sm"
-      >
+      <div v-if="report" class="mt-8 p-6 bg-white w-full max-w-2xl">
         <h2 class="text-md font-medium text-gray-900 mb-4">{{ monthName }},</h2>
-        <table class="w-full text-right text-sm border-collapse">
+        <table class="w-full text-sm">
           <tbody>
             <tr>
-              <td class="border border-gray-300 px-3 py-1 text-left">
-                Stok Awal
-              </td>
-              <td class="border border-gray-300 px-3 py-1">
+              <td class="py-1 pr-4 text-left">Stok Awal</td>
+              <td class="py-1 text-right">
                 {{ formatNumberCustom(report.stok_awal.total) }}
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-300 px-3 py-1 text-left">
-                Beli Barang
-              </td>
-              <td class="border border-gray-300 px-3 py-1">
+              <td class="py-1 pr-4 text-left">Beli Barang</td>
+              <td class="py-1 text-right">
                 {{ formatNumberCustom(report.beli_barang.total) }}
               </td>
             </tr>
-            <tr>
-              <td class="border border-gray-300 px-3 py-1 text-left">
-                Stok Akhir
-              </td>
-              <td class="border border-gray-300 px-3 py-1">
+            <tr class="border-b border-black">
+              <td class="py-1 pr-4 text-left">Stok Akhir</td>
+              <td class="py-1 text-right">
                 {{ formatNumberCustom(report.stok_akhir.total) }}
               </td>
             </tr>
             <tr>
-              <td
-                class="border border-gray-300 px-3 py-1 text-left font-semibold"
-              >
-                HPP =
-              </td>
-              <td class="border border-gray-300 px-3 py-1 font-semibold">
+              <td class="py-1 pr-8 text-right font-semibold">HPP =</td>
+              <td class="py-1 text-right font-semibold">
                 {{ formatNumberCustom(report.hpp) }}
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-300 px-3 py-1 text-left">
-                Omset =
-              </td>
-              <td class="border border-gray-300 px-3 py-1">
+              <td class="pt-6 pr-8 text-right">Omset =</td>
+              <td class="pt-6 text-right">
                 {{ formatNumberCustom(report.omset) }}
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-300 px-3 py-1 text-left">
-                Biaya =
-              </td>
-              <td class="border border-gray-300 px-3 py-1">
+              <td class="py-1 pr-8 text-right">Biaya =</td>
+              <td class="py-1 text-right">
                 {{ formatNumberCustom(report.biaya) }}
               </td>
             </tr>
-            <tr>
+            <tr class="border-t border-black">
+              <td class="py-2 pr-8 text-right font-bold text-base">Laba =</td>
               <td
-                class="border border-gray-300 px-3 py-2 text-left font-bold text-base"
+                class="py-2 text-right font-bold text-base underline decoration-double decoration-2"
               >
-                Laba =
-              </td>
-              <td class="border border-gray-300 px-3 py-2 font-bold text-base">
                 {{ formatNumberCustom(report.laba) }}
               </td>
             </tr>
