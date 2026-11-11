@@ -26,6 +26,13 @@
             class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-2 px-4"
           />
         </div>
+        <button
+          v-if="currentTab === 'stok_awal' || currentTab === 'stok_akhir'"
+          @click="exportStokExcel"
+          class="inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+        >
+          Export Excel
+        </button>
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -344,6 +351,24 @@
                       scope="col"
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
+                      Tonase Sistem
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Fisik
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Selisih
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
                       Tonase Akhir Bulan<br /><span
                         class="text-[10px] font-normal whitespace-nowrap"
                         >({{ formatNumber(totalTonaseStokAwal) }} kg)</span
@@ -386,7 +411,33 @@
                       class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="font-medium text-gray-900">
-                        {{ formatNumber(row.tonnage) }}
+                        {{ formatTonase(row.tonnage_sistem) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatTonase(row.tonnage_fisik) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatSelisih(row.selisih) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatTonase(row.tonnage) }}
+                        <span
+                          v-if="row.basis === 'fisik'"
+                          class="ml-1 rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-800"
+                          >Fisik</span
+                        >
                       </div>
                     </td>
                     <td
@@ -406,7 +457,7 @@
                   </tr>
                   <tr v-if="stokAwalRows.length === 0">
                     <td
-                      colspan="5"
+                      colspan="8"
                       class="py-4 pl-4 pr-3 text-center text-xs text-gray-500 sm:pl-6"
                     >
                       Tidak ada data
@@ -420,6 +471,21 @@
                       class="py-2 pl-4 pr-3 text-right text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Total
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatTonase(totalSistemStokAwal) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatTonase(totalFisikStokAwal) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatSelisih(totalSelisihStokAwal) }}
                     </td>
                     <td
                       class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
@@ -440,6 +506,11 @@
             </div>
           </div>
         </div>
+        <p class="mt-3 text-xs text-gray-600">
+          Penyusutan (info): {{ formatTonase(penyusutanStokAwalTonnage) }} kg /
+          Rp. {{ formatNumber(penyusutanStokAwalNominal) }} — tercermin di HPP
+          bulan sebelumnya.
+        </p>
       </div>
     </div>
     <!-- //SECTION Stok Akhir -->
@@ -467,6 +538,24 @@
                       class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Tanggal Datang
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Sistem
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Tonase Fisik
+                    </th>
+                    <th
+                      scope="col"
+                      class="py-2 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Selisih
                     </th>
                     <th
                       scope="col"
@@ -514,7 +603,33 @@
                       class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
                     >
                       <div class="font-medium text-gray-900">
-                        {{ formatNumber(row.tonnage) }}
+                        {{ formatTonase(row.tonnage_sistem) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatTonase(row.tonnage_fisik) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatSelisih(row.selisih) }}
+                      </div>
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs sm:pl-6 grow"
+                    >
+                      <div class="font-medium text-gray-900">
+                        {{ formatTonase(row.tonnage) }}
+                        <span
+                          v-if="row.basis === 'fisik'"
+                          class="ml-1 rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-800"
+                          >Fisik</span
+                        >
                       </div>
                     </td>
                     <td
@@ -534,7 +649,7 @@
                   </tr>
                   <tr v-if="stokAkhirRows.length === 0">
                     <td
-                      colspan="5"
+                      colspan="8"
                       class="py-4 pl-4 pr-3 text-center text-xs text-gray-500 sm:pl-6"
                     >
                       Tidak ada data
@@ -548,6 +663,21 @@
                       class="py-2 pl-4 pr-3 text-right text-xs font-semibold text-gray-900 sm:pl-6"
                     >
                       Total
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatTonase(totalSistemStokAkhir) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatTonase(totalFisikStokAkhir) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
+                    >
+                      {{ formatSelisih(totalSelisihStokAkhir) }}
                     </td>
                     <td
                       class="whitespace-nowrap py-2 pl-4 pr-3 text-xs font-semibold text-gray-900 sm:pl-6"
@@ -568,6 +698,11 @@
             </div>
           </div>
         </div>
+        <p class="mt-3 text-xs text-gray-600">
+          Penyusutan (info): {{ formatTonase(penyusutanStokAkhirTonnage) }} kg /
+          Rp. {{ formatNumber(penyusutanStokAkhirNominal) }} — sudah tercermin di
+          HPP.
+        </p>
       </div>
     </div>
     <!-- //SECTION Pembelian -->
@@ -1064,6 +1199,7 @@ import {
   SwitchGroup,
   SwitchLabel,
 } from "@headlessui/vue";
+import * as XLSX from "xlsx";
 export default {
   components: {
     Menu,
@@ -1121,6 +1257,36 @@ export default {
         0,
       );
     },
+    totalSistemStokAwal() {
+      return this.stokBlockValue("stok_awal", "total_sistem_tonnage");
+    },
+    totalFisikStokAwal() {
+      return this.stokBlockValue("stok_awal", "total_fisik_tonnage");
+    },
+    totalSelisihStokAwal() {
+      return this.stokBlockValue("stok_awal", "total_selisih_tonnage");
+    },
+    penyusutanStokAwalTonnage() {
+      return this.penyusutanValue("stok_awal", "tonnage");
+    },
+    penyusutanStokAwalNominal() {
+      return this.penyusutanValue("stok_awal", "nominal");
+    },
+    totalSistemStokAkhir() {
+      return this.stokBlockValue("stok_akhir", "total_sistem_tonnage");
+    },
+    totalFisikStokAkhir() {
+      return this.stokBlockValue("stok_akhir", "total_fisik_tonnage");
+    },
+    totalSelisihStokAkhir() {
+      return this.stokBlockValue("stok_akhir", "total_selisih_tonnage");
+    },
+    penyusutanStokAkhirTonnage() {
+      return this.penyusutanValue("stok_akhir", "tonnage");
+    },
+    penyusutanStokAkhirNominal() {
+      return this.penyusutanValue("stok_akhir", "nominal");
+    },
     totalTonaseBeliBarang() {
       return this.beliBarangRows.reduce(
         (acc, row) => acc + (parseFloat(row.tonnage) || 0),
@@ -1170,6 +1336,79 @@ export default {
     },
   },
   methods: {
+    stokBlockValue(block, field) {
+      const data = this.report ? this.report[block] : null;
+      return data && data[field] != null ? data[field] : 0;
+    },
+    penyusutanValue(block, field) {
+      const data = this.report ? this.report[block] : null;
+      return data && data.penyusutan && data.penyusutan[field] != null
+        ? data.penyusutan[field]
+        : 0;
+    },
+    formatTonase(value) {
+      if (value === null || value === undefined || value === "") return "-";
+      const number = Number(value);
+      if (number === 0) return "0";
+      return this.formatNumber(number.toFixed(2).replace(/\.00$/, ""));
+    },
+    formatSelisih(value) {
+      if (value === null || value === undefined || value === "") return "-";
+      const number = Number(value);
+      if (number === 0) return "0";
+      return this.formatNumber(number.toFixed(2).replace(/\.00$/, ""));
+    },
+    exportStokExcel() {
+      if (!this.report) {
+        alert("Tidak ada data untuk diexport");
+        return;
+      }
+
+      const isAwal = this.currentTab === "stok_awal";
+      const block = isAwal ? this.report.stok_awal : this.report.stok_akhir;
+      const label = isAwal ? "Stok_Awal" : "Stok_Akhir";
+
+      const rows = block.rows.map((row) => ({
+        "Kode Item": row.item_code || "-",
+        "Tanggal Datang": this.formatDate(row.arrival_date),
+        "Tonase Sistem (kg)": row.tonnage_sistem,
+        "Tonase Fisik (kg)": row.tonnage_fisik,
+        "Selisih (kg)": row.selisih,
+        "Tonase Akhir Bulan (kg)": row.tonnage,
+        "Harga Beli": row.buy_price,
+        Nominal: row.nominal,
+        Basis: row.basis,
+      }));
+
+      rows.push({
+        "Kode Item": "Total",
+        "Tanggal Datang": "",
+        "Tonase Sistem (kg)": block.total_sistem_tonnage,
+        "Tonase Fisik (kg)": block.total_fisik_tonnage,
+        "Selisih (kg)": block.total_selisih_tonnage,
+        "Tonase Akhir Bulan (kg)": block.total_tonnage,
+        "Harga Beli": "",
+        Nominal: block.total,
+        Basis: "",
+      });
+
+      rows.push({
+        "Kode Item": "Penyusutan (info)",
+        "Tanggal Datang": "",
+        "Tonase Sistem (kg)": "",
+        "Tonase Fisik (kg)": "",
+        "Selisih (kg)": block.penyusutan.tonnage,
+        "Tonase Akhir Bulan (kg)": "",
+        "Harga Beli": "",
+        Nominal: block.penyusutan.nominal,
+        Basis: "sudah tercermin di HPP",
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, label);
+      XLSX.writeFile(workbook, `${label}_${this.month}.xlsx`);
+    },
     getAllData: function () {
       if (!this.month) return;
 

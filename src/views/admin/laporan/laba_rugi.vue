@@ -118,6 +118,13 @@
             </tr>
           </tbody>
         </table>
+        <p class="mt-4 text-xs text-gray-500">
+          Penyusutan (info):
+          {{ formatNumberCustom(report.stok_akhir.penyusutan?.tonnage || 0) }} kg
+          / Rp.
+          {{ formatNumberCustom(report.stok_akhir.penyusutan?.nominal || 0) }} —
+          sudah tercermin di HPP.
+        </p>
       </div>
     </div>
   </Admin>
