@@ -570,7 +570,7 @@
         </div>
       </div>
     </div>
-    <!-- //SECTION Beli Barang -->
+    <!-- //SECTION Pembelian -->
     <div
       v-if="currentTab === 'beli_barang'"
       class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -1351,7 +1351,7 @@ export default {
         { key: "rincian", name: "Rincian RIT" },
         { key: "stok_awal", name: "Stok Awal" },
         { key: "stok_akhir", name: "Stok Akhir" },
-        { key: "beli_barang", name: "Beli Barang" },
+        { key: "beli_barang", name: "Pembelian" },
       ],
       currentTab: "rincian",
       date: [
