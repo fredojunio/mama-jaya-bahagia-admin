@@ -41,17 +41,38 @@
       >
         <h2 class="text-md font-medium text-gray-900 mb-4">{{ monthName }},</h2>
         <table class="w-full text-sm">
+          <thead>
+            <tr>
+              <th
+                class="pb-2 text-left text-xs font-normal text-gray-500"
+              ></th>
+              <th
+                class="pb-2 text-right text-xs font-normal text-gray-500"
+              ></th>
+              <th
+                class="pb-2 pl-6 text-right text-xs font-normal text-gray-500"
+              >
+                Tonase (kg)
+              </th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
               <td class="py-1 pr-4 text-left">Stok Awal</td>
               <td class="py-1 text-right">
                 {{ formatNumberCustom(report.stok_awal.total) }}
               </td>
+              <td class="py-1 pl-6 text-right">
+                {{ formatNumberCustom(report.stok_awal.total_tonnage) }}
+              </td>
             </tr>
             <tr>
-              <td class="py-1 pr-4 text-left">Beli Barang</td>
+              <td class="py-1 pr-4 text-left">Pembelian</td>
               <td class="py-1 text-right">
                 {{ formatNumberCustom(report.beli_barang.total) }}
+              </td>
+              <td class="py-1 pl-6 text-right">
+                {{ formatNumberCustom(report.beli_barang.total_tonnage) }}
               </td>
             </tr>
             <tr class="border-b border-black">
@@ -59,17 +80,24 @@
               <td class="py-1 text-right">
                 {{ formatNumberCustom(report.stok_akhir.total) }}
               </td>
+              <td class="py-1 pl-6 text-right">
+                {{ formatNumberCustom(report.stok_akhir.total_tonnage) }}
+              </td>
             </tr>
             <tr>
               <td class="py-1 pr-8 text-right font-semibold">HPP =</td>
               <td class="py-1 text-right font-semibold">
                 {{ formatNumberCustom(report.hpp) }}
               </td>
+              <td class="py-1 pl-6 text-right font-semibold">-</td>
             </tr>
             <tr>
               <td class="pt-6 pr-8 text-right">Omset =</td>
               <td class="pt-6 text-right">
                 {{ formatNumberCustom(report.omset) }}
+              </td>
+              <td class="pt-6 pl-6 text-right">
+                {{ formatNumberCustom(report.omset_tonnage) }}
               </td>
             </tr>
             <tr>
@@ -77,6 +105,7 @@
               <td class="py-1 text-right">
                 {{ formatNumberCustom(report.biaya) }}
               </td>
+              <td class="py-1 pl-6 text-right">-</td>
             </tr>
             <tr class="border-t border-black">
               <td class="py-2 pr-8 text-right font-bold text-base">Laba =</td>
@@ -85,6 +114,7 @@
               >
                 {{ formatNumberCustom(report.laba) }}
               </td>
+              <td class="py-2 pl-6 text-right">-</td>
             </tr>
           </tbody>
         </table>
@@ -161,13 +191,29 @@ export default {
       }
 
       const dataToExport = [
-        { Keterangan: "Stok Awal", Nominal: this.report.stok_awal.total },
-        { Keterangan: "Beli Barang", Nominal: this.report.beli_barang.total },
-        { Keterangan: "Stok Akhir", Nominal: this.report.stok_akhir.total },
-        { Keterangan: "HPP", Nominal: this.report.hpp },
-        { Keterangan: "Omset", Nominal: this.report.omset },
-        { Keterangan: "Biaya", Nominal: this.report.biaya },
-        { Keterangan: "Laba", Nominal: this.report.laba },
+        {
+          Keterangan: "Stok Awal",
+          Nominal: this.report.stok_awal.total,
+          "Tonase (kg)": this.report.stok_awal.total_tonnage,
+        },
+        {
+          Keterangan: "Pembelian",
+          Nominal: this.report.beli_barang.total,
+          "Tonase (kg)": this.report.beli_barang.total_tonnage,
+        },
+        {
+          Keterangan: "Stok Akhir",
+          Nominal: this.report.stok_akhir.total,
+          "Tonase (kg)": this.report.stok_akhir.total_tonnage,
+        },
+        { Keterangan: "HPP", Nominal: this.report.hpp, "Tonase (kg)": "-" },
+        {
+          Keterangan: "Omset",
+          Nominal: this.report.omset,
+          "Tonase (kg)": this.report.omset_tonnage,
+        },
+        { Keterangan: "Biaya", Nominal: this.report.biaya, "Tonase (kg)": "-" },
+        { Keterangan: "Laba", Nominal: this.report.laba, "Tonase (kg)": "-" },
       ];
 
       const worksheet = XLSX.utils.json_to_sheet(dataToExport, {
