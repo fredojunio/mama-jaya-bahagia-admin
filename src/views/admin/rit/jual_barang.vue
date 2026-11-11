@@ -194,6 +194,7 @@
                       :key="rite.id"
                       v-model="rit.item"
                       :value="rite"
+                      :disabled="!(rite.buy_price > 0)"
                       as="template"
                       v-slot="{ active, selected }"
                     >
@@ -201,6 +202,8 @@
                         :class="[
                           'relative cursor-default select-none py-2 pl-3 pr-9',
                           active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                          !(rite.buy_price > 0) &&
+                            'opacity-50 cursor-not-allowed',
                         ]"
                       >
                         <span
@@ -214,6 +217,9 @@
                             formatNumber(rite.tonnage_left)
                           }}
                           kg)
+                          <span v-if="!(rite.buy_price > 0)">
+                            - Harga beli belum diisi
+                          </span>
                         </span>
                       </li>
                     </ComboboxOption>
@@ -533,8 +539,11 @@
                   )"
                   :key="rit.id"
                   :value="rit"
+                  :disabled="!(rit.buy_price > 0)"
                 >
-                  {{ rit.item.code }} - ({{ formatDate(rit.delivery_date) }})
+                  {{ rit.item.code }} - ({{ formatDate(rit.delivery_date) }}){{
+                    !(rit.buy_price > 0) ? " - Harga beli belum diisi" : ""
+                  }}
                 </option>
               </select>
             </div>
@@ -941,6 +950,11 @@ export default {
             window.location.assign(baseUrl + "/admin/rit/jual_barang");
           })
           .catch((err) => {
+            const message =
+              err.response && err.response.data && err.response.data.message
+                ? err.response.data.message
+                : "Gagal menyimpan revisi transaksi.";
+            alert(message);
             console.log(err);
           });
       } else {
@@ -962,6 +976,11 @@ export default {
             window.location.assign(baseUrl + "/admin/rit/jual_barang");
           })
           .catch((err) => {
+            const message =
+              err.response && err.response.data && err.response.data.message
+                ? err.response.data.message
+                : "Gagal menyimpan transaksi.";
+            alert(message);
             console.log(err);
           });
       }

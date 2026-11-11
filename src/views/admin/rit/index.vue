@@ -1257,6 +1257,23 @@
 
                       <div class="sm:col-span-6">
                         <label
+                          for="buy_price"
+                          class="block text-sm font-medium text-gray-700"
+                        >
+                          Harga Beli (Rp.)
+                        </label>
+                        <div class="mt-1">
+                          <input
+                            v-model="arrivedRit.buy_price"
+                            id="buy_price"
+                            type="number"
+                            class="shadow-sm focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-md py-1 px-2"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="sm:col-span-6">
+                        <label
                           for="sak"
                           class="block text-sm font-medium text-gray-700"
                         >
@@ -1318,6 +1335,7 @@
                     </button>
                     <button
                       :disabled="
+                        !(arrivedRit.buy_price > 0) ||
                         arrivedRit.tonnage < 0 ||
                         arrivedRit.tonnage > selectedData.main_tonnage + 20 ||
                         arrivedRit.sack < 0 ||
@@ -2861,6 +2879,11 @@ export default {
           this.$router.go(0);
         })
         .catch((err) => {
+          const message =
+            err.response && err.response.data && err.response.data.message
+              ? err.response.data.message
+              : "Gagal menyimpan data kedatangan barang.";
+          alert(message);
           console.log(err);
         });
     },
@@ -2875,6 +2898,11 @@ export default {
           this.$router.go(0);
         })
         .catch((err) => {
+          const message =
+            err.response && err.response.data && err.response.data.message
+              ? err.response.data.message
+              : "Gagal menyimpan harga rit.";
+          alert(message);
           console.log(err);
         });
     },
@@ -2924,6 +2952,7 @@ export default {
       this.selectedData = this.rits.find((obj) => {
         return obj.id === id;
       });
+      this.arrivedRit.buy_price = this.selectedData.buy_price;
     },
     openEditRitPriceForm(id) {
       this.showEditRitPriceForm = true;
@@ -3043,6 +3072,7 @@ export default {
         sack: null,
         toll_used: null,
         bbm_used: null,
+        buy_price: null,
       },
       pricedRit: {
         tonnage: null,
